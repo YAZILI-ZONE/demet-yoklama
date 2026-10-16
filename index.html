@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demet Eğitim Kurumları - Yoklama & Rapor Portal</title>
+    <!-- Google Fonts & FontAwesome İkonlar -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #2563eb;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); padding-bottom: 60px; overflow-x: hidden; }
+
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 12px 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .brand-container { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .brand-logo {
+            background: var(--accent);
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+        }
+        .brand-title h1 { font-size: 1rem; font-weight: 800; line-height: 1.2; }
+        .brand-title p { font-size: 0.68rem; color: #94a3b8; letter-spacing: 0.5px; text-transform: uppercase; }
+
+        .mini-prompt-box {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 6px 12px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            backdrop-filter: blur(5px);
+        }
+        .prompt-input {
+            background: transparent;
+            border: none;
+            color: #e2e8f0;
+            font-size: 0.78rem;
+            outline: none;
+            width: 140px;
+        }
+
+        .container { max-width: 1100px; margin: 20px auto; padding: 0 12px; }
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+        .dash-card {
+            background: var(--card-bg);
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .dash-card:hover, .dash-card:active {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.12);
+        }
+        .dash-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+        .dash-title { font-size: 0.95rem; font-weight: 700; color: var(--primary); }
+        .dash-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.2; }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            border: 1px solid #f1f5f9;
+            margin-bottom: 20px;
+        }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+        .card-title { font-size: 1.05rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+
+        .btn-back {
+            background: #f1f5f9;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .attendance-box {
+            max-width: 420px;
+            margin: 0 auto;
+            text-align: center;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 25px 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.04);
+        }
+        .attendance-student-name { font-size: 1.4rem; font-weight: 800; color: var(--primary); margin: 10px 0 4px 0; word-break: break-word; }
+        .attendance-student-no { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; }
+
+        .attendance-btn-group { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        .att-btn {
+            border: none;
+            padding: 12px 6px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: transform 0.15s;
+        }
+        .att-btn:active { transform: scale(0.96); }
+        .att-var { background: var(--success); }
+        .att-yok { background: var(--danger); }
+        .att-izinli { background: var(--warning); }
+
+        .stats-nav { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; }
+        .stats-tab-btn {
+            flex: 1;
+            min-width: 110px;
+            padding: 10px 6px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .stats-tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+        .filter-nav { display: flex; gap: 6px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 4px; }
+        .filter-btn {
+            padding: 6px 12px;
+            border: 1px solid #cbd5e1;
+            background: white;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; text-align: left; min-width: 520px; }
+        th, td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
+        th { background: #f8fafc; color: var(--text-muted); font-weight: 700; font-size: 0.72rem; text-transform: uppercase; }
+
+        .badge-group { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+        .p-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .badge-var-pro { background: #d1fae5; color: #047857; }
+        .badge-yok-pro { background: #fee2e2; color: #b91c1c; }
+        .badge-izin-pro { background: #fef3c7; color: #b45309; }
+
+        .form-row { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        .form-input { flex: 1; min-width: 140px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; outline: none; }
+        .btn-main { background: var(--accent); color: white; border: none; padding: 12px 16px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; width: 100%; margin-top: 5px; }
+
+        .progress-bar-bg { background: #e2e8f0; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 4px; }
+        .progress-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s ease; }
+
+        .comment-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+        }
+        .comment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .comment-author { font-weight: 700; color: var(--primary); font-size: 0.9rem; }
+        .comment-date { font-size: 0.72rem; color: var(--text-muted); }
+        .comment-text { font-size: 0.85rem; color: #334155; line-height: 1.4; }
+
+        .creator-badge {
+            position: fixed;
+            bottom: 12px;
+            right: 12px;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 999;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="creator-badge">
+        <i class="fa-solid fa-code" style="color: var(--accent);"></i> Hazırlayan: Seyit Talha Sarı
+    </div>
+
+    <header>
+        <div class="brand-container" onclick="showView('home')">
+            <div class="brand-logo"><i class="fa-solid fa-graduation-cap"></i></div>
+            <div class="brand-title">
+                <h1>DEMET EĞİTİM KURUMLARI</h1>
+                <p>Güvenli Bulut Portal</p>
+            </div>
+        </div>
+
+        <div class="mini-prompt-box">
+            <i class="fa-solid fa-note-sticky" style="color: var(--accent);"></i>
+            <input type="text" class="prompt-input" id="kurumPrompt" value="Demet Eğitim | 2026" placeholder="Ders Notu...">
+            <span style="opacity: 0.3;">|</span>
+            <span id="liveClock" style="font-weight: 600;">12:00</span>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- 1. ANA EKRAN (DASHBOARD) -->
+        <div id="view-home" class="view-section active">
+            <div style="text-align: center; margin-bottom: 15px;">
+                <h2 style="font-size: 1.3rem; color: var(--primary);">Yoklama & Rapor Paneli</h2>
+                <p style="color: var(--text-muted); font-size: 0.8rem;">Etütler sınıflara ayrılmıştır. Yoklamalar şifrelidir.</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dash-card" onclick="startAttendanceWithPassword('dini')">
+                    <div class="dash-icon" style="background: #e0f2fe; color: #0284c7;"><i class="fa-solid fa-book-quran"></i></div>
+                    <div class="dash-title">Dini Ders Yoklaması</div>
+                    <div class="dash-desc">🔒 Şifreli Giriş</div>
+                </div>
+
+                <div class="dash-card" onclick="startAttendanceWithPassword('namaz')">
+                    <div class="dash-icon" style="background: #d1fae5; color: #059669;"><i class="fa-solid fa-mosque"></i></div>
+                    <div class="dash-title">Namaz Yoklaması</div>
+                    <div class="dash-desc">🔒 Şifreli Giriş</div>
+                </div>
+
+                <div class="dash-card" onclick="openEtutClassSelection()">
+                    <div class="dash-icon" style="background: #fef3c7; color: #d97706;"><i class="fa-solid fa-user-graduate"></i></div>
+                    <div class="dash-title">Etüt Yoklaması</div>
+                    <div class="dash-desc">🔒 Sınıf Seçimli Giriş</div>
+                </div>
+
+                <div class="dash-card" onclick="showView('stats')">
+                    <div class="dash-icon" style="background: #fee2e2; color: #dc2626;"><i class="fa-solid fa-chart-pie"></i></div>
+                    <div class="dash-title">İstatistikler & Raporlar</div>
+                    <div class="dash-desc">🌐 Herkese Açık Paneller</div>
+                </div>
+
+                <div class="dash-card" onclick="showView('comments')">
+                    <div class="dash-icon" style="background: #fae8ff; color: #a21caf;"><i class="fa-solid fa-comments"></i></div>
+                    <div class="dash-title">Yorumlar & Görüşler</div>
+                    <div class="dash-desc">💬 Okuma Açık / Yazma Şifreli</div>
+                </div>
+
+                <div class="dash-card" onclick="accessAdminPanel()">
+                    <div class="dash-icon" style="background: #ede9fe; color: #7c3aed;"><i class="fa-solid fa-user-shield"></i></div>
+                    <div class="dash-title">Talebe Kayıt / Yönet</div>
+                    <div class="dash-desc">🔒 Yönetici Paneli</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. CANLI YOKLAMA EKRANI -->
+        <div id="view-attendance" class="view-section">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title" id="attendanceCategoryTitle"><i class="fa-solid fa-pen-clip"></i> Yoklama</div>
+                    <button class="btn-back" onclick="showView('home')"><i class="fa-solid fa-arrow-left"></i> Ana Menü</button>
+                </div>
+
+                <div id="attendanceActiveArea"></div>
+            </div>
+        </div>
+
+        <!-- 3. TALEBE YÖNETİMİ -->
+        <div id="view-students" class="view-section">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><i class="fa-solid fa-user-plus"></i> Yönetici Talebe Kayıt Ekranı</div>
+                    <button class="btn-back" onclick="showView('home')"><i class="fa-solid fa-arrow-left"></i> Çıkış</button>
+                </div>
+                <div class="form-row">
+                    <input type="text" id="newStudentName" class="form-input" placeholder="Talebe Adı Soyadı">
+                    <select id="newStudentClass" class="form-input">
+                        <option value="9. Sınıf">9. Sınıf</option>
+                        <option value="10. Sınıf">10. Sınıf</option>
+                        <option value="11-12. Sınıf">11-12. Sınıf</option>
+                    </select>
+                </div>
+                <button class="btn-main" onclick="addStudent()"><i class="fa-solid fa-floppy-disk"></i> Talebeyi Kaydet</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><i class="fa-solid fa-list-check"></i> Kayıtlı Talebeler</div>
+                    <span id="totalStudentCount" style="font-size:0.8rem; color:var(--text-muted);">Toplam: 0</span>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sıra No</th>
+                                <th>Talebe Adı Soyadı</th>
+                                <th>Sınıfı</th>
+                                <th>Yönetici İşlemi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. İSTATİSTİKLER VE RAPORLAR EKRANI -->
+        <div id="view-stats" class="view-section">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><i class="fa-solid fa-chart-column"></i> İstatistikler ve Raporlar</div>
+                    <button class="btn-back" onclick="showView('home')"><i class="fa-solid fa-arrow-left"></i> Ana Menü</button>
+                </div>
+
+                <div class="stats-nav">
+                    <button class="stats-tab-btn active" id="btn-tab-dini" onclick="switchStatsCategory('dini')"><i class="fa-solid fa-book-quran"></i> Dini Ders Raporu</button>
+                    <button class="stats-tab-btn" id="btn-tab-namaz" onclick="switchStatsCategory('namaz')"><i class="fa-solid fa-mosque"></i> Namaz Raporu</button>
+                    <button class="stats-tab-btn" id="btn-tab-etut" onclick="switchStatsCategory('etut')"><i class="fa-solid fa-user-graduate"></i> Etüt Raporu</button>
+                </div>
+
+                <!-- SINIF FİLTRESİ (SADECE ETÜTTE VEYA İSTEĞE GÖRE GÖRÜNÜR) -->
+                <div class="filter-nav" id="classFilterArea">
+                    <button class="filter-btn active" onclick="filterStatsByClass('ALL')">Tüm Sınıflar</button>
+                    <button class="filter-btn" onclick="filterStatsByClass('9')">9. Sınıflar</button>
+                    <button class="filter-btn" onclick="filterStatsByClass('10')">10. Sınıflar</button>
+                    <button class="filter-btn" onclick="filterStatsByClass('11')">11-12. Sınıflar</button>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sıra No</th>
+                                <th>Talebe Adı</th>
+                                <th>Durum Özetleri</th>
+                                <th>Katılım (%)</th>
+                                <th>Grafik</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. YORUMLAR VE GÖRÜŞLER EKRANI -->
+        <div id="view-comments" class="view-section">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><i class="fa-solid fa-comments"></i> Yorumlar ve Değerlendirmeler</div>
+                    <button class="btn-back" onclick="showView('home')"><i class="fa-solid fa-arrow-left"></i> Ana Menü</button>
+                </div>
+
+                <div style="background: #f1f5f9; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                    <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 8px; color: var(--primary);">
+                        ✍️ Yeni Yorum Ekleyin (Gönderirken Şifre İster):
+                    </div>
+                    <div class="form-row">
+                        <input type="text" id="commentAuthor" class="form-input" placeholder="Adınız Soyadınız (Örn: Hoca / Veli)">
+                        <input type="text" id="commentText" class="form-input" placeholder="Yorumunuz (Örn: Sistem çok güzel olmuş...)">
+                    </div>
+                    <button class="btn-main" onclick="submitCommentWithPassword()"><i class="fa-solid fa-paper-plane"></i> Yorumu Yayınla</button>
+                </div>
+
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 12px; color: var(--primary);">
+                    💬 Yapılan Yorumlar:
+                </div>
+                
+                <div id="commentsList"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const SYSTEM_PASSWORD = "1299"; // GİZLİ ŞİFRE
+
+        const initialStudentsList = [
+            { name: "SAMET SEFA SOĞANCI", cls: "9. Sınıf" },
+            { name: "EMİR TALHA ÇUKUR", cls: "9. Sınıf" },
+            { name: "EYÜP TİLKİOĞLU", cls: "9. Sınıf" },
+            { name: "SEYİT TALHA SARI", cls: "9. Sınıf" },
+            { name: "BATIN BERKAY KÜTÜK", cls: "9. Sınıf" },
+            { name: "AHMET KAYRA OĞUZ", cls: "9. Sınıf" },
+            { name: "HARUN ENES YÜKSEL", cls: "9. Sınıf" },
+            { name: "RUÇHAN BEYAZIT AYDIN", cls: "9. Sınıf" },
+            { name: "SÜLEYMAN FARUK YÜCE", cls: "9. Sınıf" },
+            { name: "ABDUSSAMET BOLBOLCU", cls: "9. Sınıf" },
+            { name: "EMİR KAAN DEMİR", cls: "9. Sınıf" },
+            { name: "MUHAMMED CAN AŞAN", cls: "9. Sınıf" },
+            { name: "YUSUF EMİR KARIK", cls: "9. Sınıf" },
+            { name: "İBRAHİM AZİZOĞLU", cls: "9. Sınıf" },
+            { name: "OSMAN MİTHAT GÖKŞEN", cls: "10. Sınıf" },
+            { name: "MEHMET KEREM SOYLU", cls: "10. Sınıf" },
+            { name: "MEHMET EMİN KARĞI", cls: "10. Sınıf" },
+            { name: "İBRAHİM ENES ALTUNTAŞ", cls: "10. Sınıf" },
+            { name: "TUNAHAN HİLMİ KAHRAMAN", cls: "10. Sınıf" },
+            { name: "MELİH DEDEOĞLU", cls: "10. Sınıf" },
+            { name: "MUSTAFA EMİR ÖZTÜRK", cls: "10. Sınıf" },
+            { name: "MUHAMMET BURAK GÜNEŞ", cls: "10. Sınıf" },
+            { name: "MEHMET TALHA AKKAN", cls: "10. Sınıf" },
+            { name: "MAHMUT BATURALP KORKMAZ", cls: "11-12. Sınıf" },
+            { name: "EMİRHAN CELAL KARA", cls: "11-12. Sınıf" },
+            { name: "MEHMET EMRE CÖMERT", cls: "11-12. Sınıf" },
+            { name: "RUÇHAN MEHMET DALLIGÜL", cls: "11-12. Sınıf" }
+        ];
+
+        let students = [];
+        let comments = [];
+        let activeCategory = '';
+        let activeQueue = [];
+        let currentStatsCategory = 'dini';
+        let currentClassFilter = 'ALL';
+
+        window.onload = function() {
+            updateClock();
+            setInterval(updateClock, 1000);
+            loadDataFromMemory();
+        };
+
+        function loadDataFromMemory() {
+            let savedData = localStorage.getItem('demet_ogrenciler_v15');
+            if (savedData) {
+                students = JSON.parse(savedData);
+            } else {
+                students = initialStudentsList.map((item, index) => {
+                    let numStr = (index + 1) < 10 ? '0' + (index + 1) : '' + (index + 1);
+                    return {
+                        id: numStr,
+                        name: item.name + " (" + item.cls + ")",
+                        clsGroup: item.cls,
+                        dini: {p:0, a:0, l:0, history:[]},
+                        namaz: {p:0, a:0, l:0, history:[]},
+                        etut: {p:0, a:0, l:0, history:[]}
+                    };
+                });
+                saveData();
+            }
+
+            let savedComments = localStorage.getItem('demet_yorumlar_v15');
+            if (savedComments) {
+                comments = JSON.parse(savedComments);
+            } else {
+                comments = [
+                    { author: "Seyit Talha Sarı", text: "Yoklama ve Rapor Portalımız Demet Eğitim Kurumları için yayına alınmıştır. Hayırlı olsun!", date: "17.10.2026 12:00" }
+                ];
+                saveComments();
+            }
+
+            refreshActiveViews();
+            renderComments();
+        }
+
+        function saveData() {
+            localStorage.setItem('demet_ogrenciler_v15', JSON.stringify(students));
+            refreshActiveViews();
+        }
+
+        function saveComments() {
+            localStorage.setItem('demet_yorumlar_v15', JSON.stringify(comments));
+            renderComments();
+        }
+
+        function refreshActiveViews() {
+            renderStudentTable();
+            if (document.getElementById('view-stats').classList.contains('active')) {
+                renderStatsTable(currentStatsCategory);
+            }
+        }
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('liveClock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function showView(viewId) {
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById('view-' + viewId).classList.add('active');
+            if (viewId === 'students') renderStudentTable();
+            if (viewId === 'stats') renderStatsTable(currentStatsCategory);
+            if (viewId === 'comments') renderComments();
+        }
+
+        function startAttendanceWithPassword(category) {
+            const pin = prompt("Yoklama Girişi İçin Şifre Giriniz:");
+            if (pin === SYSTEM_PASSWORD) {
+                startAttendance(category);
+            } else if (pin !== null) {
+                alert("❌ Hatalı Şifre!");
+            }
+        }
+
+        function openEtutClassSelection() {
+            const pin = prompt("Etüt Yoklaması İçin Şifre Giriniz:");
+            if (pin !== SYSTEM_PASSWORD) {
+                if(pin !== null) alert("❌ Hatalı Şifre!");
+                return;
+            }
+
+            let clsChoice = prompt("Hangi Sınıfın Etüt Yoklamasını Alacaksınız?\n\n1: 9. Sınıflar\n2: 10. Sınıflar\n3: 11-12. Sınıflar\n4: Tüm Sınıflar (Karma Etüt)\n\nLütfen rakam giriniz (1, 2, 3 veya 4):");
+            
+            let filterCls = "ALL";
+            if(clsChoice === "1") filterCls = "9. Sınıf";
+            if(clsChoice === "2") filterCls = "10. Sınıf";
+            if(clsChoice === "3") filterCls = "11-12. Sınıf";
+
+            startAttendance('etut', filterCls);
+        }
+
+        function accessAdminPanel() {
+            const pin = prompt("Yönetici Erişimi İçin Şifre Giriniz:");
+            if (pin === SYSTEM_PASSWORD) {
+                showView('students');
+            } else if (pin !== null) {
+                alert("❌ Hatalı Şifre!");
+            }
+        }
+
+        function submitCommentWithPassword() {
+            const author = document.getElementById('commentAuthor').value.trim();
+            const text = document.getElementById('commentText').value.trim();
+
+            if (!author || !text) {
+                alert("Lütfen adınızı ve yorumunuzu girin!");
+                return;
+            }
+
+            const pin = prompt("Yorum Yayınlamak İçin Şifreyi Giriniz:");
+            if (pin === SYSTEM_PASSWORD) {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                comments.unshift({ author: author, text: text, date: dateStr });
+                saveComments();
+
+                document.getElementById('commentAuthor').value = '';
+                document.getElementById('commentText').value = '';
+                alert("✅ Yorumunuz başarıyla yüklendi!");
+            } else if (pin !== null) {
+                alert("❌ Hatalı Şifre! Yorum yayınlanmadı.");
+            }
+        }
+
+        function renderComments() {
+            const container = document.getElementById('commentsList');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (comments.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted);">Henüz yorum yapılmamış.</div>`;
+                return;
+            }
+
+            comments.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'comment-card';
+                card.innerHTML = `
+                    <div class="comment-header">
+                        <span class="comment-author"><i class="fa-solid fa-user-circle"></i> ${c.author}</span>
+                        <span class="comment-date"><i class="fa-regular fa-clock"></i> ${c.date}</span>
+                    </div>
+                    <div class="comment-text">${c.text}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function startAttendance(category, filterCls = "ALL") {
+            activeCategory = category;
+            
+            if(filterCls !== "ALL") {
+                activeQueue = students.filter(s => s.clsGroup === filterCls);
+            } else {
+                activeQueue = [...students];
+            }
+
+            if (activeQueue.length === 0) {
+                alert("Seçilen grupta talebe bulunmuyor!");
+                return;
+            }
+
+            let titleText = "Dini Ders";
+            if (category === 'namaz') titleText = "Namaz";
+            if (category === 'etut') titleText = "Etüt" + (filterCls !== "ALL" ? ` (${filterCls})` : "");
+            document.getElementById('attendanceCategoryTitle').innerHTML = `<i class="fa-solid fa-pen-clip"></i> ${titleText} (Kalan: ${activeQueue.length})`;
+
+            showView('attendance');
+            renderNextStudent();
+        }
+
+        function renderNextStudent() {
+            const container = document.getElementById('attendanceActiveArea');
+            
+            if (activeQueue.length === 0) {
+                container.innerHTML = `
+                    <div style="padding: 30px 10px; text-align: center;">
+                        <i class="fa-solid fa-circle-check" style="font-size: 3.5rem; color: var(--success); margin-bottom: 12px;"></i>
+                        <h3 style="font-size: 1.3rem; color: var(--primary);">Yoklama Tamamlandı!</h3>
+                        <p style="color: var(--text-muted); font-size:0.85rem; margin: 8px 0 20px 0;">Tüm talebeler yoklandı ve kaydedildi.</p>
+                        <button class="btn-main" onclick="showView('home')"><i class="fa-solid fa-house"></i> Ana Menüye Dön</button>
+                    </div>
+                `;
+                return;
+            }
+
+            const student = activeQueue[0];
+            document.getElementById('attendanceCategoryTitle').innerHTML = `<i class="fa-solid fa-pen-clip"></i> Yoklama (Kalan: ${activeQueue.length})`;
+
+            container.innerHTML = `
+                <div class="attendance-box">
+                    <span class="badge" style="background: #e2e8f0; color: var(--primary); font-weight:700;">Sıra No: #${student.id}</span>
+                    <div class="attendance-student-name">${student.name}</div>
+                    <div class="attendance-student-no">Yoklama durumunu seçin:</div>
+                    
+                    <div class="attendance-btn-group">
+                        <button class="att-btn att-var" onclick="markAttendance('${student.id}', 'var')">
+                            <i class="fa-solid fa-check fa-lg"></i> VAR
+                        </button>
+                        <button class="att-btn att-yok" onclick="markAttendance('${student.id}', 'yok')">
+                            <i class="fa-solid fa-xmark fa-lg"></i> YOK
+                        </button>
+                        <button class="att-btn att-izinli" onclick="markAttendance('${student.id}', 'izinli')">
+                            <i class="fa-solid fa-clock fa-lg"></i> İZİNLİ
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function markAttendance(studentId, status) {
+            const student = students.find(s => s.id === studentId);
+            if (student) {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' }) + " " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                if (status === 'var') student[activeCategory].p++;
+                if (status === 'yok') {
+                    student[activeCategory].a++;
+                    if(!student[activeCategory].history) student[activeCategory].history = [];
+                    student[activeCategory].history.push({ type: 'yok', date: dateStr });
+                }
+                if (status === 'izinli') {
+                    student[activeCategory].l++;
+                    if(!student[activeCategory].history) student[activeCategory].history = [];
+                    student[activeCategory].history.push({ type: 'izinli', date: dateStr });
+                }
+
+                saveData();
+            }
+
+            activeQueue.shift();
+            renderNextStudent();
+        }
+
+        function addStudent() {
+            const name = document.getElementById('newStudentName').value.trim();
+            const cls = document.getElementById('newStudentClass').value;
+
+            if (!name) {
+                alert("Lütfen ad ve soyad girin!");
+                return;
+            }
+
+            let nextNum = students.length + 1;
+            let numStr = nextNum < 10 ? '0' + nextNum : '' + nextNum;
+
+            students.push({
+                id: numStr,
+                name: name + " (" + cls + ")",
+                clsGroup: cls,
+                dini: {p:0, a:0, l:0, history:[]},
+                namaz: {p:0, a:0, l:0, history:[]},
+                etut: {p:0, a:0, l:0, history:[]}
+            });
+
+            saveData();
+            renderStudentTable();
+
+            document.getElementById('newStudentName').value = '';
+            alert("✅ Talebe başarıyla eklendi!");
+        }
+
+        function deleteStudent(id) {
+            if(confirm("Talebeyi silmek istediğinize emin misiniz?")) {
+                students = students.filter(s => s.id !== id);
+                students.forEach((s, idx) => {
+                    s.id = (idx + 1) < 10 ? '0' + (idx + 1) : '' + (idx + 1);
+                });
+                saveData();
+                renderStudentTable();
+            }
+        }
+
+        function renderStudentTable() {
+            const tbody = document.getElementById('studentTableBody');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            document.getElementById('totalStudentCount').innerText = `Toplam: ${students.length}`;
+
+            students.forEach(s => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>#${s.id}</strong></td>
+                    <td>${s.name}</td>
+                    <td><span class="p-badge badge-var-pro">${s.clsGroup || 'Genel'}</span></td>
+                    <td><button style="background:#fee2e2; color:#b91c1c; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-size:0.75rem;" onclick="deleteStudent('${s.id}')"><i class="fa-solid fa-trash"></i> Sil</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function switchStatsCategory(category) {
+            currentStatsCategory = category;
+            document.querySelectorAll('.stats-tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            const activeBtn = document.getElementById('btn-tab-' + category);
+            if (activeBtn) activeBtn.classList.add('active');
+            
+            renderStatsTable(category);
+        }
+
+        function filterStatsByClass(cls) {
+            currentClassFilter = cls;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            renderStatsTable(currentStatsCategory);
+        }
+
+        function renderStatsTable(category) {
+            const tbody = document.getElementById('statsTableBody');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+
+            let filteredStudents = students;
+            if(currentClassFilter !== 'ALL') {
+                filteredStudents = students.filter(s => s.clsGroup && s.clsGroup.includes(currentClassFilter));
+            }
+
+            filteredStudents.forEach(s => {
+                const data = s[category] || {p:0, a:0, l:0, history:[]};
+                const validLectures = data.p + data.a;
+                const percentage = validLectures > 0 ? Math.round((data.p / validLectures) * 100) : 100;
+
+                let barColor = '#10b981';
+                if(percentage < 70) barColor = '#f59e0b';
+                if(percentage < 50) barColor = '#ef4444';
+
+                const tr = document.createElement('tr');
+
+                tr.innerHTML = `
+                    <td><strong>#${s.id}</strong></td>
+                    <td><strong>${s.name}</strong></td>
+                    <td>
+                        <div class="badge-group">
+                            <span class="p-badge badge-var-pro"><i class="fa-solid fa-check"></i> ${data.p} Var</span>
+                            <span class="p-badge badge-yok-pro"><i class="fa-solid fa-xmark"></i> ${data.a} Yok</span>
+                            <span class="p-badge badge-izin-pro"><i class="fa-solid fa-clock"></i> ${data.l} İzin</span>
+                        </div>
+                    </td>
+                    <td><strong style="color: ${barColor};">%${percentage}</strong></td>
+                    <td style="width: 100px;">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: ${percentage}%; background: ${barColor};"></div>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>

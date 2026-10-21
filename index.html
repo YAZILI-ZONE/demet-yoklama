@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demet Eğitim Kurumları - Yoklama & Rapor Portal</title>
+    <title>Demet Eğitim Kurumları - Bulut Yoklama & Rapor Portal</title>
     <!-- Google Fonts & FontAwesome İkonlar -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Firebase SDK (Bulut Senkronizasyonu) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
         :root {
@@ -208,6 +212,9 @@
         th, td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
         th { background: #f8fafc; color: var(--text-muted); font-weight: 700; font-size: 0.72rem; text-transform: uppercase; }
 
+        .clickable-row { cursor: pointer; }
+        .clickable-row:hover { background: #f8fafc; }
+
         .badge-group { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
         .p-badge {
             padding: 4px 8px;
@@ -241,6 +248,42 @@
         .comment-date { font-size: 0.72rem; color: var(--text-muted); }
         .comment-text { font-size: 0.85rem; color: #334155; line-height: 1.4; }
 
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 15px;
+        }
+        .modal-card {
+            background: white;
+            border-radius: 16px;
+            max-width: 450px;
+            width: 100%;
+            padding: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 12px; }
+        .modal-title { font-size: 1.05rem; font-weight: 800; color: var(--primary); }
+        .modal-close { background: none; border: none; font-size: 1.2rem; color: var(--text-muted); cursor: pointer; }
+
+        .history-list { list-style: none; max-height: 240px; overflow-y: auto; }
+        .history-item {
+            padding: 8px 10px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            background: #f8fafc;
+            border: 1px solid #f1f5f9;
+        }
+
         .creator-badge {
             position: fixed;
             bottom: 12px;
@@ -271,7 +314,7 @@
             <div class="brand-logo"><i class="fa-solid fa-graduation-cap"></i></div>
             <div class="brand-title">
                 <h1>DEMET EĞİTİM KURUMLARI</h1>
-                <p>Güvenli Bulut Portal</p>
+                <p>Güvenli Canlı Bulut Portal</p>
             </div>
         </div>
 
@@ -285,11 +328,11 @@
 
     <div class="container">
 
-        <!-- 1. ANA EKRAN (DASHBOARD) -->
+        <!-- 1. ANA EKRAN -->
         <div id="view-home" class="view-section active">
             <div style="text-align: center; margin-bottom: 15px;">
                 <h2 style="font-size: 1.3rem; color: var(--primary);">Yoklama & Rapor Paneli</h2>
-                <p style="color: var(--text-muted); font-size: 0.8rem;">Etütler sınıflara ayrılmıştır. Yoklamalar şifrelidir.</p>
+                <p style="color: var(--text-muted); font-size: 0.8rem;">Tüm cihazlar tek veritabanına bağlıdır. Yoklamalar şifrelidir.</p>
             </div>
 
             <div class="dashboard-grid">
@@ -396,12 +439,15 @@
                     <button class="stats-tab-btn" id="btn-tab-etut" onclick="switchStatsCategory('etut')"><i class="fa-solid fa-user-graduate"></i> Etüt Raporu</button>
                 </div>
 
-                <!-- SINIF FİLTRESİ (SADECE ETÜTTE VEYA İSTEĞE GÖRE GÖRÜNÜR) -->
                 <div class="filter-nav" id="classFilterArea">
                     <button class="filter-btn active" onclick="filterStatsByClass('ALL')">Tüm Sınıflar</button>
                     <button class="filter-btn" onclick="filterStatsByClass('9')">9. Sınıflar</button>
                     <button class="filter-btn" onclick="filterStatsByClass('10')">10. Sınıflar</button>
                     <button class="filter-btn" onclick="filterStatsByClass('11')">11-12. Sınıflar</button>
+                </div>
+
+                <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;">
+                    ℹ️ Tarih ve detay geçmişini görmek için talebe isminin üstüne tıklayın.
                 </div>
 
                 <div class="table-responsive">
@@ -450,8 +496,40 @@
 
     </div>
 
+    <!-- TARİH DETAYI MODAL -->
+    <div class="modal-overlay" id="historyModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="modalStudentName">Talebe Detayı</div>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);" id="modalCategoryName">Geçmiş</span>
+                </div>
+                <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div style="margin-bottom: 10px; font-weight: 700; font-size: 0.85rem; color: var(--primary);">
+                🚨 Gelmediği / İzinli Olduğu Tarihler:
+            </div>
+            
+            <ul class="history-list" id="modalHistoryList"></ul>
+        </div>
+    </div>
+
     <script>
         const SYSTEM_PASSWORD = "1299"; // GİZLİ ŞİFRE
+
+        // CANLI BULUT VERİTABANI AYARLARI (OTOMATİK AKTİF)
+        const firebaseConfig = {
+            databaseURL: "https://demet-yoklama-system-default-rtdb.firebaseio.com/"
+        };
+
+        let db;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+        } catch (e) {
+            console.warn("Bulut modunda başlatılıyor...");
+        }
 
         const initialStudentsList = [
             { name: "SAMET SEFA SOĞANCI", cls: "9. Sınıf" },
@@ -493,50 +571,82 @@
         window.onload = function() {
             updateClock();
             setInterval(updateClock, 1000);
-            loadDataFromMemory();
+            initCloudSync();
         };
 
-        function loadDataFromMemory() {
-            let savedData = localStorage.getItem('demet_ogrenciler_v15');
-            if (savedData) {
-                students = JSON.parse(savedData);
-            } else {
-                students = initialStudentsList.map((item, index) => {
-                    let numStr = (index + 1) < 10 ? '0' + (index + 1) : '' + (index + 1);
-                    return {
-                        id: numStr,
-                        name: item.name + " (" + item.cls + ")",
-                        clsGroup: item.cls,
-                        dini: {p:0, a:0, l:0, history:[]},
-                        namaz: {p:0, a:0, l:0, history:[]},
-                        etut: {p:0, a:0, l:0, history:[]}
-                    };
+        function initCloudSync() {
+            if (db) {
+                // Buluttan öğrencileri canlı çek
+                db.ref('demet_ogrenciler_v20').on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        students = Object.values(data);
+                    } else {
+                        // Eğer bulut boşsa varsayılan listeyi yükle ve buluta yaz
+                        students = initialStudentsList.map((item, index) => {
+                            let numStr = (index + 1) < 10 ? '0' + (index + 1) : '' + (index + 1);
+                            return {
+                                id: numStr,
+                                name: item.name + " (" + item.cls + ")",
+                                clsGroup: item.cls,
+                                dini: {p:0, a:0, l:0, history:[]},
+                                namaz: {p:0, a:0, l:0, history:[]},
+                                etut: {p:0, a:0, l:0, history:[]}
+                            };
+                        });
+                        saveData();
+                    }
+                    refreshActiveViews();
                 });
-                saveData();
-            }
 
-            let savedComments = localStorage.getItem('demet_yorumlar_v15');
-            if (savedComments) {
-                comments = JSON.parse(savedComments);
+                // Buluttan yorumları canlı çek
+                db.ref('demet_yorumlar_v20').on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    comments = data ? Object.values(data) : [
+                        { author: "Seyit Talha Sarı", text: "Yoklama ve Rapor Portalımız Canlı Bulut Altyapısıyla Aktifleşmiştir!", date: "17.10.2026 12:00" }
+                    ];
+                    renderComments();
+                });
             } else {
-                comments = [
-                    { author: "Seyit Talha Sarı", text: "Yoklama ve Rapor Portalımız Demet Eğitim Kurumları için yayına alınmıştır. Hayırlı olsun!", date: "17.10.2026 12:00" }
-                ];
-                saveComments();
+                // İnternetsiz veya bulutsuz yerel çalışma yedek hafızası
+                let savedData = localStorage.getItem('demet_ogrenciler_v20');
+                if (savedData) {
+                    students = JSON.parse(savedData);
+                } else {
+                    students = initialStudentsList.map((item, index) => {
+                        let numStr = (index + 1) < 10 ? '0' + (index + 1) : '' + (index + 1);
+                        return {
+                            id: numStr,
+                            name: item.name + " (" + item.cls + ")",
+                            clsGroup: item.cls,
+                            dini: {p:0, a:0, l:0, history:[]},
+                            namaz: {p:0, a:0, l:0, history:[]},
+                            etut: {p:0, a:0, l:0, history:[]}
+                        };
+                    });
+                }
+                refreshActiveViews();
             }
-
-            refreshActiveViews();
-            renderComments();
         }
 
         function saveData() {
-            localStorage.setItem('demet_ogrenciler_v15', JSON.stringify(students));
-            refreshActiveViews();
+            if (db) {
+                let dataObj = {};
+                students.forEach(s => { dataObj[s.id] = s; });
+                db.ref('demet_ogrenciler_v20').set(dataObj);
+            } else {
+                localStorage.setItem('demet_ogrenciler_v20', JSON.stringify(students));
+                refreshActiveViews();
+            }
         }
 
         function saveComments() {
-            localStorage.setItem('demet_yorumlar_v15', JSON.stringify(comments));
-            renderComments();
+            if (db) {
+                db.ref('demet_yorumlar_v20').set(comments);
+            } else {
+                localStorage.setItem('demet_yorumlar_v20', JSON.stringify(comments));
+                renderComments();
+            }
         }
 
         function refreshActiveViews() {
@@ -613,7 +723,7 @@
 
                 document.getElementById('commentAuthor').value = '';
                 document.getElementById('commentText').value = '';
-                alert("✅ Yorumunuz başarıyla yüklendi!");
+                alert("✅ Yorumunuz tüm cihazlara anında gönderildi!");
             } else if (pin !== null) {
                 alert("❌ Hatalı Şifre! Yorum yayınlanmadı.");
             }
@@ -674,7 +784,7 @@
                     <div style="padding: 30px 10px; text-align: center;">
                         <i class="fa-solid fa-circle-check" style="font-size: 3.5rem; color: var(--success); margin-bottom: 12px;"></i>
                         <h3 style="font-size: 1.3rem; color: var(--primary);">Yoklama Tamamlandı!</h3>
-                        <p style="color: var(--text-muted); font-size:0.85rem; margin: 8px 0 20px 0;">Tüm talebeler yoklandı ve kaydedildi.</p>
+                        <p style="color: var(--text-muted); font-size:0.85rem; margin: 8px 0 20px 0;">Tüm yoklamalar canlı veritabanına kaydedildi.</p>
                         <button class="btn-main" onclick="showView('home')"><i class="fa-solid fa-house"></i> Ana Menüye Dön</button>
                     </div>
                 `;
@@ -824,10 +934,12 @@
                 if(percentage < 50) barColor = '#ef4444';
 
                 const tr = document.createElement('tr');
+                tr.className = "clickable-row";
+                tr.onclick = () => openStudentHistory(s.id, category);
 
                 tr.innerHTML = `
                     <td><strong>#${s.id}</strong></td>
-                    <td><strong>${s.name}</strong></td>
+                    <td><strong>${s.name}</strong> <i class="fa-solid fa-angle-right" style="font-size:0.7rem; color:var(--text-muted);"></i></td>
                     <td>
                         <div class="badge-group">
                             <span class="p-badge badge-var-pro"><i class="fa-solid fa-check"></i> ${data.p} Var</span>
@@ -844,6 +956,53 @@
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        function openStudentHistory(studentId, category) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            let catTitle = "Dini Ders";
+            if (category === 'namaz') catTitle = "Namaz";
+            if (category === 'etut') catTitle = "Etüt";
+
+            document.getElementById('modalStudentName').innerText = `${student.name} (#${student.id})`;
+            document.getElementById('modalCategoryName').innerText = `${catTitle} Geçmişi`;
+
+            const historyList = document.getElementById('modalHistoryList');
+            historyList.innerHTML = '';
+
+            const historyData = student[category]?.history || [];
+
+            if (historyData.length === 0) {
+                historyList.innerHTML = `
+                    <div style="text-align:center; padding:15px; color:var(--text-muted); font-size:0.8rem;">
+                        <i class="fa-solid fa-shield-cat" style="font-size:1.8rem; color:var(--success); margin-bottom:6px;"></i><br>
+                        Talebenin bu kategoride devamsızlığı veya izni bulunmuyor.
+                    </div>
+                `;
+            } else {
+                historyData.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'history-item';
+                    
+                    let badge = item.type === 'yok' 
+                        ? '<span class="p-badge badge-yok-pro">GELMEDİ (YOK)</span>' 
+                        : '<span class="p-badge badge-izin-pro">İZİNLİ</span>';
+
+                    li.innerHTML = `
+                        <span><i class="fa-regular fa-calendar-days" style="color:var(--text-muted);"></i> ${item.date}</span>
+                        ${badge}
+                    `;
+                    historyList.appendChild(li);
+                });
+            }
+
+            document.getElementById('historyModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('historyModal').style.display = 'none';
         }
     </script>
 </body>

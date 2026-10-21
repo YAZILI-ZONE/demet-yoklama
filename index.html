@@ -153,7 +153,7 @@
             padding: 25px 15px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.04);
         }
-        .attendance-student-name { font-size: 1.4rem; font-weight: 800; color: var(--primary); margin: 10px 0 4px 0; word-break: break-word; }
+        .attendance-student-name { font-size: 1.3rem; font-weight: 800; color: var(--primary); margin: 10px 0 4px 0; word-break: break-word; }
         .attendance-student-no { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; }
 
         .attendance-btn-group { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
@@ -314,7 +314,7 @@
             <div class="brand-logo"><i class="fa-solid fa-graduation-cap"></i></div>
             <div class="brand-title">
                 <h1>DEMET EĞİTİM KURUMLARI</h1>
-                <p>Güvenli Canlı Bulut Portal</p>
+                <p>Güvenli Bulut Portal</p>
             </div>
         </div>
 
@@ -332,7 +332,7 @@
         <div id="view-home" class="view-section active">
             <div style="text-align: center; margin-bottom: 15px;">
                 <h2 style="font-size: 1.3rem; color: var(--primary);">Yoklama & Rapor Paneli</h2>
-                <p style="color: var(--text-muted); font-size: 0.8rem;">Tüm cihazlar tek veritabanına bağlıdır. Yoklamalar şifrelidir.</p>
+                <p style="color: var(--text-muted); font-size: 0.8rem;">Tüm cihazlar canlı veritabanına bağlıdır. Yoklamalar şifrelidir.</p>
             </div>
 
             <div class="dashboard-grid">
@@ -518,7 +518,7 @@
     <script>
         const SYSTEM_PASSWORD = "1299"; // GİZLİ ŞİFRE
 
-        // CANLI BULUT VERİTABANI AYARLARI (OTOMATİK AKTİF)
+        // CANLI BULUT VERİTABANI AYARLARI
         const firebaseConfig = {
             databaseURL: "https://demet-yoklama-system-default-rtdb.firebaseio.com/"
         };
@@ -528,9 +528,10 @@
             firebase.initializeApp(firebaseConfig);
             db = firebase.database();
         } catch (e) {
-            console.warn("Bulut modunda başlatılıyor...");
+            console.warn("Bulut modunda çalışılıyor...");
         }
 
+        // ÖNCEKİ TALEBE LİSTESİ (27 ÖĞRENCİ TAM DİZİ)
         const initialStudentsList = [
             { name: "SAMET SEFA SOĞANCI", cls: "9. Sınıf" },
             { name: "EMİR TALHA ÇUKUR", cls: "9. Sınıf" },
@@ -576,13 +577,11 @@
 
         function initCloudSync() {
             if (db) {
-                // Buluttan öğrencileri canlı çek
-                db.ref('demet_ogrenciler_v20').on('value', (snapshot) => {
+                db.ref('demet_ogrenciler_v25').on('value', (snapshot) => {
                     const data = snapshot.val();
                     if (data) {
                         students = Object.values(data);
                     } else {
-                        // Eğer bulut boşsa varsayılan listeyi yükle ve buluta yaz
                         students = initialStudentsList.map((item, index) => {
                             let numStr = (index + 1) < 10 ? '0' + (index + 1) : '' + (index + 1);
                             return {
@@ -599,8 +598,7 @@
                     refreshActiveViews();
                 });
 
-                // Buluttan yorumları canlı çek
-                db.ref('demet_yorumlar_v20').on('value', (snapshot) => {
+                db.ref('demet_yorumlar_v25').on('value', (snapshot) => {
                     const data = snapshot.val();
                     comments = data ? Object.values(data) : [
                         { author: "Seyit Talha Sarı", text: "Yoklama ve Rapor Portalımız Canlı Bulut Altyapısıyla Aktifleşmiştir!", date: "17.10.2026 12:00" }
@@ -608,8 +606,7 @@
                     renderComments();
                 });
             } else {
-                // İnternetsiz veya bulutsuz yerel çalışma yedek hafızası
-                let savedData = localStorage.getItem('demet_ogrenciler_v20');
+                let savedData = localStorage.getItem('demet_ogrenciler_v25');
                 if (savedData) {
                     students = JSON.parse(savedData);
                 } else {
@@ -633,18 +630,18 @@
             if (db) {
                 let dataObj = {};
                 students.forEach(s => { dataObj[s.id] = s; });
-                db.ref('demet_ogrenciler_v20').set(dataObj);
+                db.ref('demet_ogrenciler_v25').set(dataObj);
             } else {
-                localStorage.setItem('demet_ogrenciler_v20', JSON.stringify(students));
+                localStorage.setItem('demet_ogrenciler_v25', JSON.stringify(students));
                 refreshActiveViews();
             }
         }
 
         function saveComments() {
             if (db) {
-                db.ref('demet_yorumlar_v20').set(comments);
+                db.ref('demet_yorumlar_v25').set(comments);
             } else {
-                localStorage.setItem('demet_yorumlar_v20', JSON.stringify(comments));
+                localStorage.setItem('demet_yorumlar_v25', JSON.stringify(comments));
                 renderComments();
             }
         }

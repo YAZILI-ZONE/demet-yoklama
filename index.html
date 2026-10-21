@@ -516,10 +516,10 @@
     </div>
 
     <script>
-        // KİŞİSELLEŞTİRİLMİŞ ŞİFRELER
+        // ÖZELLEŞTİRİLMİŞ ŞİFRELER
         const PASSWORDS = {
-            NAMAZ_DINI: "1299", // Namaz ve Dini Ders Yoklama Şifresi
-            ETUT: "1453",       // Etüt Yoklama Şifresi
+            NAMAZ_DINI: "1299", // Dini Ders ve Namaz Yoklaması Şifresi
+            ETUT: "1453",       // Etüt Yoklaması Şifresi
             ADMIN: "2026"       // Yönetici Paneli & Yorum Gönderme Şifresi
         };
 
@@ -533,10 +533,10 @@
             firebase.initializeApp(firebaseConfig);
             db = firebase.database();
         } catch (e) {
-            console.warn("Bulut modunda çalışılıyor...");
+            console.warn("Bulut veritabanına bağlanılıyor...");
         }
 
-        // ÖNCEKİ TALEBE LİSTESİ (27 ÖĞRENCİ TAM DİZİ)
+        // ÖNCEKİ TALEBE LİSTESİ (TAM 27 EKSİKSİZ ÖĞRENCİ)
         const initialStudentsList = [
             { name: "SAMET SEFA SOĞANCI", cls: "9. Sınıf" },
             { name: "EMİR TALHA ÇUKUR", cls: "9. Sınıf" },
@@ -582,7 +582,8 @@
 
         function initCloudSync() {
             if (db) {
-                db.ref('demet_ogrenciler_v30').on('value', (snapshot) => {
+                // Sürüm v50 (Eksiksiz 27 Talebeli Sıfır Bulut Düğümü)
+                db.ref('demet_ogrenciler_v50').on('value', (snapshot) => {
                     const data = snapshot.val();
                     if (data) {
                         students = Object.values(data);
@@ -603,15 +604,15 @@
                     refreshActiveViews();
                 });
 
-                db.ref('demet_yorumlar_v30').on('value', (snapshot) => {
+                db.ref('demet_yorumlar_v50').on('value', (snapshot) => {
                     const data = snapshot.val();
                     comments = data ? Object.values(data) : [
-                        { author: "Seyit Talha Sarı", text: "Yoklama ve Rapor Portalımız Canlı Bulut Altyapısıyla Aktifleşmiştir!", date: "17.10.2026 12:00" }
+                        { author: "Seyit Talha Sarı", text: "Yoklama ve Rapor Portalımız 27 Talebe ve Canlı Bulut Altyapısıyla Yayındadır!", date: "17.10.2026 12:00" }
                     ];
                     renderComments();
                 });
             } else {
-                let savedData = localStorage.getItem('demet_ogrenciler_v30');
+                let savedData = localStorage.getItem('demet_ogrenciler_v50');
                 if (savedData) {
                     students = JSON.parse(savedData);
                 } else {
@@ -635,18 +636,18 @@
             if (db) {
                 let dataObj = {};
                 students.forEach(s => { dataObj[s.id] = s; });
-                db.ref('demet_ogrenciler_v30').set(dataObj);
+                db.ref('demet_ogrenciler_v50').set(dataObj);
             } else {
-                localStorage.setItem('demet_ogrenciler_v30', JSON.stringify(students));
+                localStorage.setItem('demet_ogrenciler_v50', JSON.stringify(students));
                 refreshActiveViews();
             }
         }
 
         function saveComments() {
             if (db) {
-                db.ref('demet_yorumlar_v30').set(comments);
+                db.ref('demet_yorumlar_v50').set(comments);
             } else {
-                localStorage.setItem('demet_yorumlar_v30', JSON.stringify(comments));
+                localStorage.setItem('demet_yorumlar_v50', JSON.stringify(comments));
                 renderComments();
             }
         }

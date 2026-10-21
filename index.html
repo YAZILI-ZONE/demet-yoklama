@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demet Eğitim Kurumları - Bulut Yoklama & Rapor Portal</title>
+    <title>Demet Eğitim Kurumları - Canlı Bulut Portal</title>
     <!-- Google Fonts & FontAwesome İkonlar -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -314,7 +314,7 @@
             <div class="brand-logo"><i class="fa-solid fa-graduation-cap"></i></div>
             <div class="brand-title">
                 <h1>DEMET EĞİTİM KURUMLARI</h1>
-                <p>Güvenli Bulut Portal</p>
+                <p>Canlı Bulut Portal</p>
             </div>
         </div>
 
@@ -516,14 +516,12 @@
     </div>
 
     <script>
-        // ÖZELLEŞTİRİLMİŞ ŞİFRELER
         const PASSWORDS = {
             NAMAZ_DINI: "1299", // Dini Ders ve Namaz Yoklaması Şifresi
             ETUT: "1453",       // Etüt Yoklaması Şifresi
             ADMIN: "2026"       // Yönetici Paneli & Yorum Gönderme Şifresi
         };
 
-        // CANLI BULUT VERİTABANI AYARLARI
         const firebaseConfig = {
             databaseURL: "https://demet-yoklama-system-default-rtdb.firebaseio.com/"
         };
@@ -536,7 +534,7 @@
             console.warn("Bulut veritabanına bağlanılıyor...");
         }
 
-        // ÖNCEKİ TALEBE LİSTESİ (TAM 27 EKSİKSİZ ÖĞRENCİ)
+        // TAM VE EKSİKSİZ TALEBE LİSTESİ (27 ÖĞRENCİ)
         const initialStudentsList = [
             { name: "SAMET SEFA SOĞANCI", cls: "9. Sınıf" },
             { name: "EMİR TALHA ÇUKUR", cls: "9. Sınıf" },
@@ -575,59 +573,49 @@
         let currentClassFilter = 'ALL';
 
         window.onload = function() {
+            localStorage.clear();
             updateClock();
             setInterval(updateClock, 1000);
             initCloudSync();
         };
 
+        function getFreshInitialStudents() {
+            return initialStudentsList.map((item, index) => {
+                let numStr = (index + 1) < 10 ? '0' + (index + 1) : '' + (index + 1);
+                return {
+                    id: numStr,
+                    name: item.name + " (" + item.cls + ")",
+                    clsGroup: item.cls,
+                    dini: {p:0, a:0, l:0, history:[]},
+                    namaz: {p:0, a:0, l:0, history:[]},
+                    etut: {p:0, a:0, l:0, history:[]}
+                };
+            });
+        }
+
         function initCloudSync() {
             if (db) {
-                // Sürüm v50 (Eksiksiz 27 Talebeli Sıfır Bulut Düğümü)
-                db.ref('demet_ogrenciler_v50').on('value', (snapshot) => {
+                // v1000 Taze Veritabanı Düğümü
+                db.ref('demet_ogrenciler_v1000').on('value', (snapshot) => {
                     const data = snapshot.val();
-                    if (data) {
+                    if (data && Object.keys(data).length > 0) {
                         students = Object.values(data);
                     } else {
-                        students = initialStudentsList.map((item, index) => {
-                            let numStr = (index + 1) < 10 ? '0' + (index + 1) : '' + (index + 1);
-                            return {
-                                id: numStr,
-                                name: item.name + " (" + item.cls + ")",
-                                clsGroup: item.cls,
-                                dini: {p:0, a:0, l:0, history:[]},
-                                namaz: {p:0, a:0, l:0, history:[]},
-                                etut: {p:0, a:0, l:0, history:[]}
-                            };
-                        });
+                        students = getFreshInitialStudents();
                         saveData();
                     }
                     refreshActiveViews();
                 });
 
-                db.ref('demet_yorumlar_v50').on('value', (snapshot) => {
+                db.ref('demet_yorumlar_v1000').on('value', (snapshot) => {
                     const data = snapshot.val();
                     comments = data ? Object.values(data) : [
-                        { author: "Seyit Talha Sarı", text: "Yoklama ve Rapor Portalımız 27 Talebe ve Canlı Bulut Altyapısıyla Yayındadır!", date: "17.10.2026 12:00" }
+                        { author: "Seyit Talha Sarı", text: "Yoklama Portalımız Canlı Bulut Altyapısıyla Aktifleşmiştir!", date: "17.10.2026 12:00" }
                     ];
                     renderComments();
                 });
             } else {
-                let savedData = localStorage.getItem('demet_ogrenciler_v50');
-                if (savedData) {
-                    students = JSON.parse(savedData);
-                } else {
-                    students = initialStudentsList.map((item, index) => {
-                        let numStr = (index + 1) < 10 ? '0' + (index + 1) : '' + (index + 1);
-                        return {
-                            id: numStr,
-                            name: item.name + " (" + item.cls + ")",
-                            clsGroup: item.cls,
-                            dini: {p:0, a:0, l:0, history:[]},
-                            namaz: {p:0, a:0, l:0, history:[]},
-                            etut: {p:0, a:0, l:0, history:[]}
-                        };
-                    });
-                }
+                students = getFreshInitialStudents();
                 refreshActiveViews();
             }
         }
@@ -636,20 +624,16 @@
             if (db) {
                 let dataObj = {};
                 students.forEach(s => { dataObj[s.id] = s; });
-                db.ref('demet_ogrenciler_v50').set(dataObj);
-            } else {
-                localStorage.setItem('demet_ogrenciler_v50', JSON.stringify(students));
-                refreshActiveViews();
+                db.ref('demet_ogrenciler_v1000').set(dataObj);
             }
+            refreshActiveViews();
         }
 
         function saveComments() {
             if (db) {
-                db.ref('demet_yorumlar_v50').set(comments);
-            } else {
-                localStorage.setItem('demet_yorumlar_v50', JSON.stringify(comments));
-                renderComments();
+                db.ref('demet_yorumlar_v1000').set(comments);
             }
+            renderComments();
         }
 
         function refreshActiveViews() {

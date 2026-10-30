@@ -245,7 +245,7 @@
         .comment-date { font-size: 0.72rem; color: var(--text-muted); }
         .comment-text { font-size: 0.85rem; color: #334155; line-height: 1.4; }
 
-        /* YAPAY ZEKA ASİSTAN KUTUSU */
+        /* PROFESYONEL YAPAY ZEKA ASİSTAN KUTUSU */
         .ai-assistant-card {
             background: linear-gradient(135deg, #1e293b 100%, #0f172a 0%);
             border-radius: 16px;
@@ -259,12 +259,13 @@
             background: rgba(255, 255, 255, 0.07);
             border-radius: 10px;
             padding: 12px;
-            min-height: 60px;
+            min-height: 55px;
             max-height: 140px;
             overflow-y: auto;
             font-size: 0.85rem;
             margin-bottom: 10px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            line-height: 1.4;
         }
 
         .modal-overlay {
@@ -373,10 +374,10 @@
                     <h3 style="font-size: 0.95rem; font-weight: 700;">Demet Eğitim Akıllı Asistanı</h3>
                 </div>
                 <div class="ai-chat-box" id="aiResponseArea">
-                    Merhaba! Ben akıllı asistanınız. Bana talebelerin durumunu, namaz/dini ders katılımını, "haftanın talebesi kim?" veya "bekar hocamız kim?" gibi sorular sorabilirsiniz.
+                    Sistem ve talebe verileri analiz edilmeye hazır. Merak ettiğiniz bir konuyu veya öğrenci durumunu sorabilirsiniz.
                 </div>
                 <div style="display: flex; gap: 6px;">
-                    <input type="text" id="aiQuestionInput" class="form-input" placeholder="Örn: Samet Sefa bu hafta nasıl? veya haftanın talebesi kim?" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;">
+                    <input type="text" id="aiQuestionInput" class="form-input" placeholder="Bir soru sorun..." style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;">
                     <button class="btn-main" style="width: auto; margin-top: 0; padding: 8px 14px;" onclick="askAiAssistant()">Sor</button>
                 </div>
             </div>
@@ -414,7 +415,7 @@
                 <div class="dash-card" onclick="showView('comments')">
                     <div class="dash-icon" style="background: #fae8ff; color: #a21caf;"><i class="fa-solid fa-comments"></i></div>
                     <div class="dash-title">Yorumlar & Görüşler</div>
-                    <div class="dash-desc">💬 Şifresiz Ortak Yorumlar</div>
+                    <div class="dash-desc">💬 Ortak Yorumlar (Herkes Görebilir)</div>
                 </div>
 
                 <div class="dash-card" onclick="accessAdminPanel()">
@@ -524,7 +525,7 @@
             </div>
         </div>
 
-        <!-- 5. YORUMLAR VE GÖRÜŞLER EKRANI -->
+        <!-- 5. YORUMLAR VE GÖRÜŞLER EKRANI (HERKES GÖREBİLİR) -->
         <div id="view-comments" class="view-section">
             <div class="card">
                 <div class="card-header">
@@ -544,7 +545,7 @@
                 </div>
 
                 <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 12px; color: var(--primary);">
-                    💬 Yapılan Yorumlar:
+                    💬 Yapılan Yorumlar (Ortak Görüntüleme):
                 </div>
                 
                 <div id="commentsList"></div>
@@ -572,7 +573,7 @@
         </div>
     </div>
 
-    <!-- SMS / BİLDİRİM MODAL -->
+    <!-- WHATSAPP RAPOR MODAL -->
     <div class="modal-overlay" id="smsModal">
         <div class="modal-card">
             <div class="modal-header">
@@ -581,7 +582,7 @@
             </div>
             
             <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
-                Rapor metni hazır! Butona basınca metin kopyalanacak ve WhatsApp açılacaktır. (Gruba yapıştırabilirsiniz):
+                Rapor metni hazır! Butona basınca kopyalanıp WhatsApp açılacaktır:
             </div>
 
             <textarea id="smsReportText" style="width:100%; height:120px; padding:10px; border-radius:8px; border:1px solid #cbd5e1; font-size:0.85rem; margin-bottom:12px; outline:none;"></textarea>
@@ -671,7 +672,7 @@
                     comments = data.record.comments || [];
                 } else {
                     students = getFreshInitialStudents();
-                    comments = [{ author: "Seyit Talha Sarı", text: "Akıllı bulut sistemi aktifleşti!", date: "17.10.2026 12:00" }];
+                    comments = [{ author: "Sistem", text: "Ortak bulut sistemi aktifleşti!", date: "17.10.2026 12:00" }];
                     saveToCloud();
                 }
             } catch(e) {
@@ -719,14 +720,14 @@
             if (viewId === 'comments') renderComments();
         }
 
-        // 🤖 YAPAY ZEKA ASİSTAN FONKSİYONU (Büyük/Küçük harf duyarsız ve akıllı analiz)
+        // 🤖 PROFESYONEL AKILLI ASİSTAN ANALİZ MOTORU
         function askAiAssistant() {
             const rawInput = document.getElementById('aiQuestionInput').value.trim();
             const q = rawInput.toLowerCase();
             const responseBox = document.getElementById('aiResponseArea');
 
             if (!q) {
-                responseBox.innerHTML = "Lütfen bir şeyler sorun (Örn: Samet Sefa bu hafta nasıl?, Haftanın talebesi kim?, Bekar hocamız kim?)";
+                responseBox.innerHTML = "Lütfen asiste etmemi istediğiniz bir konu veya talebe adı yazın.";
                 return;
             }
 
@@ -736,8 +737,12 @@
             if (q.includes("bekar hoca") || q.includes("bekar hocamız")) {
                 answer = "👨‍🏫 Kurumumuzun bekar hocası: **Emirhan Tanış**'tır.";
             }
-            // 2. Haftanın talebesi sorusu
-            else if (q.includes("haftanın talebesi") || q.includes("en iyi talebe")) {
+            // 2. İdareci sorusu
+            else if (q.includes("idareci") || q.includes("yönetici") || q.includes("kurum müdürü")) {
+                answer = "🏛️ Kurumumuzun idarecisi: **Adem Koca**'dır.";
+            }
+            // 3. Haftanın talebesi / lideri
+            else if (q.includes("haftanın talebesi") || q.includes("en iyi talebe") || q.includes("lider")) {
                 let best = students[0];
                 let maxP = -1;
                 students.forEach(s => {
@@ -747,19 +752,23 @@
                         best = s;
                     }
                 });
-                answer = maxP > 0 ? `🌟 Yapay Zeka Analizi: Bu haftanın en aktif talebesi toplam katılımıyla **${best.name}** (${maxP} katılım) görünmektedir!` : "Henüz yeterli yoklama verisi girilmediği için bu hafta lider belirleyemedim.";
+                answer = maxP > 0 ? `🌟 Yapay Zeka Analizi: Verilere göre toplam katılımda öne çıkan talebe **${best.name}** (${maxP} katılım) olarak görünmektedir.` : "Henüz yeterli katılım verisi girilmedi.";
             }
-            // 3. Belirli bir öğrenci sorusu (Örn: Samet Sefa)
+            // 4. Öğrenci bazlı analiz
             else {
                 let foundStudent = students.find(s => s.name.toLowerCase().includes(q));
                 if (foundStudent) {
-                    let totalP = foundStudent.dini.p + foundStudent.dini.a;
-                    let pYuzde = totalP > 0 ? Math.round((foundStudent.dini.p / totalP) * 100) : 100;
-                    answer = `📊 **${foundStudent.name}** analiz raporu:\n• Dini Ders Katılım Oranı: %${pYuzde}\n• Dini Ders Var: ${foundStudent.dini.p}, Yok: ${foundStudent.dini.a}, İzin: ${foundStudent.dini.l}\n• Namaz Katılım Var: ${foundStudent.namaz.p}, Yok: ${foundStudent.namaz.a}`;
-                } else if (q.includes("nasılsın") || q.includes("merhaba")) {
-                    answer = "👋 Harikayım! Talebelerin katılım verilerini buluttan anlık takip ediyorum. Size nasıl yardımcı olabilirim?";
+                    let totalDini = foundStudent.dini.p + foundStudent.dini.a;
+                    let diniYuzde = totalDini > 0 ? Math.round((foundStudent.dini.p / totalDini) * 100) : 100;
+                    
+                    let totalNamaz = foundStudent.namaz.p + foundStudent.namaz.a;
+                    let namazYuzde = totalNamaz > 0 ? Math.round((foundStudent.namaz.p / totalNamaz) * 100) : 100;
+
+                    answer = `📊 **${foundStudent.name}** Raporu:\n• Dini Ders Katılım: %${diniYuzde} (Var: ${foundStudent.dini.p}, Yok: ${foundStudent.dini.a}, İzin: ${foundStudent.dini.l})\n• Namaz Katılım: %${namazYuzde} (Var: ${foundStudent.namaz.p}, Yok: ${foundStudent.namaz.a})`;
+                } else if (q.includes("yorum") || q.includes("görüş")) {
+                    answer = `💬 Sistemde kayıtlı toplam ${comments.length} adet ortak yorum bulunmaktadır. Yorumlar sekmesinden inceleyebilirsiniz.`;
                 } else {
-                    answer = `🤖 "${rawInput}" hakkında net bir kayıt bulamadım ama tüm veriler ortak bulutta güncel! Şunu sorabilirsiniz: "Samet Sefa bu hafta nasıl?", "Haftanın talebesi kim?" veya "Bekar hocamız kim?"`;
+                    answer = `🤖 "${rawInput}" ile ilgili özel bir veri bulamadım. Talebe isimlerini, katılım durumlarını, "haftanın talebesi" veya "idarecimiz kim" gibi soruları doğrudan sorabilirsiniz.`;
                 }
             }
 
@@ -767,10 +776,10 @@
             document.getElementById('aiQuestionInput').value = '';
         }
 
-        // 🔐 GİZLİ ŞİFRELERİ AÇMA (Soru ile doğrulama, büyük/küçük harf duyarsız)
+        // 🔐 GİZLİ ŞİFRE PANELİ (İdareci sorusu ve Adem Koca cevabı)
         function openSecretPasswordPanel() {
-            let answer = prompt("🔒 Yönetici Şifrelerini Görmek İçin Soru:\n'Demet Eğitim Kurumları'nın kurucusu kimdir? (İpucu: S. T. S.)");
-            if (answer && (answer.toLowerCase().includes("seyit") || answer.toLowerCase().includes("seyit talha"))) {
+            let answer = prompt("🔒 Yönetici Şifrelerini Görmek İçin Doğrulama:\n'Kurumumuzun idarecisi kimdir?'");
+            if (answer && answer.toLowerCase().includes("adem koca")) {
                 alert(`📋 GÜVENLİ YÖNETİCİ ŞİFRELERİ:\n\n• Dini Ders Yoklaması Şifresi: ${PASSWORDS.DINI}\n• Namaz Yoklaması Şifresi: ${PASSWORDS.NAMAZ}\n• Etüt & Yönetim Şifresi: ${PASSWORDS.ETUT_ADMIN}`);
             } else if (answer !== null) {
                 alert("❌ Yanlış cevap! Şifreler gizli kaldı.");
@@ -854,7 +863,7 @@
 
             document.getElementById('commentAuthor').value = '';
             document.getElementById('commentText').value = '';
-            alert("✅ Yorumunuz ortak buluta eklendi!");
+            alert("✅ Yorumunuz ortak buluta eklendi ve herkes tarafından görüntülenebilir!");
         }
 
         function renderComments() {
@@ -889,7 +898,7 @@
                     <div style="padding: 30px 10px; text-align: center;">
                         <i class="fa-solid fa-circle-check" style="font-size: 3.5rem; color: var(--success); margin-bottom: 12px;"></i>
                         <h3 style="font-size: 1.3rem; color: var(--primary);">Yoklama Tamamlandı!</h3>
-                        <p style="color: var(--text-muted); font-size:0.85rem; margin: 8px 0 20px 0;">Yoklamalar ortak buluta kaydedildi, diğer cihazlarda anında görünecek.</p>
+                        <p style="color: var(--text-muted); font-size:0.85rem; margin: 8px 0 20px 0;">Yoklamalar ortak buluta kaydedildi.</p>
                         <button class="btn-main" onclick="showView('home')"><i class="fa-solid fa-house"></i> Ana Menüye Dön</button>
                     </div>
                 `;

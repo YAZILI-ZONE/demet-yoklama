@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demet Eğitim Kurumları - Ortak Bulut Portal</title>
+    <title>Demet Eğitim Kurumları - Akıllı Ortak Bulut Portal</title>
     <!-- Google Fonts & FontAwesome İkonlar -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,7 +22,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: var(--bg); color: var(--text-main); padding-bottom: 60px; overflow-x: hidden; }
+        body { background-color: var(--bg); color: var(--text-main); padding-bottom: 70px; overflow-x: hidden; }
 
         header {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -245,6 +245,28 @@
         .comment-date { font-size: 0.72rem; color: var(--text-muted); }
         .comment-text { font-size: 0.85rem; color: #334155; line-height: 1.4; }
 
+        /* YAPAY ZEKA ASİSTAN KUTUSU */
+        .ai-assistant-card {
+            background: linear-gradient(135deg, #1e293b 100%, #0f172a 0%);
+            border-radius: 16px;
+            padding: 18px;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .ai-chat-box {
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 10px;
+            padding: 12px;
+            min-height: 60px;
+            max-height: 140px;
+            overflow-y: auto;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -298,6 +320,22 @@
             z-index: 999;
             border: 1px solid rgba(255,255,255,0.1);
         }
+
+        .secret-footer-btn {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+        .secret-btn {
+            background: #e2e8f0;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -311,7 +349,7 @@
             <div class="brand-logo"><i class="fa-solid fa-graduation-cap"></i></div>
             <div class="brand-title">
                 <h1>DEMET EĞİTİM KURUMLARI</h1>
-                <p>Ortak Bulut & Şifreli Yoklama Portal</p>
+                <p>Akıllı Ortak Bulut & Şifreli Portal</p>
             </div>
         </div>
 
@@ -327,28 +365,44 @@
 
         <!-- 1. ANA EKRAN -->
         <div id="view-home" class="view-section active">
+            
+            <!-- YAPAY ZEKA ASİSTAN BÖLÜMÜ -->
+            <div class="ai-assistant-card">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <i class="fa-solid fa-robot" style="color: #38bdf8; font-size: 1.1rem;"></i>
+                    <h3 style="font-size: 0.95rem; font-weight: 700;">Demet Eğitim Akıllı Asistanı</h3>
+                </div>
+                <div class="ai-chat-box" id="aiResponseArea">
+                    Merhaba! Ben akıllı asistanınız. Bana talebelerin durumunu, namaz/dini ders katılımını, "haftanın talebesi kim?" veya "bekar hocamız kim?" gibi sorular sorabilirsiniz.
+                </div>
+                <div style="display: flex; gap: 6px;">
+                    <input type="text" id="aiQuestionInput" class="form-input" placeholder="Örn: Samet Sefa bu hafta nasıl? veya haftanın talebesi kim?" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;">
+                    <button class="btn-main" style="width: auto; margin-top: 0; padding: 8px 14px;" onclick="askAiAssistant()">Sor</button>
+                </div>
+            </div>
+
             <div style="text-align: center; margin-bottom: 15px;">
                 <h2 style="font-size: 1.3rem; color: var(--primary);">Yoklama & Rapor Paneli</h2>
-                <p style="color: var(--text-muted); font-size: 0.8rem;">Güvenlik şifreleri ve ortak bulut senkronizasyonu aktiftir.</p>
+                <p style="color: var(--text-muted); font-size: 0.8rem;">Güvenlik şifreleri, ortak bulut ve yapay zeka analiz sistemi aktif.</p>
             </div>
 
             <div class="dashboard-grid">
                 <div class="dash-card" onclick="startAttendanceWithPassword('dini')">
                     <div class="dash-icon" style="background: #e0f2fe; color: #0284c7;"><i class="fa-solid fa-book-quran"></i></div>
                     <div class="dash-title">Dini Ders Yoklaması</div>
-                    <div class="dash-desc">🔒 Şifre: 1910</div>
+                    <div class="dash-desc">🔒 Şifreli Giriş</div>
                 </div>
 
                 <div class="dash-card" onclick="startAttendanceWithPassword('namaz')">
                     <div class="dash-icon" style="background: #d1fae5; color: #059669;"><i class="fa-solid fa-mosque"></i></div>
                     <div class="dash-title">Namaz Yoklaması</div>
-                    <div class="dash-desc">🔒 Şifre: 1071</div>
+                    <div class="dash-desc">🔒 Şifreli Giriş</div>
                 </div>
 
                 <div class="dash-card" onclick="openEtutClassSelection()">
                     <div class="dash-icon" style="background: #fef3c7; color: #d97706;"><i class="fa-solid fa-user-graduate"></i></div>
                     <div class="dash-title">Etüt Yoklaması</div>
-                    <div class="dash-desc">🔒 Şifre: 1299</div>
+                    <div class="dash-desc">🔒 Şifreli Giriş</div>
                 </div>
 
                 <div class="dash-card" onclick="showView('stats')">
@@ -366,8 +420,12 @@
                 <div class="dash-card" onclick="accessAdminPanel()">
                     <div class="dash-icon" style="background: #ede9fe; color: #7c3aed;"><i class="fa-solid fa-user-shield"></i></div>
                     <div class="dash-title">Talebe Kayıt / Yönet</div>
-                    <div class="dash-desc">🔒 Şifre: 1299</div>
+                    <div class="dash-desc">🔒 Şifreli Giriş</div>
                 </div>
+            </div>
+
+            <div class="secret-footer-btn">
+                <button class="secret-btn" onclick="openSecretPasswordPanel()"><i class="fa-solid fa-key"></i> 🔐 Yönetici / Şifre Paneli</button>
             </div>
         </div>
 
@@ -430,7 +488,7 @@
                     <button class="btn-back" onclick="showView('home')"><i class="fa-solid fa-arrow-left"></i> Ana Menü</button>
                 </div>
 
-                <button class="btn-sms" onclick="openSmsReportModal()"><i class="fa-solid fa-paper-plane"></i> Eksikleri SMS / WhatsApp ile Bildir</button>
+                <button class="btn-sms" onclick="openSmsReportModal()"><i class="fa-solid fa-paper-plane"></i> Eksikleri Gruba / WhatsApp ile Bildir</button>
 
                 <div class="stats-nav">
                     <button class="stats-tab-btn active" id="btn-tab-dini" onclick="switchStatsCategory('dini')"><i class="fa-solid fa-book-quran"></i> Dini Ders Raporu</button>
@@ -518,29 +576,29 @@
     <div class="modal-overlay" id="smsModal">
         <div class="modal-card">
             <div class="modal-header">
-                <div class="modal-title"><i class="fa-solid fa-paper-plane"></i> SMS / WhatsApp Bildirim Paneli</div>
+                <div class="modal-title"><i class="fa-solid fa-paper-plane"></i> WhatsApp Gruba Gönder</div>
                 <button class="modal-close" onclick="closeSmsModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
             <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
-                Seçilen kategoriye ait bugünkü gelmeyen/eksik talebe raporu metni:
+                Rapor metni hazır! Butona basınca metin kopyalanacak ve WhatsApp açılacaktır. (Gruba yapıştırabilirsiniz):
             </div>
 
             <textarea id="smsReportText" style="width:100%; height:120px; padding:10px; border-radius:8px; border:1px solid #cbd5e1; font-size:0.85rem; margin-bottom:12px; outline:none;"></textarea>
 
-            <button class="btn-main" onclick="sendViaWhatsApp()"><i class="fa-brands fa-whatsapp fa-lg"></i> WhatsApp ile Gönder</button>
+            <button class="btn-main" onclick="sendViaWhatsApp()"><i class="fa-brands fa-whatsapp fa-lg"></i> Kopyala ve Gruba Gönder</button>
         </div>
     </div>
 
     <script>
-        // 🔑 GÜNCELLENMİŞ ŞİFRELER
+        // 🔑 GÜVENLİK ŞİFRELERİ
         const PASSWORDS = {
             DINI: "1910",
             NAMAZ: "1071",
             ETUT_ADMIN: "1299"
         };
 
-        // 🌐 KENDİ BIN ID'N VE MASTER KEY'İN ENTEGRE EDİLDİ:
+        // 🌐 KENDİ BIN ID'N VE MASTER KEY'İN
         const BIN_URL = "https://api.jsonbin.io/v3/b/6ae4a6b3ffd5d16053989d5c";
         const API_KEY = "$2a$10$836Mma2Tx7Vbjqe5ncCca.cSQZDCQpuuBs3ddUlzyPUehkHyWdmKO";
 
@@ -613,7 +671,7 @@
                     comments = data.record.comments || [];
                 } else {
                     students = getFreshInitialStudents();
-                    comments = [{ author: "Seyit Talha Sarı", text: "Şifreli ortak bulut sistemi aktifleşti!", date: "17.10.2026 12:00" }];
+                    comments = [{ author: "Seyit Talha Sarı", text: "Akıllı bulut sistemi aktifleşti!", date: "17.10.2026 12:00" }];
                     saveToCloud();
                 }
             } catch(e) {
@@ -659,6 +717,64 @@
             if (viewId === 'students') renderStudentTable();
             if (viewId === 'stats') renderStatsTable(currentStatsCategory);
             if (viewId === 'comments') renderComments();
+        }
+
+        // 🤖 YAPAY ZEKA ASİSTAN FONKSİYONU (Büyük/Küçük harf duyarsız ve akıllı analiz)
+        function askAiAssistant() {
+            const rawInput = document.getElementById('aiQuestionInput').value.trim();
+            const q = rawInput.toLowerCase();
+            const responseBox = document.getElementById('aiResponseArea');
+
+            if (!q) {
+                responseBox.innerHTML = "Lütfen bir şeyler sorun (Örn: Samet Sefa bu hafta nasıl?, Haftanın talebesi kim?, Bekar hocamız kim?)";
+                return;
+            }
+
+            let answer = "";
+
+            // 1. Bekar hoca sorusu
+            if (q.includes("bekar hoca") || q.includes("bekar hocamız")) {
+                answer = "👨‍🏫 Kurumumuzun bekar hocası: **Emirhan Tanış**'tır.";
+            }
+            // 2. Haftanın talebesi sorusu
+            else if (q.includes("haftanın talebesi") || q.includes("en iyi talebe")) {
+                let best = students[0];
+                let maxP = -1;
+                students.forEach(s => {
+                    let totalP = s.dini.p + s.namaz.p + s.etut.p;
+                    if (totalP > maxP) {
+                        maxP = totalP;
+                        best = s;
+                    }
+                });
+                answer = maxP > 0 ? `🌟 Yapay Zeka Analizi: Bu haftanın en aktif talebesi toplam katılımıyla **${best.name}** (${maxP} katılım) görünmektedir!` : "Henüz yeterli yoklama verisi girilmediği için bu hafta lider belirleyemedim.";
+            }
+            // 3. Belirli bir öğrenci sorusu (Örn: Samet Sefa)
+            else {
+                let foundStudent = students.find(s => s.name.toLowerCase().includes(q));
+                if (foundStudent) {
+                    let totalP = foundStudent.dini.p + foundStudent.dini.a;
+                    let pYuzde = totalP > 0 ? Math.round((foundStudent.dini.p / totalP) * 100) : 100;
+                    answer = `📊 **${foundStudent.name}** analiz raporu:\n• Dini Ders Katılım Oranı: %${pYuzde}\n• Dini Ders Var: ${foundStudent.dini.p}, Yok: ${foundStudent.dini.a}, İzin: ${foundStudent.dini.l}\n• Namaz Katılım Var: ${foundStudent.namaz.p}, Yok: ${foundStudent.namaz.a}`;
+                } else if (q.includes("nasılsın") || q.includes("merhaba")) {
+                    answer = "👋 Harikayım! Talebelerin katılım verilerini buluttan anlık takip ediyorum. Size nasıl yardımcı olabilirim?";
+                } else {
+                    answer = `🤖 "${rawInput}" hakkında net bir kayıt bulamadım ama tüm veriler ortak bulutta güncel! Şunu sorabilirsiniz: "Samet Sefa bu hafta nasıl?", "Haftanın talebesi kim?" veya "Bekar hocamız kim?"`;
+                }
+            }
+
+            responseBox.innerHTML = answer.replace(/\n/g, '<br>');
+            document.getElementById('aiQuestionInput').value = '';
+        }
+
+        // 🔐 GİZLİ ŞİFRELERİ AÇMA (Soru ile doğrulama, büyük/küçük harf duyarsız)
+        function openSecretPasswordPanel() {
+            let answer = prompt("🔒 Yönetici Şifrelerini Görmek İçin Soru:\n'Demet Eğitim Kurumları'nın kurucusu kimdir? (İpucu: S. T. S.)");
+            if (answer && (answer.toLowerCase().includes("seyit") || answer.toLowerCase().includes("seyit talha"))) {
+                alert(`📋 GÜVENLİ YÖNETİCİ ŞİFRELERİ:\n\n• Dini Ders Yoklaması Şifresi: ${PASSWORDS.DINI}\n• Namaz Yoklaması Şifresi: ${PASSWORDS.NAMAZ}\n• Etüt & Yönetim Şifresi: ${PASSWORDS.ETUT_ADMIN}`);
+            } else if (answer !== null) {
+                alert("❌ Yanlış cevap! Şifreler gizli kaldı.");
+            }
         }
 
         function startAttendanceWithPassword(category) {
@@ -1024,9 +1140,20 @@
         }
 
         function sendViaWhatsApp() {
-            let text = document.getElementById('smsReportText').value;
-            let encoded = encodeURIComponent(text);
-            window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+            let textarea = document.getElementById('smsReportText');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999);
+            
+            navigator.clipboard.writeText(textarea.value).then(() => {
+                alert("📋 Rapor kopyalandı! WhatsApp açılıyor, grubu seçip yapıştırabilirsiniz.");
+                let encoded = encodeURIComponent(textarea.value);
+                window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+                closeSmsModal();
+            }).catch(err => {
+                let encoded = encodeURIComponent(textarea.value);
+                window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+                closeSmsModal();
+            });
         }
     </script>
 </body>

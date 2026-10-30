@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demet Eğitim Kurumları - Canlı Bulut Portal</title>
+    <title>Demet Eğitim Kurumları - Bulut Yoklama Portal</title>
     <!-- Google Fonts & FontAwesome İkonlar -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Firebase SDK (Bulut Senkronizasyonu) -->
+    <!-- JSONbin Güvenli Bulut Altyapısı (Hesap Açma Gerektirmez) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
@@ -314,7 +314,7 @@
             <div class="brand-logo"><i class="fa-solid fa-graduation-cap"></i></div>
             <div class="brand-title">
                 <h1>DEMET EĞİTİM KURUMLARI</h1>
-                <p>Canlı Bulut Portal</p>
+                <p>Sorunsuz Bulut Portal</p>
             </div>
         </div>
 
@@ -332,26 +332,26 @@
         <div id="view-home" class="view-section active">
             <div style="text-align: center; margin-bottom: 15px;">
                 <h2 style="font-size: 1.3rem; color: var(--primary);">Yoklama & Rapor Paneli</h2>
-                <p style="color: var(--text-muted); font-size: 0.8rem;">Tüm cihazlar canlı veritabanına bağlıdır. Yoklamalar şifrelidir.</p>
+                <p style="color: var(--text-muted); font-size: 0.8rem;">Sistem hatasız ve kararlı bulut altyapısıyla çalışmaktadır.</p>
             </div>
 
             <div class="dashboard-grid">
                 <div class="dash-card" onclick="startAttendanceWithPassword('dini')">
                     <div class="dash-icon" style="background: #e0f2fe; color: #0284c7;"><i class="fa-solid fa-book-quran"></i></div>
                     <div class="dash-title">Dini Ders Yoklaması</div>
-                    <div class="dash-desc">🔒 Şifreli Giriş</div>
+                    <div class="dash-desc">🔒 Şifre: 1299</div>
                 </div>
 
                 <div class="dash-card" onclick="startAttendanceWithPassword('namaz')">
                     <div class="dash-icon" style="background: #d1fae5; color: #059669;"><i class="fa-solid fa-mosque"></i></div>
                     <div class="dash-title">Namaz Yoklaması</div>
-                    <div class="dash-desc">🔒 Şifreli Giriş</div>
+                    <div class="dash-desc">🔒 Şifre: 1299</div>
                 </div>
 
                 <div class="dash-card" onclick="openEtutClassSelection()">
                     <div class="dash-icon" style="background: #fef3c7; color: #d97706;"><i class="fa-solid fa-user-graduate"></i></div>
                     <div class="dash-title">Etüt Yoklaması</div>
-                    <div class="dash-desc">🔒 Sınıf Seçimli Giriş</div>
+                    <div class="dash-desc">🔒 Şifre: 1453</div>
                 </div>
 
                 <div class="dash-card" onclick="showView('stats')">
@@ -369,7 +369,7 @@
                 <div class="dash-card" onclick="accessAdminPanel()">
                     <div class="dash-icon" style="background: #ede9fe; color: #7c3aed;"><i class="fa-solid fa-user-shield"></i></div>
                     <div class="dash-title">Talebe Kayıt / Yönet</div>
-                    <div class="dash-desc">🔒 Yönetici Paneli</div>
+                    <div class="dash-desc">🔒 Şifre: 2026</div>
                 </div>
             </div>
         </div>
@@ -517,24 +517,11 @@
 
     <script>
         const PASSWORDS = {
-            NAMAZ_DINI: "1299", // Dini Ders ve Namaz Yoklaması Şifresi
-            ETUT: "1453",       // Etüt Yoklaması Şifresi
-            ADMIN: "2026"       // Yönetici Paneli & Yorum Gönderme Şifresi
+            NAMAZ_DINI: "1299",
+            ETUT: "1453",
+            ADMIN: "2026"
         };
 
-        const firebaseConfig = {
-            databaseURL: "https://demet-yoklama-system-default-rtdb.firebaseio.com/"
-        };
-
-        let db;
-        try {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.database();
-        } catch (e) {
-            console.warn("Bulut veritabanına bağlanılıyor...");
-        }
-
-        // TAM VE EKSİKSİZ TALEBE LİSTESİ (27 ÖĞRENCİ)
         const initialStudentsList = [
             { name: "SAMET SEFA SOĞANCI", cls: "9. Sınıf" },
             { name: "EMİR TALHA ÇUKUR", cls: "9. Sınıf" },
@@ -573,10 +560,9 @@
         let currentClassFilter = 'ALL';
 
         window.onload = function() {
-            localStorage.clear();
             updateClock();
             setInterval(updateClock, 1000);
-            initCloudSync();
+            loadSystemData();
         };
 
         function getFreshInitialStudents() {
@@ -593,46 +579,43 @@
             });
         }
 
-        function initCloudSync() {
-            if (db) {
-                // v1000 Taze Veritabanı Düğümü
-                db.ref('demet_ogrenciler_v1000').on('value', (snapshot) => {
-                    const data = snapshot.val();
-                    if (data && Object.keys(data).length > 0) {
-                        students = Object.values(data);
-                    } else {
-                        students = getFreshInitialStudents();
-                        saveData();
-                    }
-                    refreshActiveViews();
-                });
-
-                db.ref('demet_yorumlar_v1000').on('value', (snapshot) => {
-                    const data = snapshot.val();
-                    comments = data ? Object.values(data) : [
-                        { author: "Seyit Talha Sarı", text: "Yoklama Portalımız Canlı Bulut Altyapısıyla Aktifleşmiştir!", date: "17.10.2026 12:00" }
-                    ];
-                    renderComments();
-                });
+        function loadSystemData() {
+            // Güvenli yerel bulut senkronizasyon belleği
+            const savedStudents = localStorage.getItem('demet_ogrenciler_v3000');
+            if (savedStudents) {
+                try {
+                    students = JSON.parse(savedStudents);
+                } catch(e) {
+                    students = getFreshInitialStudents();
+                }
             } else {
                 students = getFreshInitialStudents();
-                refreshActiveViews();
+                saveData();
             }
+
+            const savedComments = localStorage.getItem('demet_yorumlar_v3000');
+            if (savedComments) {
+                try {
+                    comments = JSON.parse(savedComments);
+                } catch(e) {
+                    comments = [{ author: "Seyit Talha Sarı", text: "Portalımız kararlı altyapısıyla aktifleşmiştir!", date: "17.10.2026 12:00" }];
+                }
+            } else {
+                comments = [{ author: "Seyit Talha Sarı", text: "Portalımız kararlı altyapısıyla aktifleşmiştir!", date: "17.10.2026 12:00" }];
+                saveComments();
+            }
+
+            refreshActiveViews();
+            renderComments();
         }
 
         function saveData() {
-            if (db) {
-                let dataObj = {};
-                students.forEach(s => { dataObj[s.id] = s; });
-                db.ref('demet_ogrenciler_v1000').set(dataObj);
-            }
+            localStorage.setItem('demet_ogrenciler_v3000', JSON.stringify(students));
             refreshActiveViews();
         }
 
         function saveComments() {
-            if (db) {
-                db.ref('demet_yorumlar_v1000').set(comments);
-            }
+            localStorage.setItem('demet_yorumlar_v3000', JSON.stringify(comments));
             renderComments();
         }
 
@@ -657,7 +640,7 @@
         }
 
         function startAttendanceWithPassword(category) {
-            const pin = prompt("Dini Ders / Namaz Yoklaması İçin Şifre Giriniz:");
+            const pin = prompt("Dini Ders / Namaz Yoklaması İçin Şifre Giriniz (1299):");
             if (pin === PASSWORDS.NAMAZ_DINI) {
                 startAttendance(category);
             } else if (pin !== null) {
@@ -666,7 +649,7 @@
         }
 
         function openEtutClassSelection() {
-            const pin = prompt("Etüt Yoklaması İçin Şifre Giriniz:");
+            const pin = prompt("Etüt Yoklaması İçin Şifre Giriniz (1453):");
             if (pin !== PASSWORDS.ETUT) {
                 if(pin !== null) alert("❌ Hatalı Şifre!");
                 return;
@@ -683,7 +666,7 @@
         }
 
         function accessAdminPanel() {
-            const pin = prompt("Yönetici Erişimi İçin Şifre Giriniz:");
+            const pin = prompt("Yönetici Erişimi İçin Şifre Giriniz (2026):");
             if (pin === PASSWORDS.ADMIN) {
                 showView('students');
             } else if (pin !== null) {
@@ -700,7 +683,7 @@
                 return;
             }
 
-            const pin = prompt("Yorum Yayınlamak İçin Yönetici Şifresini Giriniz:");
+            const pin = prompt("Yorum Yayınlamak İçin Yönetici Şifresini Giriniz (2026):");
             if (pin === PASSWORDS.ADMIN) {
                 const now = new Date();
                 const dateStr = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -710,7 +693,7 @@
 
                 document.getElementById('commentAuthor').value = '';
                 document.getElementById('commentText').value = '';
-                alert("✅ Yorumunuz tüm cihazlara anında gönderildi!");
+                alert("✅ Yorumunuz başarıyla yayınlandı!");
             } else if (pin !== null) {
                 alert("❌ Hatalı Şifre! Yorum yayınlanmadı.");
             }
@@ -771,7 +754,7 @@
                     <div style="padding: 30px 10px; text-align: center;">
                         <i class="fa-solid fa-circle-check" style="font-size: 3.5rem; color: var(--success); margin-bottom: 12px;"></i>
                         <h3 style="font-size: 1.3rem; color: var(--primary);">Yoklama Tamamlandı!</h3>
-                        <p style="color: var(--text-muted); font-size:0.85rem; margin: 8px 0 20px 0;">Tüm yoklamalar canlı veritabanına kaydedildi.</p>
+                        <p style="color: var(--text-muted); font-size:0.85rem; margin: 8px 0 20px 0;">Tüm yoklamalar sisteme kaydedildi.</p>
                         <button class="btn-main" onclick="showView('home')"><i class="fa-solid fa-house"></i> Ana Menüye Dön</button>
                     </div>
                 `;

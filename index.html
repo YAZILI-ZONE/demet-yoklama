@@ -245,29 +245,6 @@
         .comment-date { font-size: 0.72rem; color: var(--text-muted); }
         .comment-text { font-size: 0.85rem; color: #334155; line-height: 1.4; }
 
-        /* PROFESYONEL YAPAY ZEKA ASİSTAN KUTUSU */
-        .ai-assistant-card {
-            background: linear-gradient(135deg, #1e293b 100%, #0f172a 0%);
-            border-radius: 16px;
-            padding: 18px;
-            color: white;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .ai-chat-box {
-            background: rgba(255, 255, 255, 0.07);
-            border-radius: 10px;
-            padding: 12px;
-            min-height: 55px;
-            max-height: 140px;
-            overflow-y: auto;
-            font-size: 0.85rem;
-            margin-bottom: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            line-height: 1.4;
-        }
-
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -326,6 +303,10 @@
             text-align: center;
             margin-top: 30px;
             margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
         .secret-btn {
             background: #e2e8f0;
@@ -336,6 +317,20 @@
             color: var(--text-muted);
             cursor: pointer;
             font-weight: 600;
+        }
+        .ai-launch-btn {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
     </style>
 </head>
@@ -367,19 +362,10 @@
         <!-- 1. ANA EKRAN -->
         <div id="view-home" class="view-section active">
             
-            <!-- YAPAY ZEKA ASİSTAN BÖLÜMÜ -->
-            <div class="ai-assistant-card">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                    <i class="fa-solid fa-robot" style="color: #38bdf8; font-size: 1.1rem;"></i>
-                    <h3 style="font-size: 0.95rem; font-weight: 700;">Demet Eğitim Akıllı Asistanı</h3>
-                </div>
-                <div class="ai-chat-box" id="aiResponseArea">
-                    Sistem ve talebe verileri analiz edilmeye hazır. Merak ettiğiniz bir konuyu veya öğrenci durumunu sorabilirsiniz.
-                </div>
-                <div style="display: flex; gap: 6px;">
-                    <input type="text" id="aiQuestionInput" class="form-input" placeholder="Bir soru sorun..." style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;">
-                    <button class="btn-main" style="width: auto; margin-top: 0; padding: 8px 14px;" onclick="askAiAssistant()">Sor</button>
-                </div>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <button class="ai-launch-btn" onclick="openAiModal()">
+                    <i class="fa-solid fa-robot"></i> 🤖 Yapay Zeka Asistanını Aç
+                </button>
             </div>
 
             <div style="text-align: center; margin-bottom: 15px;">
@@ -525,7 +511,7 @@
             </div>
         </div>
 
-        <!-- 5. YORUMLAR VE GÖRÜŞLER EKRANI (HERKES GÖREBİLİR) -->
+        <!-- 5. YORUMLAR VE GÖRÜŞLER EKRANI -->
         <div id="view-comments" class="view-section">
             <div class="card">
                 <div class="card-header">
@@ -552,6 +538,31 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- YAPAY ZEKA ASİSTAN MODALI -->
+    <div class="modal-overlay" id="aiModal">
+        <div class="modal-card" style="max-width: 500px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; border: 1px solid rgba(255,255,255,0.1);">
+            <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <div class="modal-title" style="color: white; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-robot" style="color: #38bdf8;"></i> Demet Eğitim Akıllı Asistanı
+                </div>
+                <button class="modal-close" onclick="closeAiModal()" style="color: #94a3b8;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px;">
+                Talebe yoklama verilerini, katılım yüzdelerini ve yorumları anlık analiz eder.
+            </div>
+
+            <div id="aiResponseArea" style="background: rgba(255,255,255,0.07); border-radius: 10px; padding: 12px; min-height: 90px; max-height: 180px; overflow-y: auto; font-size: 0.85rem; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.1); line-height: 1.4;">
+                Merhaba! Sistem ve talebe verileri analiz edilmeye hazır. Merak ettiğiniz bir konuyu veya öğrenci durumunu sorabilirsiniz.
+            </div>
+
+            <div class="form-row" style="margin-bottom: 0;">
+                <input type="text" id="aiQuestionInput" class="form-input" placeholder="Bir soru sorun (Örn: Samet Sefa nasıl?)" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;">
+                <button class="btn-main" style="width: auto; margin-top: 0; padding: 10px 16px;" onclick="askAiAssistant()">Sor</button>
+            </div>
+        </div>
     </div>
 
     <!-- TARİH DETAYI MODAL -->
@@ -720,28 +731,33 @@
             if (viewId === 'comments') renderComments();
         }
 
-        // 🤖 PROFESYONEL AKILLI ASİSTAN ANALİZ MOTORU
+        function openAiModal() {
+            document.getElementById('aiModal').style.display = 'flex';
+        }
+
+        function closeAiModal() {
+            document.getElementById('aiModal').style.display = 'none';
+        }
+
+        // 🤖 AKILLI ASİSTAN ANALİZ MOTORU
         function askAiAssistant() {
             const rawInput = document.getElementById('aiQuestionInput').value.trim();
             const q = rawInput.toLowerCase();
             const responseBox = document.getElementById('aiResponseArea');
 
             if (!q) {
-                responseBox.innerHTML = "Lütfen asiste etmemi istediğiniz bir konu veya talebe adı yazın.";
+                responseBox.innerHTML = "Lütfen bir şeyler yazın.";
                 return;
             }
 
             let answer = "";
 
-            // 1. Bekar hoca sorusu
             if (q.includes("bekar hoca") || q.includes("bekar hocamız")) {
                 answer = "👨‍🏫 Kurumumuzun bekar hocası: **Emirhan Tanış**'tır.";
             }
-            // 2. İdareci sorusu
             else if (q.includes("idareci") || q.includes("yönetici") || q.includes("kurum müdürü")) {
                 answer = "🏛️ Kurumumuzun idarecisi: **Adem Koca**'dır.";
             }
-            // 3. Haftanın talebesi / lideri
             else if (q.includes("haftanın talebesi") || q.includes("en iyi talebe") || q.includes("lider")) {
                 let best = students[0];
                 let maxP = -1;
@@ -754,7 +770,6 @@
                 });
                 answer = maxP > 0 ? `🌟 Yapay Zeka Analizi: Verilere göre toplam katılımda öne çıkan talebe **${best.name}** (${maxP} katılım) olarak görünmektedir.` : "Henüz yeterli katılım verisi girilmedi.";
             }
-            // 4. Öğrenci bazlı analiz
             else {
                 let foundStudent = students.find(s => s.name.toLowerCase().includes(q));
                 if (foundStudent) {
@@ -768,7 +783,7 @@
                 } else if (q.includes("yorum") || q.includes("görüş")) {
                     answer = `💬 Sistemde kayıtlı toplam ${comments.length} adet ortak yorum bulunmaktadır. Yorumlar sekmesinden inceleyebilirsiniz.`;
                 } else {
-                    answer = `🤖 "${rawInput}" ile ilgili özel bir veri bulamadım. Talebe isimlerini, katılım durumlarını, "haftanın talebesi" veya "idarecimiz kim" gibi soruları doğrudan sorabilirsiniz.`;
+                    answer = `🤖 "${rawInput}" ile ilgili özel bir veri bulamadım. Talebe isimlerini, katılım durumlarını, "haftanın talebesi" veya "idarecimiz kim" gibi soruları sorabilirsiniz.`;
                 }
             }
 

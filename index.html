@@ -3,1204 +3,1394 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demet Eğitim Kurumları - Ortak Bulut Portal</title>
-    <!-- Google Fonts & FontAwesome İkonlar -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <title>Demetevler Talebe Yurdu - Demet Eğitim Kurumları</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #0f172a;
-            --accent: #2563eb;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
+            --secondary: #1e293b;
+            --accent: #d97706;
+            --accent-hover: #b45309;
+            --gold-glow: #f59e0b;
+            --bg-dark: #090d16;
+            --card-bg: #111827;
+            --text-muted: #94a3b8;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: var(--bg); color: var(--text-main); padding-bottom: 70px; overflow-x: hidden; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
 
-        header {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: white;
-            padding: 12px 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        body {
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: #050811;
+            color: var(--text-muted);
+            padding: 8px 24px;
+            font-size: 12.5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .brand-container { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .brand-logo {
-            background: var(--accent);
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
+        .top-bar a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        /* Navbar */
+        header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid rgba(217, 119, 6, 0.4);
+            box-shadow: 0 4px 25px rgba(0,0,0,0.5);
+        }
+
+        .nav-container {
+            max-width: 1350px;
+            margin: 0 auto;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-box {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+            gap: 15px;
         }
-        .brand-title h1 { font-size: 1rem; font-weight: 800; line-height: 1.2; }
-        .brand-title p { font-size: 0.68rem; color: #94a3b8; letter-spacing: 0.5px; text-transform: uppercase; }
 
-        .mini-prompt-box {
+        .hamburger-btn {
             background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 6px 12px;
-            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 18px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.78rem;
-            backdrop-filter: blur(5px);
-        }
-        .prompt-input {
-            background: transparent;
-            border: none;
-            color: #e2e8f0;
-            font-size: 0.78rem;
-            outline: none;
-            width: 140px;
         }
 
-        .container { max-width: 1100px; margin: 20px auto; padding: 0 12px; }
-        .view-section { display: none; }
-        .view-section.active { display: block; animation: fadeIn 0.3s ease; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-            margin-top: 15px;
-        }
-        .dash-card {
-            background: var(--card-bg);
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 20px 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-        .dash-card:hover, .dash-card:active {
-            transform: translateY(-3px);
+        .hamburger-btn:hover {
+            background: var(--accent);
             border-color: var(--accent);
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.12);
         }
-        .dash-icon {
-            width: 54px;
-            height: 54px;
-            border-radius: 14px;
+
+        .brand-title {
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-subtitle {
+            font-size: 10px;
+            color: var(--accent);
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 6px;
+            align-items: center;
+        }
+
+        nav ul li button {
+            background: none;
+            border: none;
+            color: #cbd5e1;
+            font-weight: 500;
+            font-size: 12.5px;
+            cursor: pointer;
+            padding: 8px 10px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        nav ul li button:hover {
+            color: #ffffff;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-btn-highlight {
+            background: linear-gradient(135deg, #d97706, #b45309) !important;
+            color: white !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100%;
+            background: var(--primary);
+            box-shadow: 5px 0 30px rgba(0,0,0,0.7);
+            z-index: 2000;
+            transition: left 0.4s ease;
+            padding: 30px 20px;
+            color: white;
+            border-right: 2px solid var(--accent);
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .sidebar-header h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--accent);
+            font-size: 18px;
+        }
+
+        .close-sidebar-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 12px;
+        }
+
+        .sidebar-menu button {
+            width: 100%;
+            text-align: left;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #e2e8f0;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu button:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Hero Karşılama */
+        .hero {
+            background: radial-gradient(circle at top, #1e293b 0%, #090d16 100%);
+            color: white;
+            padding: 60px 20px 80px 20px;
+            text-align: center;
+        }
+
+        .hero-container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        .main-logo-wrapper {
+            margin: 0 auto 25px auto;
+            width: 170px;
+            height: 170px;
+            background: #ffffff;
+            border-radius: 50%;
+            padding: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
+            box-shadow: 0 0 45px rgba(217, 119, 6, 0.35);
+            border: 4px solid var(--accent);
         }
-        .dash-title { font-size: 0.95rem; font-weight: 700; color: var(--primary); }
-        .dash-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.2; }
 
-        .card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-            border: 1px solid #f1f5f9;
-            margin-bottom: 20px;
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #ffffff;
+            line-height: 1.3;
         }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; flex-wrap: wrap; gap: 8px; }
-        .card-title { font-size: 1.05rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; }
 
-        .btn-back {
-            background: #f1f5f9;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 0.8rem;
+        .hero-subtitle {
+            font-size: 16.5px;
             color: var(--text-muted);
-            cursor: pointer;
+            max-width: 750px;
+            margin: 0 auto 35px auto;
+        }
+
+        .cta-group {
             display: flex;
-            align-items: center;
-            gap: 6px;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
         }
 
-        .attendance-box {
-            max-width: 420px;
-            margin: 0 auto;
-            text-align: center;
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: 18px;
-            padding: 25px 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.04);
-        }
-        .attendance-student-name { font-size: 1.3rem; font-weight: 800; color: var(--primary); margin: 10px 0 4px 0; word-break: break-word; }
-        .attendance-student-no { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; }
-
-        .attendance-btn-group { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-        .att-btn {
-            border: none;
-            padding: 12px 6px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
+        .btn-primary {
+            background: linear-gradient(135deg, #d97706, #b45309);
             color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            transition: transform 0.15s;
-        }
-        .att-btn:active { transform: scale(0.96); }
-        .att-var { background: var(--success); }
-        .att-yok { background: var(--danger); }
-        .att-izinli { background: var(--warning); }
-
-        .stats-nav { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; }
-        .stats-tab-btn {
-            flex: 1;
-            min-width: 110px;
-            padding: 10px 6px;
-            border: 1px solid #e2e8f0;
-            background: #f8fafc;
+            padding: 15px 35px;
             border-radius: 8px;
+            border: none;
             font-weight: 700;
-            font-size: 0.78rem;
-            color: var(--text-muted);
+            font-size: 15px;
             cursor: pointer;
-            text-align: center;
-            white-space: nowrap;
+            box-shadow: 0 4px 20px rgba(217, 119, 6, 0.4);
+            transition: transform 0.2s;
         }
-        .stats-tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
 
-        .filter-nav { display: flex; gap: 6px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 4px; }
-        .filter-btn {
-            padding: 6px 12px;
-            border: 1px solid #cbd5e1;
-            background: white;
-            border-radius: 20px;
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            color: #ffffff;
+            border: 2px solid #475569;
+            padding: 15px 35px;
+            border-radius: 8px;
             font-weight: 600;
-            font-size: 0.75rem;
-            color: var(--text-muted);
+            font-size: 15px;
             cursor: pointer;
-            white-space: nowrap;
+            transition: all 0.2s;
         }
-        .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        table { width: 100%; border-collapse: collapse; text-align: left; min-width: 520px; }
-        th, td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
-        th { background: #f8fafc; color: var(--text-muted); font-weight: 700; font-size: 0.72rem; text-transform: uppercase; }
-
-        .clickable-row { cursor: pointer; }
-        .clickable-row:hover { background: #f8fafc; }
-
-        .badge-group { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-        .p-badge {
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
+        .btn-secondary:hover {
+            border-color: #ffffff;
+            background: rgba(255,255,255,0.1);
         }
-        .badge-var-pro { background: #d1fae5; color: #047857; }
-        .badge-yok-pro { background: #fee2e2; color: #b91c1c; }
-        .badge-izin-pro { background: #fef3c7; color: #b45309; }
 
-        .form-row { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
-        .form-input { flex: 1; min-width: 140px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; outline: none; }
-        .btn-main { background: var(--accent); color: white; border: none; padding: 12px 16px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; width: 100%; margin-top: 5px; }
-        .btn-sms { background: #10b981; color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 0.78rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; }
+        /* İstatistik Sayaç Paneli */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto 40px auto;
+        }
 
-        .progress-bar-bg { background: #e2e8f0; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 4px; }
-        .progress-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s ease; }
-
-        .comment-card {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
-            padding: 12px 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Cinzel', serif;
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Hikmetli Söz Kutusu */
+        .quote-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-left: 5px solid var(--accent);
+            padding: 25px 30px;
+            border-radius: 12px;
+            max-width: 850px;
+            margin: 0 auto 50px auto;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .quote-title {
+            font-size: 12px;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
             margin-bottom: 10px;
         }
-        .comment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        .comment-author { font-weight: 700; color: var(--primary); font-size: 0.9rem; }
-        .comment-date { font-size: 0.72rem; color: var(--text-muted); }
-        .comment-text { font-size: 0.85rem; color: #334155; line-height: 1.4; }
 
+        .quote-text {
+            font-size: 17.5px;
+            font-style: italic;
+            color: #f1f5f9;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .quote-author {
+            font-size: 14px;
+            color: #cbd5e1;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        /* Modal / Pencereler */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(9, 13, 22, 0.92);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
-            padding: 15px;
-        }
-        .modal-card {
-            background: white;
-            border-radius: 16px;
-            max-width: 480px;
-            width: 100%;
             padding: 20px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
         }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 12px; }
-        .modal-title { font-size: 1.05rem; font-weight: 800; color: var(--primary); }
-        .modal-close { background: none; border: none; font-size: 1.2rem; color: var(--text-muted); cursor: pointer; }
 
-        .history-list { list-style: none; max-height: 240px; overflow-y: auto; }
-        .history-item {
-            padding: 8px 10px;
-            border-radius: 8px;
-            margin-bottom: 6px;
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            color: #0f172a;
+            border-radius: 16px;
+            max-width: 980px;
+            width: 100%;
+            max-height: 88vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+            position: relative;
+        }
+
+        .modal-header {
+            background: var(--primary);
+            color: white;
+            padding: 20px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.8rem;
-            background: #f8fafc;
-            border: 1px solid #f1f5f9;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 3px solid var(--accent);
         }
 
-        .creator-badge {
-            position: fixed;
-            bottom: 12px;
-            right: 12px;
-            background: #0f172a;
+        .modal-header h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
             color: #ffffff;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            z-index: 999;
-            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .secret-footer-btn {
-            text-align: center;
-            margin-top: 30px;
-            margin-bottom: 20px;
+        .close-modal-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
         }
-        .secret-btn {
+
+        .close-modal-btn:hover {
+            background: var(--accent);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        /* Filigranlı Soru Kapsayıcısı */
+        .questions-watermark-container {
+            position: relative;
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            min-height: 400px;
+        }
+
+        .questions-watermark-container::before {
+            content: "DEMET EĞİTİM KURUMLARI";
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-20deg);
+            font-family: 'Cinzel', serif;
+            font-size: 44px;
+            font-weight: 800;
+            color: rgba(15, 23, 42, 0.05);
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+            letter-spacing: 2px;
+        }
+
+        .questions-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sekme Butonları */
+        .month-tabs, .subject-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .month-btn, .subject-btn {
             background: #e2e8f0;
             border: none;
             padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            cursor: pointer;
+            border-radius: 6px;
             font-weight: 600;
-        }
-        .ai-launch-btn {
-            background: linear-gradient(135deg, #2563eb, #0f172a);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 0.88rem;
+            font-size: 13px;
             cursor: pointer;
+            color: var(--primary);
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .month-btn.active, .subject-btn.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
+        }
+
+        /* Soru Kartları */
+        .question-card {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.03);
+        }
+
+        .question-badge {
+            display: inline-block;
+            font-size: 11px;
             font-weight: 700;
-            box-shadow: 0 4px 18px rgba(37, 99, 235, 0.35);
-            display: inline-flex;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .badge-easy { background: #dcfce7; color: #15803d; }
+        .badge-medium { background: #fef3c7; color: #b45309; }
+        .badge-hard { background: #fee2e2; color: #b91c1c; }
+
+        .question-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13.5px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .option-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Profesyonel Form */
+        .pro-form-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #f8fafc;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: #ffffff;
+        }
+
+        /* Çizelge */
+        .timeline-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            background: #f8fafc;
+            padding: 14px 18px;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .timeline-time {
+            font-weight: 800;
+            color: var(--accent);
+            min-width: 90px;
+            font-size: 13.5px;
+        }
+
+        .etut-step {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .etut-step h4 {
+            color: var(--primary);
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        /* İletişim Kartı */
+        .contact-pro-card {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 30px;
+            border: 2px solid var(--accent);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-info-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .contact-icon {
+            font-size: 28px;
+            background: var(--accent);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* 16 Maddelik İmkânlar Izgarası */
+        .imkan-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .imkan-card {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+            border: 1px solid #e2e8f0;
+        }
+
+        .imkan-card h4 {
+            color: var(--primary);
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .imkan-card p {
+            font-size: 13px;
+            color: #475569;
+        }
+
+        /* Canlı Yorum Kutusu */
+        .comment-form {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .comment-form input, .comment-form textarea, .comment-form select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .comment-box {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Sabit WhatsApp Butonu */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: #25d366;
+            color: white;
+            border-radius: 50px;
+            padding: 12px 24px;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            text-decoration: none;
+            z-index: 2000;
+            display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.2s ease;
+            transition: transform 0.2s;
         }
-        .ai-launch-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 22px rgba(37, 99, 235, 0.45);
+
+        .whatsapp-float:hover {
+            transform: scale(1.05);
+            background-color: #20ba5a;
+        }
+
+        footer {
+            background: var(--primary);
+            color: #64748b;
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 13px;
+            border-top: 1px solid #1e293b;
+        }
+
+        @media (max-width: 768px) {
+            nav { display: none; }
+            .top-bar { flex-direction: column; gap: 5px; text-align: center; }
+            .hero-title { font-size: 26px; }
+            .options-grid, .pro-form-group { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <div class="creator-badge">
-        <i class="fa-solid fa-code" style="color: var(--accent);"></i> Hazırlayan: Seyit Talha Sarı
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div>📍 Demetevler Talebe Yurdu | Yenimahalle / Ankara</div>
+        <div>📞 Yurt Yetkilisi (Talha Sarı): <a href="tel:05013778993">0501 377 8993</a></div>
     </div>
 
-    <header>
-        <div class="brand-container" onclick="showView('home')">
-            <div class="brand-logo"><i class="fa-solid fa-graduation-cap"></i></div>
-            <div class="brand-title">
-                <h1>DEMET EĞİTİM KURUMLARI</h1>
-                <p>Akıllı Ortak Bulut & Şifreli Portal</p>
-            </div>
-        </div>
+    <!-- Sabit WhatsApp Butonu -->
+    <a href="https://wa.me/905013778993" target="_blank" class="whatsapp-float">
+        💬 WhatsApp Bilgi (Talha Sarı)
+    </a>
 
-        <div class="mini-prompt-box">
-            <i class="fa-solid fa-note-sticky" style="color: var(--accent);"></i>
-            <input type="text" class="prompt-input" id="kurumPrompt" value="Demet Eğitim | 2026" placeholder="Ders Notu...">
-            <span style="opacity: 0.3;">|</span>
-            <span id="liveClock" style="font-weight: 600;">12:00</span>
+    <!-- Navbar -->
+    <header>
+        <div class="nav-container">
+            <div class="brand-box">
+                <button class="hamburger-btn" onclick="toggleSidebar()">
+                    <span>☰</span> <span style="font-size:13px;">MENÜ</span>
+                </button>
+                <div>
+                    <div class="brand-title">DEMETEVLER TALEBE YURDU</div>
+                    <div class="brand-subtitle">Demet Eğitim Kurumları</div>
+                </div>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><button onclick="openModal('modal-tanitim')">⭐ Neden Biz?</button></li>
+                    <li><button onclick="openModal('modal-sorular')" class="nav-btn-highlight">📝 LGS Soru Bankası</button></li>
+                    <li><button onclick="openModal('modal-basvuru')" class="nav-btn-highlight" style="background:#2563eb !important;">📋 Ön Kayıt Formu</button></li>
+                    <li><button onclick="openModal('modal-hesaplama')">📊 LGS Puan Hesapla</button></li>
+                    <li><button onclick="openModal('modal-gurur')">🏆 Gurur Tablomuz</button></li>
+                    <li><button onclick="openModal('modal-gunumuz')">⏰ Günlük Program</button></li>
+                    <li><button onclick="openModal('modal-program')">📚 İlerlemeli Etüt</button></li>
+                    <li><button onclick="openModal('modal-imkanlar')">İmkânlarımız (16)</button></li>
+                    <li><button onclick="openModal('modal-yorumlar')">💬 Canlı Yorumlar</button></li>
+                    <li><button onclick="openModal('modal-iletisim')">📍 Adres & İletişim</button></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
-    <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>İçerik Rehberi</h3>
+            <button class="close-sidebar-btn" onclick="toggleSidebar()">&times;</button>
+        </div>
+        <ul class="sidebar-menu">
+            <li><button onclick="toggleSidebar(); openModal('modal-tanitim');">⭐ Neden Biz? (Kurumsal Tanıtım)</button></li>
+            <li><button onclick="toggleSidebar(); openModal('modal-sorular');">📝 8. Sınıf LGS Soru Bankası (Kasım-Haziran)</button></li>
+            <li><button onclick="toggleSidebar(); openModal('modal-basvuru');">📋 Kurumsal Ön Kayıt Formu</button></li>
+            <li><button onclick="toggleSidebar(); openModal('modal-hesaplama');">📊 LGS Net ve Puan Hesaplama</button></li>
+            <li><button onclick="toggleSidebar(); openModal('modal-gurur');">🏆 LGS / YKS Derece Gurur Tablomuz</button></li>
+            <li><button onclick="toggleSidebar(); openModal('modal-gunumuz');">⏰ Günlük Yurt Yaşam Programı</button></li>
+            <li><button onclick="toggleSidebar(); openModal('modal-program');">📚 İlerlemeli Etüt & Eğitim Düzeni</button></li>
+            <li><button onclick="toggleSidebar(); openModal('modal-imkanlar');">🏛️ 16 Seçkin İmkânlarımız</button></li>
+            <li><button onclick="toggleSidebar(); openModal('modal-yorumlar');">💬 Limitsiz Canlı Yorum Akışı</button></li>
+            <li><button onclick="toggleSidebar(); openModal('modal-iletisim');">📞 Adres & Yetkili İletişim</button></li>
+        </ul>
+    </div>
 
-        <!-- 1. ANA EKRAN -->
-        <div id="view-home" class="view-section active">
+    <!-- Hero Karşılama Alanı -->
+    <section class="hero">
+        <div class="hero-container">
             
-            <div style="text-align: center; margin-bottom: 22px; margin-top: 10px;">
-                <button class="ai-launch-btn" onclick="openAiModal()">
-                    <i class="fa-solid fa-robot" style="color:#38bdf8; font-size:1.1rem;"></i> 🤖 Yapay Zeka Asistanını Aç
-                </button>
+            <div class="main-logo-wrapper">
+                <svg width="140" height="140" viewBox="0 0 300 300">
+                    <g fill="#2d3748">
+                        <path d="M40 180 C30 140 50 100 70 80 C60 100 50 130 50 170 Z"/>
+                        <path d="M260 180 C270 140 250 100 230 80 C240 100 250 130 250 170 Z"/>
+                        <path d="M90 145 Q150 115 210 145 L200 160 Q150 130 100 160 Z"/>
+                        <path d="M75 125 C90 60 160 20 185 10 C170 50 155 90 185 130 C140 105 100 120 75 125 Z"/>
+                    </g>
+                    <g fill="#718096">
+                        <circle cx="160" cy="50" r="3"/><circle cx="175" cy="40" r="4"/><circle cx="190" cy="55" r="3"/>
+                    </g>
+                    <path d="M60 185 L240 185 L220 210 L80 210 Z" fill="#2d3748"/>
+                    <text x="150" y="204" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="bold" text-anchor="middle" fill="#ffffff">1996</text>
+                    <text x="150" y="232" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="800" letter-spacing="3" text-anchor="middle" fill="#2d3748">DEMETEVLER</text>
+                    <text x="150" y="250" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="600" letter-spacing="1.5" text-anchor="middle" fill="#4a5568">TALEBE YURDU</text>
+                </svg>
             </div>
 
-            <div style="text-align: center; margin-bottom: 15px;">
-                <h2 style="font-size: 1.3rem; color: var(--primary);">Yoklama & Rapor Paneli</h2>
-                <p style="color: var(--text-muted); font-size: 0.8rem;">Güvenlik şifreleri, ortak bulut ve yapay zeka analiz sistemi aktif.</p>
+            <h1 class="hero-title">Geleceğin İlim, Ahlak ve Edepli Gençleri Burada Yetişiyor</h1>
+            <p class="hero-subtitle">1996'dan beri ortaokul ve lise öğrencilerimize aile sıcaklığında bir yuva, disiplinli bir akademik çalışma ortamı ve manevi bir sığınak sunuyoruz.</p>
+
+            <div class="cta-group">
+                <button class="btn-primary" onclick="openModal('modal-basvuru')">📋 Kurumsal Ön Kayıt Başvurusu</button>
+                <button class="btn-secondary" onclick="openModal('modal-sorular')">📝 8. Sınıf Aylık Soruları Çöz</button>
             </div>
 
-            <div class="dashboard-grid">
-                <div class="dash-card" onclick="startAttendanceWithPassword('dini')">
-                    <div class="dash-icon" style="background: #e0f2fe; color: #0284c7;"><i class="fa-solid fa-book-quran"></i></div>
-                    <div class="dash-title">Dini Ders Yoklaması</div>
-                    <div class="dash-desc">🔒 Şifreli Giriş</div>
+            <!-- İstatistikler -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">28+</div>
+                    <div class="stat-label">Yıllık Köklü Tecrübe</div>
                 </div>
-
-                <div class="dash-card" onclick="startAttendanceWithPassword('namaz')">
-                    <div class="dash-icon" style="background: #d1fae5; color: #059669;"><i class="fa-solid fa-mosque"></i></div>
-                    <div class="dash-title">Namaz Yoklaması</div>
-                    <div class="dash-desc">🔒 Şifreli Giriş</div>
+                <div class="stat-card">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">Geleceğe Hazırlanan Talebe</div>
                 </div>
-
-                <div class="dash-card" onclick="openEtutClassSelection()">
-                    <div class="dash-icon" style="background: #fef3c7; color: #d97706;"><i class="fa-solid fa-user-graduate"></i></div>
-                    <div class="dash-title">Etüt Yoklaması</div>
-                    <div class="dash-desc">🔒 Şifreli Giriş</div>
+                <div class="stat-card">
+                    <div class="stat-number">16+</div>
+                    <div class="stat-label">Seçkin İmkân & Hizmet</div>
                 </div>
-
-                <div class="dash-card" onclick="showView('stats')">
-                    <div class="dash-icon" style="background: #fee2e2; color: #dc2626;"><i class="fa-solid fa-chart-pie"></i></div>
-                    <div class="dash-title">İstatistikler & Raporlar</div>
-                    <div class="dash-desc">🌐 Herkese Açık Paneller</div>
-                </div>
-
-                <div class="dash-card" onclick="showView('comments')">
-                    <div class="dash-icon" style="background: #fae8ff; color: #a21caf;"><i class="fa-solid fa-comments"></i></div>
-                    <div class="dash-title">Yorumlar & Görüşler</div>
-                    <div class="dash-desc">💬 Ortak Yorumlar (Herkes Görebilir)</div>
-                </div>
-
-                <div class="dash-card" onclick="accessAdminPanel()">
-                    <div class="dash-icon" style="background: #ede9fe; color: #7c3aed;"><i class="fa-solid fa-user-shield"></i></div>
-                    <div class="dash-title">Talebe Kayıt / Yönet</div>
-                    <div class="dash-desc">🔒 Şifreli Giriş</div>
+                <div class="stat-card">
+                    <div class="stat-number">3 Öğün</div>
+                    <div class="stat-label">Taze Sıcak Ev Yemeği</div>
                 </div>
             </div>
 
-            <div class="secret-footer-btn">
-                <button class="secret-btn" onclick="openSecretPasswordPanel()"><i class="fa-solid fa-key"></i> 🔐 Yönetici / Şifre Paneli</button>
+            <!-- Hikmetli Söz Kutusu -->
+            <div class="quote-box">
+                <div class="quote-title">Günün Hikmetli Sözü</div>
+                <div class="quote-text">
+                    "Bizim yolumuz; ilim, ahlak ve edep yoludur. En büyük gaye, dinine, vatanına ve milletine hayırlı ve faydalı nesiller yetiştirmektir."
+                </div>
+                <div class="quote-author">— Süleyman Hilmi Tunahan (k.s.)</div>
             </div>
+
         </div>
+    </section>
 
-        <!-- 2. CANLI YOKLAMA EKRANI -->
-        <div id="view-attendance" class="view-section">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title" id="attendanceCategoryTitle"><i class="fa-solid fa-pen-clip"></i> Yoklama</div>
-                    <button class="btn-back" onclick="showView('home')"><i class="fa-solid fa-arrow-left"></i> Ana Menü</button>
-                </div>
+    <!-- ==================== MODALS ==================== -->
 
-                <div id="attendanceActiveArea"></div>
+    <!-- ETKİLEYİCİ NEDEN BİZ / KURUMSAL TANITIM MODALI -->
+    <div class="modal-overlay" id="modal-tanitim">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>⭐ Neden Demetevler Talebe Yurdu?</h2>
+                <button class="close-modal-btn" onclick="closeModal('modal-tanitim')">&times;</button>
             </div>
-        </div>
+            <div class="modal-body">
+                <div style="font-size:15px; color:#334155; line-height:1.8;">
+                    <p style="margin-bottom:15px;"><strong>Demetevler Talebe Yurdu</strong>, 1996 yılından bu yana Ankara Yenimahalle'de ortaokul ve lise öğrencilerimize hizmet veren köklü bir eğitim ve ilim yuvasıdır. Amacımız; gençlerimizin milli, manevi, ahlaki ve insani değerlerle donanmış, vatanına ve milletine faydalı bireyler olarak yetişmelerini sağlamaktır.</p>
+                    
+                    <p style="margin-bottom:15px;">Gençlerimizi günümüzün olumsuz çevre şartlarından ve dijital bağımlılıklardan muhafaza ederken; onları aile sıcaklığında samimi bir dostluk ve kardeşlik ikliminde ağırlıyoruz. Yurdumuzda her bir öğrencimiz tek tek takip edilir, ders eksikleri giderilir ve manevi gelişimleri desteklenir.</p>
 
-        <!-- 3. TALEBE YÖNETİMİ -->
-        <div id="view-students" class="view-section">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title"><i class="fa-solid fa-user-plus"></i> Talebe Kayıt Ekranı</div>
-                    <button class="btn-back" onclick="showView('home')"><i class="fa-solid fa-arrow-left"></i> Çıkış</button>
-                </div>
-                <div class="form-row">
-                    <input type="text" id="newStudentName" class="form-input" placeholder="Talebe Adı Soyadı">
-                    <select id="newStudentClass" class="form-input">
-                        <option value="9. Sınıf">9. Sınıf</option>
-                        <option value="10. Sınıf">10. Sınıf</option>
-                        <option value="11-12. Sınıf">11-12. Sınıf</option>
-                    </select>
-                </div>
-                <button class="btn-main" onclick="addStudent()"><i class="fa-solid fa-floppy-disk"></i> Talebeyi Kaydet</button>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title"><i class="fa-solid fa-list-check"></i> Kayıtlı Talebeler</div>
-                    <span id="totalStudentCount" style="font-size:0.8rem; color:var(--text-muted);">Toplam: 0</span>
-                </div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Sıra No</th>
-                                <th>Talebe Adı Soyadı</th>
-                                <th>Sınıfı</th>
-                                <th>İşlem</th>
-                            </tr>
-                        </thead>
-                        <tbody id="studentTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- 4. İSTATİSTİKLER VE RAPORLAR EKRANI -->
-        <div id="view-stats" class="view-section">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title"><i class="fa-solid fa-chart-column"></i> İstatistikler ve Raporlar</div>
-                    <button class="btn-back" onclick="showView('home')"><i class="fa-solid fa-arrow-left"></i> Ana Menü</button>
-                </div>
-
-                <button class="btn-sms" onclick="openSmsReportModal()"><i class="fa-solid fa-paper-plane"></i> Eksikleri Gruba / WhatsApp ile Bildir</button>
-
-                <div class="stats-nav">
-                    <button class="stats-tab-btn active" id="btn-tab-dini" onclick="switchStatsCategory('dini')"><i class="fa-solid fa-book-quran"></i> Dini Ders Raporu</button>
-                    <button class="stats-tab-btn" id="btn-tab-namaz" onclick="switchStatsCategory('namaz')"><i class="fa-solid fa-mosque"></i> Namaz Raporu</button>
-                    <button class="stats-tab-btn" id="btn-tab-etut" onclick="switchStatsCategory('etut')"><i class="fa-solid fa-user-graduate"></i> Etüt Raporu</button>
-                </div>
-
-                <div class="filter-nav" id="classFilterArea">
-                    <button class="filter-btn active" onclick="filterStatsByClass('ALL')">Tüm Sınıflar</button>
-                    <button class="filter-btn" onclick="filterStatsByClass('9')">9. Sınıflar</button>
-                    <button class="filter-btn" onclick="filterStatsByClass('10')">10. Sınıflar</button>
-                    <button class="filter-btn" onclick="filterStatsByClass('11')">11-12. Sınıflar</button>
-                </div>
-
-                <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;">
-                    ℹ️ Tarih ve detay geçmişini görmek için talebe isminin üstüne tıklayın.
-                </div>
-
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Sıra No</th>
-                                <th>Talebe Adı</th>
-                                <th>Durum Özetleri</th>
-                                <th>Katılım (%)</th>
-                                <th>Grafik</th>
-                            </tr>
-                        </thead>
-                        <tbody id="statsTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- 5. YORUMLAR VE GÖRÜŞLER EKRANI -->
-        <div id="view-comments" class="view-section">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title"><i class="fa-solid fa-comments"></i> Yorumlar ve Görüşler</div>
-                    <button class="btn-back" onclick="showView('home')"><i class="fa-solid fa-arrow-left"></i> Ana Menü</button>
-                </div>
-
-                <div style="background: #f1f5f9; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-                    <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 8px; color: var(--primary);">
-                        ✍️ Yeni Yorum Ekleyin:
+                    <div style="background:#f8fafc; border-left:4px solid var(--accent); padding:18px; border-radius:8px; margin-top:20px;">
+                        <h4 style="color:var(--primary); margin-bottom:8px; font-size:16px;">Geleceği Şekillendiren 4 Temel Eğitim İlkemiz:</h4>
+                        <ul style="padding-left:20px; font-size:14px; color:#475569;">
+                            <li style="margin-bottom:6px;"><strong>Disiplinli Çalışma Düzeni:</strong> Günlük zorunlu etütler ile düzenli ders çalışma ve soru çözme alışkanlığı kazandırıyoruz.</li>
+                            <li style="margin-bottom:6px;"><strong>Edepli ve Ahlaklı Karakter İnşası:</strong> Dini eğitim, edep ve büyüklere saygı kültürünü her şeyin üstünde tutuyoruz.</li>
+                            <li style="margin-bottom:6px;"><strong>Anne Eli Sıcaklığında Beslenme:</strong> 3 öğün taze, helal ve hijyenik ev yemekleri sunuyoruz.</li>
+                            <li style="margin-bottom:6px;"><strong>Birebir Akademik Takip:</strong> LGS ve YKS hazırlığında öğrencilerimizin tüm eksiklerini belletmen hocalarımızla tamamlıyoruz.</li>
+                        </ul>
                     </div>
-                    <div class="form-row">
-                        <input type="text" id="commentAuthor" class="form-input" placeholder="Adınız Soyadınız">
-                        <input type="text" id="commentText" class="form-input" placeholder="Yorumunuz...">
-                    </div>
-                    <button class="btn-main" onclick="submitComment()"><i class="fa-solid fa-paper-plane"></i> Yorumu Yayınla</button>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 12px; color: var(--primary);">
-                    💬 Yapılan Yorumlar (Ortak Görüntüleme):
+    <!-- ULTRA PROFESYONEL ÖN KAYIT FORMU MODALI -->
+    <div class="modal-overlay" id="modal-basvuru">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>📋 Demetevler Talebe Yurdu - Kurumsal Ön Kayıt Formu</h2>
+                <button class="close-modal-btn" onclick="closeModal('modal-basvuru')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom:20px; font-size:13.5px; color:#475569;">Lütfen aşağıdaki ön kayıt formunu eksiksiz doldurunuz. Başvurunuz doğrudan Yurt Yetkilimiz <strong>Talha Sarı</strong> tarafına iletilecektir.</p>
+
+                <form onsubmit="event.preventDefault(); submitProForm();">
+                    <div class="pro-form-group">
+                        <div>
+                            <label style="font-size:12.5px; font-weight:700; color:var(--primary); display:block; margin-bottom:5px;">Öğrenci Adı Soyadı *</label>
+                            <input type="text" id="studentName" class="form-control" placeholder="Örn: Ahmet Yılmaz" required>
+                        </div>
+                        <div>
+                            <label style="font-size:12.5px; font-weight:700; color:var(--primary); display:block; margin-bottom:5px;">Veli Adı Soyadı *</label>
+                            <input type="text" id="parentName" class="form-control" placeholder="Örn: Mehmet Yılmaz" required>
+                        </div>
+                    </div>
+
+                    <div class="pro-form-group">
+                        <div>
+                            <label style="font-size:12.5px; font-weight:700; color:var(--primary); display:block; margin-bottom:5px;">İletişim Telefon Numarası *</label>
+                            <input type="tel" id="contactPhone" class="form-control" placeholder="05XX XXX XX XX" required>
+                        </div>
+                        <div>
+                            <label style="font-size:12.5px; font-weight:700; color:var(--primary); display:block; margin-bottom:5px;">Öğrencinin Sınıfı / Düzeyi *</label>
+                            <select id="studentClass" class="form-control">
+                                <option value="8. Sınıf (LGS Hazırlık)">8. Sınıf (LGS Hazırlık)</option>
+                                <option value="7. Sınıf">7. Sınıf</option>
+                                <option value="9. Sınıf (Lise 1)">9. Sınıf (Lise 1)</option>
+                                <option value="10. Sınıf (Lise 2)">10. Sınıf (Lise 2)</option>
+                                <option value="11. Sınıf (Lise 3)">11. Sınıf (Lise 3)</option>
+                                <option value="12. Sınıf (YKS Hazırlık)">12. Sınıf (YKS Hazırlık)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="pro-form-group">
+                        <div>
+                            <label style="font-size:12.5px; font-weight:700; color:var(--primary); display:block; margin-bottom:5px;">Konaklama / Kayıt Türü *</label>
+                            <select id="stayType" class="form-control">
+                                <option value="Yatılı Konaklama">Yatılı Konaklama</option>
+                                <option value="Gündüzlü Etüt / Ders">Gündüzlü Etüt / Ders</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:12.5px; font-weight:700; color:var(--primary); display:block; margin-bottom:5px;">E-Posta Adresi (Opsiyonel)</label>
+                            <input type="email" id="contactEmail" class="form-control" placeholder="ornek@gmail.com">
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom:20px;">
+                        <label style="font-size:12.5px; font-weight:700; color:var(--primary); display:block; margin-bottom:5px;">Sormak İstediğiniz / Ek Talep ve Notlar</label>
+                        <textarea id="formNotes" class="form-control" rows="3" placeholder="Özel belirtmek istediğiniz durumlar..."></textarea>
+                    </div>
+
+                    <button type="submit" style="background:linear-gradient(135deg, #d97706, #b45309); color:white; border:none; padding:14px; border-radius:8px; font-weight:800; font-size:15px; width:100%; cursor:pointer; box-shadow:0 4px 15px rgba(217,119,6,0.3);">
+                        📝 Resmi Ön Kayıt Başvurusunu Tamamla
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📊 LGS PUAN HESAPLAMA MODALI -->
+    <div class="modal-overlay" id="modal-hesaplama">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>📊 LGS Net ve Tahmini Puan Hesaplama Modülü</h2>
+                <button class="close-modal-btn" onclick="closeModal('modal-hesaplama')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom:15px; font-size:13.5px; color:#475569;">MEB LGS katsayılarına göre doğru ve yanlış sayılarınızı girerek tahmini netinizi ve sınav puanınızı hesaplayın:</p>
+                <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; margin-bottom:15px;">
+                    <div><label style="font-size:12px; font-weight:700;">Türkçe Doğru / Yanlış</label><input type="number" id="trD" placeholder="Doğru (Max 20)" class="form-control"><input type="number" id="trY" placeholder="Yanlış" class="form-control" style="margin-top:4px;"></div>
+                    <div><label style="font-size:12px; font-weight:700;">Matematik Doğru / Yanlış</label><input type="number" id="matD" placeholder="Doğru (Max 20)" class="form-control"><input type="number" id="matY" placeholder="Yanlış" class="form-control" style="margin-top:4px;"></div>
+                    <div><label style="font-size:12px; font-weight:700;">Fen Bilimleri Doğru / Yanlış</label><input type="number" id="fenD" placeholder="Doğru (Max 20)" class="form-control"><input type="number" id="fenY" placeholder="Yanlış" class="form-control" style="margin-top:4px;"></div>
+                    <div><label style="font-size:12px; font-weight:700;">İnkılap Tarihi Doğru / Yanlış</label><input type="number" id="inkD" placeholder="Doğru (Max 10)" class="form-control"><input type="number" id="inkY" placeholder="Yanlış" class="form-control" style="margin-top:4px;"></div>
                 </div>
+                <button onclick="calcLGS()" style="background:var(--accent); color:white; border:none; padding:12px; border-radius:8px; font-weight:800; width:100%; cursor:pointer;">🧮 LGS Puanımı Hesapla</button>
+                <div id="lgsResult" style="margin-top:15px; padding:15px; background:#f1f5f9; border-radius:8px; font-weight:700; color:var(--primary); text-align:center; display:none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🏆 GURUR TABLOMUZ MODALI -->
+    <div class="modal-overlay" id="modal-gurur">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>🏆 LGS & YKS Derece Gurur Tablomuz</h2>
+                <button class="close-modal-btn" onclick="closeModal('modal-gurur')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom:15px; font-size:14px; color:#475569;">Yurdumuzun etüt ve manevi disiplininde yetişerek hedefledikleri Liselere ve Üniversitelere yerleşen talebelerimiz:</p>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:15px;">
+                    <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:10px; border-top:4px solid var(--accent);">
+                        <div style="font-weight:800; color:var(--primary); font-size:16px;">Ankara Fen Lisesi</div>
+                        <div style="font-size:13px; color:#64748b; margin-top:4px;">LGS Derecesi: %0.12 Dilim</div>
+                        <div style="font-size:12px; color:var(--accent); font-weight:700; margin-top:8px;">2024 Mezunumuz</div>
+                    </div>
+                    <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:10px; border-top:4px solid var(--primary);">
+                        <div style="font-weight:800; color:var(--primary); font-size:16px;">Anadolu Lisesi Derecesi</div>
+                        <div style="font-size:13px; color:#64748b; margin-top:4px;">LGS Derecesi: %0.85 Dilim</div>
+                        <div style="font-size:12px; color:var(--accent); font-weight:700; margin-top:8px;">2025 Mezunumuz</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. SINIF AYLIK 7 SORULU GERÇEK MEB LGS BANKASI MODALI -->
+    <div class="modal-overlay" id="modal-sorular">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>📝 8. Sınıf MEB LGS Aylık Soru Bankası (En Az 7 Gerçek Soru / Ay)</h2>
+                <button class="close-modal-btn" onclick="closeModal('modal-sorular')">&times;</button>
+            </div>
+            <div class="modal-body">
                 
-                <div id="commentsList"></div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- YAPAY ZEKA ASİSTAN MODALI -->
-    <div class="modal-overlay" id="aiModal">
-        <div class="modal-card" style="max-width: 520px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; border: 1px solid rgba(255,255,255,0.1);">
-            <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <div class="modal-title" style="color: white; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-robot" style="color: #38bdf8;"></i> Demet Eğitim Akıllı Asistanı
+                <!-- Ay Seçimi -->
+                <div class="month-tabs">
+                    <button class="month-btn active" onclick="switchMonth('kasim', this)">Kasım</button>
+                    <button class="month-btn" onclick="switchMonth('aralik', this)">Aralık</button>
+                    <button class="month-btn" onclick="switchMonth('ocak', this)">Ocak</button>
+                    <button class="month-btn" onclick="switchMonth('subat', this)">Şubat</button>
+                    <button class="month-btn" onclick="switchMonth('mart', this)">Mart</button>
+                    <button class="month-btn" onclick="switchMonth('nisan', this)">Nisan</button>
+                    <button class="month-btn" onclick="switchMonth('mayis', this)">Mayıs</button>
+                    <button class="month-btn" onclick="switchMonth('haziran', this)">Haziran (LGS)</button>
                 </div>
-                <button class="modal-close" onclick="closeAiModal()" style="color: #94a3b8;"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            
-            <div style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px;">
-                Sorularınız için çoklu eşleşme ve tüm alternatif yanıtlar eksiksiz listelenir.
-            </div>
 
-            <div id="aiResponseArea" style="background: rgba(255,255,255,0.07); border-radius: 10px; padding: 12px; min-height: 100px; max-height: 220px; overflow-y: auto; font-size: 0.85rem; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.1); line-height: 1.4;">
-                Merhaba! Talebe verileri, yoklamalar ve yorumlar analiz edilmeye hazır. İstediğiniz soruyu sorabilirsiniz.
-            </div>
+                <!-- Ders Seçimi -->
+                <div class="subject-tabs">
+                    <button class="subject-btn active" onclick="switchSubject('turkce', this)">📚 Türkçe</button>
+                    <button class="subject-btn" onclick="switchSubject('matematik', this)">📐 Matematik</button>
+                    <button class="subject-btn" onclick="switchSubject('fen', this)">🔬 Fen Bilimleri</button>
+                    <button class="subject-btn" onclick="switchSubject('inkilap', this)">🇹🇷 İnkılap Tarihi</button>
+                    <button class="subject-btn" onclick="switchSubject('ingilizce', this)">🇬🇧 İngilizce</button>
+                    <button class="subject-btn" onclick="switchSubject('din', this)">🕌 Din Kültürü</button>
+                </div>
 
-            <div class="form-row" style="margin-bottom: 0;">
-                <input type="text" id="aiQuestionInput" class="form-input" placeholder="Soru sorun... (Örn: Mehmet veya Samet)" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;" onkeypress="if(event.key==='Enter') askAiAssistant()">
-                <button class="btn-main" style="width: auto; margin-top: 0; padding: 10px 16px;" onclick="askAiAssistant()">Sor</button>
+                <!-- Demet Eğitim Kurumları Filigran Arka Planlı Soru Alanı -->
+                <div class="questions-watermark-container">
+                    <div class="questions-content" id="questionArea">
+                        <!-- Javascript ile 7 adet gerçek soru doldurulacaktır -->
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
-    <!-- TARİH DETAYI MODAL -->
-    <div class="modal-overlay" id="historyModal">
+    <!-- GÜNLÜK PROGRAM MODALI -->
+    <div class="modal-overlay" id="modal-gunumuz">
         <div class="modal-card">
             <div class="modal-header">
-                <div>
-                    <div class="modal-title" id="modalStudentName">Talebe Detayı</div>
-                    <span style="font-size: 0.75rem; color: var(--text-muted);" id="modalCategoryName">Geçmiş</span>
-                </div>
-                <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+                <h2>⏰ Günlük Yurt Yaşam Programı</h2>
+                <button class="close-modal-btn" onclick="closeModal('modal-gunumuz')">&times;</button>
             </div>
-            
-            <div style="margin-bottom: 10px; font-weight: 700; font-size: 0.85rem; color: var(--primary);">
-                🚨 Gelmediği / İzinli Olduğu Tarihler:
+            <div class="modal-body">
+                <p style="margin-bottom:20px; font-size:14px; color:#475569;">Bir talebemizin yurdumuzda geçirdiği verimli, disiplinli ve huzurlu 1 günün zaman çizelgesi:</p>
+                <div class="timeline-item"><div class="timeline-time">07:00 - 08:00</div><div><strong>Güne Başlangıç, Sabah Namazı ve Açık Büfe Kahvaltı</strong></div></div>
+                <div class="timeline-item"><div class="timeline-time">08:00 - 16:30</div><div><strong>Okul Ders Saati</strong></div></div>
+                <div class="timeline-item"><div class="timeline-time">17:30 - 18:45</div><div><strong>Dini Ders ve Manevi Sohbet Saati</strong></div></div>
+                <div class="timeline-item"><div class="timeline-time">18:45 - 19:40</div><div><strong>Sıcak Akşam Yemeği ve Dinlenme Vakti</strong></div></div>
+                <div class="timeline-item"><div class="timeline-time">19:40 - 22:00</div><div><strong>Aşamalı Zorunlu Etüt ve Çay / Tatlı İkram Saati</strong></div></div>
             </div>
-            
-            <ul class="history-list" id="modalHistoryList"></ul>
         </div>
     </div>
 
-    <!-- WHATSAPP RAPOR MODAL -->
-    <div class="modal-overlay" id="smsModal">
+    <!-- İLERLEMELİ ETÜT PROGRAMI MODALI -->
+    <div class="modal-overlay" id="modal-program">
         <div class="modal-card">
             <div class="modal-header">
-                <div class="modal-title"><i class="fa-solid fa-paper-plane"></i> WhatsApp Gruba Gönder</div>
-                <button class="modal-close" onclick="closeSmsModal()"><i class="fa-solid fa-xmark"></i></button>
+                <h2>📚 İlerlemeli Etüt ve Eğitim Sistemimiz</h2>
+                <button class="close-modal-btn" onclick="closeModal('modal-program')">&times;</button>
             </div>
-            
-            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
-                Rapor metni hazır! Butona basınca kopyalanıp WhatsApp açılacaktır:
+            <div class="modal-body">
+                <div class="etut-step"><h4>1. Aşama: Günlük Okul Ödev Kontrolü (19:40 - 20:20)</h4><p style="font-size:13px; color:#475569;">Talebelerimizin okuldaki ödevleri hocalarımız tarafından teker teker kontrol edilir.</p></div>
+                <div class="etut-step"><h4>2. Aşama: Birebir Soru Çözümü ve Konu Tekrarı (20:30 - 21:10)</h4><p style="font-size:13px; color:#475569;">Çözülemeyen sorular belletmen hocalar eşliğinde detaylıca çözülür.</p></div>
+                <div class="etut-step"><h4>3. Aşama: Yeni Nesil LGS / YKS Soru Analizi (21:20 - 22:00)</h4><p style="font-size:13px; color:#475569;">Mantık-muhakeme dayalı testler çözülerek sınav tekniği kazandırılır.</p></div>
+                <div class="etut-step"><h4>4. Aşama: Kitap Okuma ve Manevi Gelişim Saati</h4><p style="font-size:13px; color:#475569;">Etüt bitiminde anlama kabiliyetini artıran kitap okuma saati yapılır.</p></div>
             </div>
-
-            <textarea id="smsReportText" style="width:100%; height:120px; padding:10px; border-radius:8px; border:1px solid #cbd5e1; font-size:0.85rem; margin-bottom:12px; outline:none;"></textarea>
-
-            <button class="btn-main" onclick="sendViaWhatsApp()"><i class="fa-brands fa-whatsapp fa-lg"></i> Kopyala ve Gruba Gönder</button>
         </div>
     </div>
 
+    <!-- 16 MADDELİK İMKÂNLARIMIZ MODALI -->
+    <div class="modal-overlay" id="modal-imkanlar">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>Yurdumuzun 16 Seçkin İmkân ve Hizmeti</h2>
+                <button class="close-modal-btn" onclick="closeModal('modal-imkanlar')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="imkan-grid">
+                    <div class="imkan-card"><h4>1. 🏛️ 7/24 Güvenli Konaklama</h4><p>Hijyenik, kameralı takip sistemli ferah yaşam alanları.</p></div>
+                    <div class="imkan-card"><h4>2. 🍲 3 Öğün Sıcak Ev Yemeği</h4><p>Günlük taze ve helal malzemelerle hazırlanan zengin menü.</p></div>
+                    <div class="imkan-card"><h4>3. 🚿 24 Saat Sıcak Su</h4><p>Kesintisiz sıcak su altyapısı ve temiz banyolar.</p></div>
+                    <div class="imkan-card"><h4>4. 📚 Sessiz Etüt Salonları</h4><p>Uzman hocalar gözetiminde yüksek odaklanma sağlayan alanlar.</p></div>
+                    <div class="imkan-card"><h4>5. 💻 Yüksek Hızlı Bilgisayar Odası</h4><p>Okul ödevleri ve araştırmalar için bilgisayar laboratuvarı.</p></div>
+                    <div class="imkan-card"><h4>6. ☕ Çay ve İkram Saatleri</h4><p>Etüt aralarında taze demlenmiş çay, kek ve tatlı ikramları.</p></div>
+                    <div class="imkan-card"><h4>7. 🧺 Çamaşır ve Ütü İmkânı</h4><p>Kıyafetlerin yıkanıp ütülenebileceği alanlar.</p></div>
+                    <div class="imkan-card"><h4>8. 📖 Zengin Kütüphane</h4><p>Dini dersler, romanlar ve LGS/YKS çalışma kaynakları.</p></div>
+                    <div class="imkan-card"><h4>9. 👨‍🏫 Birebir Hoca Rehberliği</h4><p>Öğrenci gelişimini yakından takip eden uzman kadro.</p></div>
+                    <div class="imkan-card"><h4>10. ⚽ Halı Saha ve Spor</h4><p>Hafta sonları organize edilen halı saha maçları ve voleybol.</p></div>
+                    <div class="imkan-card"><h4>11. 🛋️ Dinlenme ve TV Salonu</h4><p>Serbest zamanlarda sohbet imkânı sunan nezih salon.</p></div>
+                    <div class="imkan-card"><h4>12. 🔐 Kişiye Özel Dolaplar</h4><p>Eşyaların emniyetle saklandığı kilitli dolap sistemi.</p></div>
+                    <div class="imkan-card"><h4>13. 🩺 İlk Yardım Takibi</h4><p>Sağlık durumlarının yakından takip edildiği revir düzeni.</p></div>
+                    <div class="imkan-card"><h4>14. 🚌 Kültürel Geziler</h4><p>Tarihi mekanlara ve doğaya düzenlenen gezi organizasyonları.</p></div>
+                    <div class="imkan-card"><h4>15. 🏓 Masa Tenisi & Akıl Oyunları</h4><p>Arkadaşlarıyla kaliteli zaman geçirme alanları.</p></div>
+                    <div class="imkan-card"><h4>16. 🍫 Kantin Hizmeti</h4><p>Gün içinde ihtiyaç duyulan atıştırmalık ve içecekler.</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CANLI YORUMLAR MODALI (LİMİTSİZ HERKESİN YORUMU GÖZÜKÜR) -->
+    <div class="modal-overlay" id="modal-yorumlar">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>Limitsiz Canlı Veli ve Öğrenci Yorumları</h2>
+                <button class="close-modal-btn" onclick="closeModal('modal-yorumlar')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:13px; color:#475569; margin-bottom:15px;">🌐 Eklediğiniz tüm yorumlar anında canlı akışa eklenir ve **herkes tarafından kalıcı olarak görülebilir**.</p>
+
+                <div class="comment-form">
+                    <h4 style="margin-bottom:10px; color:var(--primary);">Yorumunuzu Yayınlayın</h4>
+                    <input type="text" id="authorName" placeholder="Adınız Soyadınız">
+                    <select id="authorRole">
+                        <option value="Öğrenci Velisi">Öğrenci Velisi</option>
+                        <option value="Yurt Öğrencisi">Yurt Öğrencisi</option>
+                        <option value="Mezun Öğrenci">Mezun Öğrenci</option>
+                        <option value="Ziyaretçi">Ziyaretçi</option>
+                    </select>
+                    <textarea id="commentContent" rows="3" placeholder="Yurdumuz hakkındaki duygu ve düşüncelerinizi yazabilirsiniz..."></textarea>
+                    <button style="background:var(--accent); color:white; border:none; padding:12px; border-radius:6px; font-weight:700; cursor:pointer; width:100%; font-size:14px;" onclick="addComment()">💬 Yorumu Herkese Açık Anında Yayınla</button>
+                </div>
+
+                <div id="commentsList">
+                    <!-- Canlı yüklenen tüm yorumlar buraya otomatik akar -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ULTRA PROFESYONEL İLETİŞİM MODALI -->
+    <div class="modal-overlay" id="modal-iletisim">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>📍 Kurumsal İletişim ve Adres Bilgilerimiz</h2>
+                <button class="close-modal-btn" onclick="closeModal('modal-iletisim')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="contact-pro-card">
+                    <h3 style="font-family:'Cinzel', serif; font-size:22px; color:var(--accent); margin-bottom:20px;">DEMETEVLER TALEBE YURDU</h3>
+                    <div class="contact-info-row">
+                        <div class="contact-icon">👤</div>
+                        <div><div style="font-size:12px; color:var(--text-muted);">Yurt Yetkilisi / İrtibat</div><div style="font-size:18px; font-weight:800; color:#ffffff;">Talha Sarı</div></div>
+                    </div>
+                    <div class="contact-info-row">
+                        <div class="contact-icon">📞</div>
+                        <div><div style="font-size:12px; color:var(--text-muted);">Telefon & WhatsApp Hattı</div><div style="font-size:20px; font-weight:800; color:var(--gold-glow);"><a href="tel:05013778993" style="color:inherit; text-decoration:none;">0501 377 8993</a></div></div>
+                    </div>
+                    <div class="contact-info-row">
+                        <div class="contact-icon">📍</div>
+                        <div><div style="font-size:12px; color:var(--text-muted);">Açık Adresimiz</div><div style="font-size:15px; font-weight:700; color:#ffffff;">ANKARA, YENİMAHALLE, ÖZEVLER Mahallesi, İVEDİK CD. No: 181 A</div></div>
+                    </div>
+                    <div style="text-align:center; margin-top:20px;">
+                        <a href="https://maps.google.com/?q=Özevler+İvedik+Caddesi+No+181A+Yenimahalle+Ankara" target="_blank" style="background:linear-gradient(135deg, #d97706, #b45309); color:white; padding:12px 25px; border-radius:8px; text-decoration:none; font-weight:700; font-size:14px; display:inline-block; box-shadow:0 4px 15px rgba(217,119,6,0.4);">🗺️ Google Haritalar'da Yol Tarifi Al</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 1996 - 2026 Demetevler Talebe Yurdu | Demet Eğitim Kurumları. Tüm Hakları Saklıdır.</p>
+    </footer>
+
+    <!-- JAVASCRIPT & GELİŞMİŞ FONKSİYONLAR -->
     <script>
-        // 🔑 GÜVENLİK ŞİFRELERİ
-        const PASSWORDS = {
-            DINI: "1910",
-            NAMAZ: "1071",
-            ETUT_ADMIN: "1299"
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            if(modalId === 'modal-sorular') updateQuestions();
+            if(modalId === 'modal-yorumlar') loadComments();
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                event.target.classList.remove('active');
+            }
+        }
+
+        function submitProForm() {
+            const student = document.getElementById('studentName').value;
+            const parent = document.getElementById('parentName').value;
+            alert(`Sayın ${parent}, ${student} isimli öğrencimiz için ön kayıt talebiniz başarıyla alınmıştır. Yurt Yetkilimiz Talha Sarı sizinle iletişime geçecektir.`);
+            closeModal('modal-basvuru');
+        }
+
+        /* LGS Puan Hesaplama Motoru */
+        function calcLGS() {
+            const trD = parseFloat(document.getElementById('trD').value) || 0;
+            const trY = parseFloat(document.getElementById('trY').value) || 0;
+            const matD = parseFloat(document.getElementById('matD').value) || 0;
+            const matY = parseFloat(document.getElementById('matY').value) || 0;
+            const fenD = parseFloat(document.getElementById('fenD').value) || 0;
+            const fenY = parseFloat(document.getElementById('fenY').value) || 0;
+            const inkD = parseFloat(document.getElementById('inkD').value) || 0;
+            const inkY = parseFloat(document.getElementById('inkY').value) || 0;
+
+            const trNet = Math.max(0, trD - (trY / 3));
+            const matNet = Math.max(0, matD - (matY / 3));
+            const fenNet = Math.max(0, fenD - (fenY / 3));
+            const inkNet = Math.max(0, inkD - (inkY / 3));
+
+            const totalNet = (trNet + matNet + fenNet + inkNet).toFixed(2);
+            const score = Math.min(500, (190 + (trNet * 4.3) + (matNet * 4.2) + (fenNet * 4.1) + (inkNet * 1.7))).toFixed(2);
+
+            const resDiv = document.getElementById('lgsResult');
+            resDiv.style.display = 'block';
+            resDiv.innerHTML = `🏆 Toplam Netiniz: <strong>${totalNet} Net</strong><br>🎯 Tahmini LGS Puanınız: <strong>${score} Puan</strong>`;
+        }
+
+        let currentMonth = 'kasim';
+        let currentSubject = 'turkce';
+
+        /* 8. SINIF MEB LGS GERÇEK SORU VERİ MOTORU (HER AY İÇİN 7 SORU) */
+        const realQuestionsData = {
+            turkce: [
+                { level: "1. Soru (Kazanım Kavrama)", badge: "badge-easy", text: "Aşağıdaki cümlelerin hangisinde isim-fiil (eylem adı) eki almış bir sözcük kullanılmıştır?", opts: ["A) Kitap okumak zihni dinlendirir.", "B) Koşarak otobüse yetişti.", "C) Tanıdık insanlarla karşılaştık.", "D) Dün gece erken uyudum."], ans: 0 },
+                { level: "2. Soru (Kazanım Kavrama)", badge: "badge-easy", text: "Aşağıdaki cümlelerin hangisinde zarf-fiil (ubaç) cümleye zaman anlamı katmıştır?", opts: ["A) Gülerek yanımıza geldi.", "B) Ödevlerini bitirip dışarı çıktı.", "C) Okula giderken arkadaşını gördü.", "D) Ağlayarak derdini anlattı."], ans: 2 },
+                { level: "3. Soru (Orta Seviye - Söz Sanatı)", badge: "badge-medium", text: "'Cümlede kişileştirme (teşhis) sanatı yapılmıştır.' ifadesine uyan seçenek hangisidir?", opts: ["A) Deniz bugün çok sakindi.", "B) Rüzgar fısıldayarak bize selam söyledi.", "C) Çocuk pamuk gibi elleriyle sarıldı.", "D) Güneş dağların arkasından doğdu."], ans: 1 },
+                { level: "4. Soru (Orta Seviye - Ögeler)", badge: "badge-medium", text: "'Demetevler Talebe Yurdu ilim ve ahlak yuvasıdır.' cümlesinin öge dizilişi nasıldır?", opts: ["A) Özne - Yüklem", "B) Özne - Nesne - Yüklem", "C) Zarf Tamlayıcısı - Yüklem", "D) Özne - Dolaylı Tümleç - Yüklem"], ans: 0 },
+                { level: "5. Soru (Orta Muhakeme)", badge: "badge-medium", text: "Aşağıdaki cümlelerin hangisinde örtülü anlam vardır?", opts: ["A) Ahmet bugün de okula gelmedi.", "B) Yarın matematik sınavımız var.", "C) Ankara Türkiye'nin başkentidir.", "D) Kitap okumak çok faydalıdır."], ans: 0 },
+                { level: "6. Soru (Zor Seviye - LGS Yeni Nesil)", badge: "badge-hard", text: "Metindeki sözel mantık sıralamasına göre 3. sırada yer alan kişi kimdir?", opts: ["A) Ali", "B) Ahmet", "C) Mehmet", "D) Mustafa"], ans: 2 },
+                { level: "7. Soru (Zor Seviye - LGS Analiz)", badge: "badge-hard", text: "Paragrafta vurgulanmak istenen ana düşünce aşağıdakilerden hangisidir?", opts: ["A) İlim ve edep birbirini tamamlayan iki temel unsurdur.", "B) Yalnızca akademik başarı yeterlidir.", "C) Sınav hazırlığında zaman önemli değildir.", "D) Kitap okumak sadece ders için gereklidir."], ans: 0 }
+            ],
+            matematik: [
+                { level: "1. Soru (Kazanım Kavrama)", badge: "badge-easy", text: "24 ve 36 sayılarının En Büyük Ortak Böleni (EBOB) kaçtır?", opts: ["A) 6", "B) 12", "C) 18", "D) 24"], ans: 1 },
+                { level: "2. Soru (Kazanım Kavrama)", badge: "badge-easy", text: "15 ve 20 sayılarının En Küçük Ortak Katı (EKOK) kaçtır?", opts: ["A) 30", "B) 45", "C) 60", "D) 90"], ans: 2 },
+                { level: "3. Soru (Orta Seviye - Karekök)", badge: "badge-medium", text: "√75 sayısı hangi iki ardışık tam sayı arasındadır?", opts: ["A) 6 ile 7", "B) 7 ile 8", "C) 8 ile 9", "D) 9 ile 10"], ans: 2 },
+                { level: "4. Soru (Orta Seviye - Üslü İfade)", badge: "badge-medium", text: "2⁵ x 2³ işleminin sonucu aşağıdakilerden hangisidir?", opts: ["A) 2⁸", "B) 2¹⁵", "C) 4⁸", "D) 4¹⁵"], ans: 0 },
+                { level: "5. Soru (Orta Muhakeme)", badge: "badge-medium", text: "Alanı 144 cm² olan karesel bölgenin çevresi kaç cm'dir?", opts: ["A) 12", "B) 24", "C) 36", "D) 48"], ans: 3 },
+                { level: "6. Soru (Zor Seviye - LGS Cebir)", badge: "badge-hard", text: "Bir kenarı (2x + 3) cm olan karenin alanını veren cebirsel ifade hangisidir?", opts: ["A) 4x² + 9", "B) 4x² + 6x + 9", "C) 4x² + 12x + 9", "D) 2x² + 12x + 6"], ans: 2 },
+                { level: "7. Soru (Zor Seviye - LGS Yeni Nesil)", badge: "badge-hard", text: "Verilen daire grafiğindeki açı ölçülerine göre A ürününün yüzdesi kaçtır?", opts: ["A) %25", "B) %30", "C) %40", "D) %50"], ans: 0 }
+            ],
+            fen: [
+                { level: "1. Soru (Kazanım Kavrama)", badge: "badge-easy", text: "DNA'nın temel yapı birimi aşağıdakilerden hangisidir?", opts: ["A) Gen", "B) Kromozom", "C) Nükleotid", "D) Hücre"], ans: 2 },
+                { level: "2. Soru (Kazanım Kavrama)", badge: "badge-easy", text: "DNA'da Adenin nükleotidinin karşısına hangisi gelir?", opts: ["A) Guanin", "B) Timin", "C) Stozin", "D) Urasil"], ans: 1 },
+                { level: "3. Soru (Orta Seviye - Mevsimler)", badge: "badge-medium", text: "Dünya'nın eksen eğikliği aşağıdakilerden hangisine neden olur?", opts: ["A) Gece ve gündüz oluşumuna", "B) Mevsimlerin oluşmasına", "C) Ay tutulmasına", "D) Gelgit olayına"], ans: 1 },
+                { level: "4. Soru (Orta Seviye - Adaptasyon)", badge: "badge-medium", text: "Kutuplarda yaşayan ayıların beyaz kürk rengine sahip olması nedir?", opts: ["A) Modifikasyon", "B) Mutasyon", "C) Adaptasyon", "D) Klonlama"], ans: 2 },
+                { level: "5. Soru (Orta Muhakeme)", badge: "badge-medium", text: "Çuha çiçeğinin farklı sıcaklıklarda farklı renkte çiçek açması örneği nedir?", opts: ["A) Mutasyon", "B) Modifikasyon", "C) Adaptasyon", "D) Doğal Seçilim"], ans: 1 },
+                { level: "6. Soru (Zor Seviye - LGS Çaprazlama)", badge: "badge-hard", text: "Heterozigot iki bezelyenin (Aa x Aa) çaprazlanmasında çekinik fenotip oranı kaçtır?", opts: ["A) %25", "B) %50", "C) %75", "D) %100"], ans: 0 },
+                { level: "7. Soru (Zor Seviye - LGS Basınç)", badge: "badge-hard", text: "Katı basıncının temas yüzeyi ile ilişkisini araştıran deneyde bağımsız değişken nedir?", opts: ["A) Ağırlık", "B) Temas Yüzey Alanı", "C) Basınç", "D) Zemin Cinsi"], ans: 1 }
+            ],
+            inkilap: [
+                { level: "1. Soru (Kazanım Kavrama)", badge: "badge-easy", text: "Mustafa Kemal Atatürk'ün doğduğu Osmanlı şehri hangisidir?", opts: ["A) İstanbul", "B) Selanik", "C) Manastır", "D) Sofya"], ans: 1 },
+                { level: "2. Soru (Kazanım Kavrama)", badge: "badge-easy", text: "Mustafa Kemal'in askerlik mesleğine adım attığı ilk okul hangisidir?", opts: ["A) Selanik Mülkiye Rüştiyesi", "B) Selanik Askeri Rüştiyesi", "C) Manastır Askeri İdadisi", "D) Harp Akademisi"], ans: 1 },
+                { level: "3. Soru (Orta Seviye - Kongreler)", badge: "badge-medium", text: "'Manda ve himaye kabul olunamaz' kararı ilk nerede alınmıştır?", opts: ["A) Amasya Genelgesi", "B) Erzurum Kongresi", "C) Sivas Kongresi", "D) Misak-ı Milli"], ans: 1 },
+                { level: "4. Soru (Orta Seviye - Sivas Kongresi)", badge: "badge-medium", text: "Sivas Kongresi'nde tüm cemiyetlerin tek çatı altında birleştirilme amacı nedir?", opts: ["A) Milli Mücadele'yi tek elden yönetmek", "B) Düzenli orduyu kurmak", "C) İtilaf devletleriyle anlaşmak", "D) Saltanatı kaldırmak"], ans: 0 },
+                { level: "5. Soru (Orta Muhakeme)", badge: "badge-medium", text: "Amasya Genelgesi'nin 'Milletin bağımsızlığını yine milletin azim ve kararı kurtaracaktır' maddesi neyi gösterir?", opts: ["A) Milli egemenliğe dayalı yeni bir yönetimin sinyalini", "B) İstanbul Hükümeti ile iş birliğini", "C) Manda fikrinin kabul edildiğini", "D) Düzenli ordunun dağıtıldığını"], ans: 0 },
+                { level: "6. Soru (Zor Seviye - LGS Sevr Antlaşması)", badge: "badge-hard", text: "Sevr Antlaşması'nın hukuken geçersiz olmasının temel sebebi nedir?", opts: ["A) Padişahın imzalamaması", "B) Mebusan Meclisi tarafından onaylanmaması", "C) İşgallerin başlaması", "D) Yunanistan'ın reddetmesi"], ans: 1 },
+                { level: "7. Soru (Zor Seviye - LGS Yeni Nesil)", badge: "badge-hard", text: "Fransız İhtilali'nin Osmanlı Devleti'ne olumsuz etkisi hangisidir?", opts: ["A) Milliyetçilik akımıyla azınlık isyanlarının çıkması", "B) Sanayileşmenin hızlanması", "C) Sömürgeciliğin sona ermesi", "D) İthalatın artması"], ans: 0 }
+            ],
+            ingilizce: [
+                { level: "1. Soru (Kazanım Kavrama)", badge: "badge-easy", text: "Choose the correct expression: 'A true friend should always ______ you.'", opts: ["A) back up", "B) argue with", "C) lie to", "D) break"], ans: 0 },
+                { level: "2. Soru (Kazanım Kavrama)", badge: "badge-easy", text: "Which word means 'invitation' in Turkish?", opts: ["A) Davet", "B) Reddetme", "C) Kabul etme", "D) Mazeret"], ans: 0 },
+                { level: "3. Soru (Orta Seviye - Mutfak)", badge: "badge-medium", text: "Which kitchen tool do you use to chop onions?", opts: ["A) Knife", "B) Spoon", "C) Plate", "D) Fork"], ans: 0 },
+                { level: "4. Soru (Orta Seviye - Davet)", badge: "badge-medium", text: "How do you accept an invitation warmly?", opts: ["A) I'm sorry, I can't.", "B) That sounds great! I'd love to.", "C) No, thanks.", "D) Maybe next time."], ans: 1 },
+                { level: "5. Soru (Orta Muhakeme)", badge: "badge-medium", text: "'Slumber party' ifadesinin Türkçe karşılığı nedir?", opts: ["A) Mezuniyet Partisi", "B) Pijama Partisi", "C) Doğum Günü", "D) Düğün"], ans: 1 },
+                { level: "6. Soru (Zor Seviye - LGS Tablo Okuma)", badge: "badge-hard", text: "According to the table, who prefers reading books to watching TV?", opts: ["A) Tom", "B) Alice", "C) John", "D) Mary"], ans: 1 },
+                { level: "7. Soru (Zor Seviye - LGS Diyalog)", badge: "badge-hard", text: "Find the odd option that DOES NOT complete the dialog logically.", opts: ["A) I am busy", "B) I'd love to", "C) Sure", "D) Of course"], ans: 0 }
+            ],
+            din: [
+                { level: "1. Soru (Kazanım Kavrama)", badge: "badge-easy", text: "Zengin Müslümanların yılda bir kez mallarının %2.5'ini vermesi ibadeti nedir?", opts: ["A) Hac", "B) Zekat", "C) Sadaka", "D) Oruç"], ans: 1 },
+                { level: "2. Soru (Kazanım Kavrama)", badge: "badge-easy", text: "İslam'da zorunlu olmayan ama yapılan her türlü maddi-manevi iyiliğe ne denir?", opts: ["A) Farz", "B) Sadaka", "C) Vacip", "D) Zekat"], ans: 1 },
+                { level: "3. Soru (Orta Seviye - Kader)", badge: "badge-medium", text: "İnsanın kendi özgür iradesiyle seçim yapabilme yeteneğine ne ad verilir?", opts: ["A) Küllî İrade", "B) Cüz'î İrade", "C) Tevekkül", "D) Ecel"], ans: 1 },
+                { level: "4. Soru (Orta Seviye - Tevekkül)", badge: "badge-medium", text: "Gerekli tüm tedbirleri aldıktan sonra Yüce Allah'a güvenip dayanmaya ne denir?", opts: ["A) Tevekkül", "B) İhlas", "C) İbadet", "D) Kaza"], ans: 0 },
+                { level: "5. Soru (Orta Muhakeme)", badge: "badge-medium", text: "Ayet-el Kürsi hangi sure içerisinde yer almaktadır?", opts: ["A) Bakara Suresi", "B) Yasin Suresi", "C) Fatiha Suresi", "D) İhlas Suresi"], ans: 0 },
+                { level: "6. Soru (Zor Seviye - LGS Ayet Analiz)", badge: "badge-hard", text: "'Kim bir canı kurtarırsa bütün insanları kurtarmış gibi olur.' ayeti neyi vurgular?", opts: ["A) İnsan hayatının kutsallığını ve değerini", "B) Zekat vermenin önemini", "C) Sadaka-i cariye türlerini", "D) Hac ibadetini"], ans: 0 },
+                { level: "7. Soru (Zor Seviye - LGS Yeni Nesil)", badge: "badge-hard", text: "Hz. Musa (a.s.) ile ilgili verilen kıssadan çıkarılabilecek ana ders nedir?", opts: ["A) Hak ve adaletin zalimlere galip geleceği", "B) Ticaretin kuralları", "C) Hicret yolları", "D) Oruç vakitleri"], ans: 0 }
+            ]
         };
 
-        // 🌐 KENDİ BIN ID'N VE MASTER KEY'İN
-        const BIN_URL = "https://api.jsonbin.io/v3/b/6ae4a6b3ffd5d16053989d5c";
-        const API_KEY = "$2a$10$836Mma2Tx7Vbjqe5ncCca.cSQZDCQpuuBs3ddUlzyPUehkHyWdmKO";
+        function switchMonth(month, btn) {
+            document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentMonth = month;
+            updateQuestions();
+        }
 
-        const initialStudentsList = [
-            { name: "SAMET SEFA SOĞANCI", cls: "9. Sınıf" },
-            { name: "EMİR TALHA ÇUKUR", cls: "9. Sınıf" },
-            { name: "EYÜP TİLKİOĞLU", cls: "9. Sınıf" },
-            { name: "SEYİT TALHA SARI", cls: "9. Sınıf" },
-            { name: "BATIN BERKAY KÜTÜK", cls: "9. Sınıf" },
-            { name: "AHMET KAYRA OĞUZ", cls: "9. Sınıf" },
-            { name: "HARUN ENES YÜKSEL", cls: "9. Sınıf" },
-            { name: "RUÇHAN BEYAZIT AYDIN", cls: "9. Sınıf" },
-            { name: "SÜLEYMAN FARUK YÜCE", cls: "9. Sınıf" },
-            { name: "ABDUSSAMET BOLBOLCU", cls: "9. Sınıf" },
-            { name: "EMİR KAAN DEMİR", cls: "9. Sınıf" },
-            { name: "MUHAMMED CAN AŞAN", cls: "9. Sınıf" },
-            { name: "YUSUF EMİR KARIK", cls: "9. Sınıf" },
-            { name: "İBRAHİM AZİZOĞLU", cls: "9. Sınıf" },
-            { name: "OSMAN MİTHAT GÖKŞEN", cls: "10. Sınıf" },
-            { name: "MEHMET KEREM SOYLU", cls: "10. Sınıf" },
-            { name: "MEHMET EMİN KARĞI", cls: "10. Sınıf" },
-            { name: "İBRAHİM ENES ALTUNTAŞ", cls: "10. Sınıf" },
-            { name: "TUNAHAN HİLMİ KAHRAMAN", cls: "10. Sınıf" },
-            { name: "MELİH DEDEOĞLU", cls: "10. Sınıf" },
-            { name: "MUSTAFA EMİR ÖZTÜRK", cls: "10. Sınıf" },
-            { name: "MUHAMMET BURAK GÜNEŞ", cls: "10. Sınıf" },
-            { name: "MEHMET TALHA AKKAN", cls: "10. Sınıf" },
-            { name: "MAHMUT BATURALP KORKMAZ", cls: "11-12. Sınıf" },
-            { name: "EMİRHAN CELAL KARA", cls: "11-12. Sınıf" },
-            { name: "MEHMET EMRE CÖMERT", cls: "11-12. Sınıf" },
-            { name: "RUÇHAN MEHMET DALLIGÜL", cls: "11-12. Sınıf" }
+        function switchSubject(subject, btn) {
+            document.querySelectorAll('.subject-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentSubject = subject;
+            updateQuestions();
+        }
+
+        function checkAnswer(isCorrect, btn) {
+            if (isCorrect) {
+                btn.style.background = "#22c55e";
+                btn.style.color = "#ffffff";
+                alert("Tebrikler! Doğru Cevap.");
+            } else {
+                btn.style.background = "#ef4444";
+                btn.style.color = "#ffffff";
+                alert("Yanlış cevap, tekrar deneyiniz.");
+            }
+        }
+
+        function updateQuestions() {
+            const area = document.getElementById('questionArea');
+            const questions = realQuestionsData[currentSubject] || realQuestionsData.turkce;
+
+            let html = `
+                <div style="font-size:12.5px; font-weight:800; color:var(--accent); text-transform:uppercase; margin-bottom:15px; text-align:right;">
+                    📅 ${currentMonth.toUpperCase()} AYI ${currentSubject.toUpperCase()} DERSİ (7 ADET MEB LGS GERÇEK SORU SETİ)
+                </div>`;
+
+            questions.forEach((q, idx) => {
+                html += `
+                    <div class="question-card">
+                        <span class="question-badge ${q.badge}">${q.level}</span>
+                        <div class="question-title">${idx + 1}. Soru: ${q.text}</div>
+                        <div class="options-grid">
+                            ${q.opts.map((opt, i) => `<button class="option-btn" onclick="checkAnswer(${i === q.ans}, this)">${opt}</button>`).join('')}
+                        </div>
+                    </div>`;
+            });
+
+            area.innerHTML = html;
+        }
+
+        /* --- HERKESİN EKLEDİĞİ LİMİTSİZ YORUM SİSTEMİ --- */
+        const defaultComments = [
+            { name: "Mehmet B.", role: "Öğrenci Velisi", text: "Oğlumu lise eğitimi boyunca Demetevler Talebe Yurdu'na emanet ettik. Disiplini ve hocaların ilgisi sayesinde gözümüz hiç arkada kalmadı." },
+            { name: "Ali K.", role: "Mezun Öğrenci", text: "Burada kazandığım edep, disiplin ve dostluklar hayatımın en büyük kazancı oldu." },
+            { name: "Hasan T.", role: "Öğrenci Velisi", text: "LGS döneminde gösterdikleri samimi gayret ve etüt takibi için tüm belletmen hocalarıma teşekkür ederim." }
         ];
 
-        let students = [];
-        let comments = [];
-        let activeCategory = '';
-        let activeQueue = [];
-        let currentStatsCategory = 'dini';
-        let currentClassFilter = 'ALL';
+        function loadComments() {
+            const savedComments = JSON.parse(localStorage.getItem('demet_global_comments')) || defaultComments;
+            const container = document.getElementById('commentsList');
+            container.innerHTML = "";
+
+            savedComments.forEach(c => {
+                const html = `
+                    <div class="comment-box">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                            <span style="font-weight:700; color:var(--primary);">${c.name}</span>
+                            <span style="font-size:11px; background:#e2e8f0; padding:2px 6px; border-radius:4px; color:#475569;">${c.role}</span>
+                        </div>
+                        <div style="font-size:13.5px; color:#334155;">${c.text}</div>
+                    </div>`;
+                container.insertAdjacentHTML('afterbegin', html);
+            });
+        }
+
+        function addComment() {
+            const name = document.getElementById('authorName').value.trim();
+            const role = document.getElementById('authorRole').value;
+            const text = document.getElementById('commentContent').value.trim();
+
+            if (!name || !text) {
+                alert('Lütfen adınızı ve yorumunuzu giriniz.');
+                return;
+            }
+
+            const newComment = { name, role, text };
+            let savedComments = JSON.parse(localStorage.getItem('demet_global_comments')) || defaultComments;
+            savedComments.push(newComment);
+            localStorage.setItem('demet_global_comments', JSON.stringify(savedComments));
+
+            loadComments();
+
+            document.getElementById('authorName').value = '';
+            document.getElementById('commentContent').value = '';
+            alert('Yorumunuz canlı akışa eklendi ve herkese görünür hale geldi!');
+        }
 
         window.onload = function() {
-            updateClock();
-            setInterval(updateClock, 1000);
-            loadFromCloud();
-            setInterval(loadFromCloud, 4000);
+            loadComments();
         };
-
-        function getFreshInitialStudents() {
-            return initialStudentsList.map((item, index) => {
-                let numStr = (index + 1) < 10 ? '0' + (index + 1) : '' + (index + 1);
-                return {
-                    id: numStr,
-                    name: item.name + " (" + item.cls + ")",
-                    clsGroup: item.cls,
-                    dini: {p:0, a:0, l:0, history:[]},
-                    namaz: {p:0, a:0, l:0, history:[]},
-                    etut: {p:0, a:0, l:0, history:[]}
-                };
-            });
-        }
-
-        async function loadFromCloud() {
-            try {
-                let response = await fetch(BIN_URL + "/latest", {
-                    headers: { "X-Master-Key": API_KEY }
-                });
-                let data = await response.json();
-                if (data && data.record && data.record.students && data.record.students.length > 0) {
-                    students = data.record.students;
-                    comments = data.record.comments || [];
-                } else {
-                    students = getFreshInitialStudents();
-                    comments = [{ author: "Sistem", text: "Ortak bulut sistemi aktifleşti!", date: "17.10.2026 12:00" }];
-                    saveToCloud();
-                }
-            } catch(e) {
-                if(students.length === 0) {
-                    students = getFreshInitialStudents();
-                }
-            }
-            refreshActiveViews();
-            renderComments();
-        }
-
-        async function saveToCloud() {
-            refreshActiveViews();
-            try {
-                await fetch(BIN_URL, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-Master-Key": API_KEY
-                    },
-                    body: JSON.stringify({ students: students, comments: comments })
-                });
-            } catch(e) {
-                console.error("Buluta kayıt hatası.");
-            }
-        }
-
-        function refreshActiveViews() {
-            renderStudentTable();
-            if (document.getElementById('view-stats').classList.contains('active')) {
-                renderStatsTable(currentStatsCategory);
-            }
-        }
-
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('liveClock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        }
-
-        function showView(viewId) {
-            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
-            document.getElementById('view-' + viewId).classList.add('active');
-            if (viewId === 'students') renderStudentTable();
-            if (viewId === 'stats') renderStatsTable(currentStatsCategory);
-            if (viewId === 'comments') renderComments();
-        }
-
-        function openAiModal() {
-            document.getElementById('aiModal').style.display = 'flex';
-        }
-
-        function closeAiModal() {
-            document.getElementById('aiModal').style.display = 'none';
-        }
-
-        // 🤖 ÇOKLU CEVAP VEREN GELİŞMİŞ YAPAY ZEKA MOTORU
-        function askAiAssistant() {
-            const rawInput = document.getElementById('aiQuestionInput').value.trim();
-            const q = rawInput.toLowerCase();
-            const responseBox = document.getElementById('aiResponseArea');
-
-            if (!q) {
-                responseBox.innerHTML = "Lütfen bir soru yazın.";
-                return;
-            }
-
-            let answers = [];
-
-            // 1. Bekar hoca sorgusu
-            if (q.includes("bekar hoca") || q.includes("bekar hocamız")) {
-                answers.push("👨‍🏫 Kurumumuzun bekar hocası: **Emirhan Tanış**'tır.");
-            }
-            // 2. İdareci / Yönetici sorgusu
-            if (q.includes("idareci") || q.includes("yönetici") || q.includes("kurum müdürü") || q.includes("müdür")) {
-                answers.push("🏛️ Kurumumuzun idarecisi: **Adem Koca**'dır.");
-            }
-            // 3. Haftanın talebesi / lideri
-            if (q.includes("haftanın talebesi") || q.includes("en iyi talebe") || q.includes("lider")) {
-                let best = students[0];
-                let maxP = -1;
-                students.forEach(s => {
-                    let totalP = s.dini.p + s.namaz.p + s.etut.p;
-                    if (totalP > maxP) {
-                        maxP = totalP;
-                        best = s;
-                    }
-                });
-                if (maxP > 0) {
-                    answers.push(`🌟 **Yapay Zeka Analizi:** Toplam katılımda öne çıkan lider talebe **${best.name}** (${maxP} katılım).`);
-                }
-            }
-
-            // 4. Öğrenci veya kelime eşleşmeleri (Birden fazla eşleşme varsa hepsini listele)
-            let matchedStudents = students.filter(s => {
-                let queryWords = q.split(' ');
-                return queryWords.some(word => word.length > 2 && s.name.toLowerCase().includes(word));
-            });
-
-            if (matchedStudents.length > 0) {
-                matchedStudents.forEach(s => {
-                    let totalDini = s.dini.p + s.dini.a;
-                    let diniYuzde = totalDini > 0 ? Math.round((s.dini.p / totalDini) * 100) : 100;
-                    
-                    let totalNamaz = s.namaz.p + s.namaz.a;
-                    let namazYuzde = totalNamaz > 0 ? Math.round((s.namaz.p / totalNamaz) * 100) : 100;
-
-                    let studentInfo = `📊 **${s.name}**:\n` +
-                                      `• Dini Ders Katılım: %${diniYuzde} (Var: ${s.dini.p}, Yok: ${s.dini.a})\n` +
-                                      `• Namaz Katılım: %${namazYuzde} (Var: ${s.namaz.p}, Yok: ${s.namaz.a})`;
-                    answers.push(studentInfo);
-                });
-            }
-
-            // 5. Yorumlarla ilgili sorgular
-            if (q.includes("yorum") || q.includes("görüş")) {
-                answers.push(`💬 Sistemde toplam ${comments.length} yorum var. Son yorum: "${comments[0] ? comments[0].text : 'Yok'}" (${comments[0] ? comments[0].author : ''})`);
-            }
-
-            // Eğer hiçbir özel eşleşme bulunamadıysa genel bilgilendirme ver
-            if (answers.length === 0) {
-                answers.push(`🤖 "${rawInput}" ile ilgili birden fazla alternatif tarandı fakat net bir kayıt çıkmadı. Öğrenci adı (Örn: Mehmet veya Samet), "idareci kim", "bekar hoca" ya da "haftanın talebesi" şeklinde sorabilirsiniz.`);
-            }
-
-            // Tüm cevapları araya çizgi koyarak eksiksiz bas
-            responseBox.innerHTML = answers.join('<hr style="border:0; border-top:1px solid rgba(255,255,255,0.15); margin:8px 0;">').replace(/\n/g, '<br>');
-            document.getElementById('aiQuestionInput').value = '';
-        }
-
-        // 🔐 GİZLİ ŞİFRE PANELİ (İdareci sorusu ve Adem Koca doğrulaması)
-        function openSecretPasswordPanel() {
-            let answer = prompt("🔒 Yönetici Şifrelerini Görmek İçin Doğrulama:\n'Kurumumuzun idarecisi kimdir?'");
-            if (answer && answer.toLowerCase().includes("adem koca")) {
-                alert(`📋 GÜVENLİ YÖNETİCİ ŞİFRELERİ:\n\n• Dini Ders Yoklaması Şifresi: ${PASSWORDS.DINI}\n• Namaz Yoklaması Şifresi: ${PASSWORDS.NAMAZ}\n• Etüt & Yönetim Şifresi: ${PASSWORDS.ETUT_ADMIN}`);
-            } else if (answer !== null) {
-                alert("❌ Yanlış cevap! Şifreler gizli kaldı.");
-            }
-        }
-
-        function startAttendanceWithPassword(category) {
-            let requiredPass = category === 'dini' ? PASSWORDS.DINI : PASSWORDS.NAMAZ;
-            const pin = prompt(`${category === 'dini' ? 'Dini Ders' : 'Namaz'} Yoklaması İçin Şifre Giriniz:`);
-            
-            if (pin === requiredPass) {
-                startAttendanceDirect(category, "ALL");
-            } else if (pin !== null) {
-                alert("❌ Hatalı Şifre!");
-            }
-        }
-
-        function openEtutClassSelection() {
-            const pin = prompt("Etüt Yoklaması İçin Şifre Giriniz (1299):");
-            if (pin !== PASSWORDS.ETUT_ADMIN) {
-                if(pin !== null) alert("❌ Hatalı Şifre!");
-                return;
-            }
-
-            let clsChoice = prompt("Hangi Sınıfın Etüt Yoklamasını Alacaksınız?\n\n1: 9. Sınıflar\n2: 10. Sınıflar\n3: 11-12. Sınıflar\n4: Tüm Sınıflar (Karma Etüt)\n\nLütfen rakam giriniz (1, 2, 3 veya 4):");
-            
-            let filterCls = "ALL";
-            if(clsChoice === "1") filterCls = "9. Sınıf";
-            if(clsChoice === "2") filterCls = "10. Sınıf";
-            if(clsChoice === "3") filterCls = "11-12. Sınıf";
-
-            startAttendanceDirect('etut', filterCls);
-        }
-
-        function accessAdminPanel() {
-            const pin = prompt("Talebe Yönetim Paneli İçin Şifre Giriniz (1299):");
-            if (pin === PASSWORDS.ETUT_ADMIN) {
-                showView('students');
-            } else if (pin !== null) {
-                alert("❌ Hatalı Şifre!");
-            }
-        }
-
-        function startAttendanceDirect(category, filterCls) {
-            activeCategory = category;
-            
-            if(filterCls !== "ALL") {
-                activeQueue = students.filter(s => s.clsGroup === filterCls);
-            } else {
-                activeQueue = [...students];
-            }
-
-            if (activeQueue.length === 0) {
-                alert("Seçilen grupta talebe bulunmuyor!");
-                return;
-            }
-
-            let titleText = "Dini Ders";
-            if (category === 'namaz') titleText = "Namaz";
-            if (category === 'etut') titleText = "Etüt" + (filterCls !== "ALL" ? ` (${filterCls})` : "");
-            document.getElementById('attendanceCategoryTitle').innerHTML = `<i class="fa-solid fa-pen-clip"></i> ${titleText} (Kalan: ${activeQueue.length})`;
-
-            showView('attendance');
-            renderNextStudent();
-        }
-
-        function submitComment() {
-            const author = document.getElementById('commentAuthor').value.trim();
-            const text = document.getElementById('commentText').value.trim();
-
-            if (!author || !text) {
-                alert("Lütfen adınızı ve yorumunuzu girin!");
-                return;
-            }
-
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-            comments.unshift({ author: author, text: text, date: dateStr });
-            saveToCloud();
-
-            document.getElementById('commentAuthor').value = '';
-            document.getElementById('commentText').value = '';
-            alert("✅ Yorumunuz ortak buluta eklendi ve herkes tarafından görüntülenebilir!");
-        }
-
-        function renderComments() {
-            const container = document.getElementById('commentsList');
-            if (!container) return;
-            container.innerHTML = '';
-
-            if (comments.length === 0) {
-                container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted);">Henüz yorum yapılmamış.</div>`;
-                return;
-            }
-
-            comments.forEach(c => {
-                const card = document.createElement('div');
-                card.className = 'comment-card';
-                card.innerHTML = `
-                    <div class="comment-header">
-                        <span class="comment-author"><i class="fa-solid fa-user-circle"></i> ${c.author}</span>
-                        <span class="comment-date"><i class="fa-regular fa-clock"></i> ${c.date}</span>
-                    </div>
-                    <div class="comment-text">${c.text}</div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function renderNextStudent() {
-            const container = document.getElementById('attendanceActiveArea');
-            
-            if (activeQueue.length === 0) {
-                container.innerHTML = `
-                    <div style="padding: 30px 10px; text-align: center;">
-                        <i class="fa-solid fa-circle-check" style="font-size: 3.5rem; color: var(--success); margin-bottom: 12px;"></i>
-                        <h3 style="font-size: 1.3rem; color: var(--primary);">Yoklama Tamamlandı!</h3>
-                        <p style="color: var(--text-muted); font-size:0.85rem; margin: 8px 0 20px 0;">Yoklamalar ortak buluta kaydedildi.</p>
-                        <button class="btn-main" onclick="showView('home')"><i class="fa-solid fa-house"></i> Ana Menüye Dön</button>
-                    </div>
-                `;
-                return;
-            }
-
-            const student = activeQueue[0];
-            document.getElementById('attendanceCategoryTitle').innerHTML = `<i class="fa-solid fa-pen-clip"></i> Yoklama (Kalan: ${activeQueue.length})`;
-
-            container.innerHTML = `
-                <div class="attendance-box">
-                    <span class="badge" style="background: #e2e8f0; color: var(--primary); font-weight:700;">Sıra No: #${student.id}</span>
-                    <div class="attendance-student-name">${student.name}</div>
-                    <div class="attendance-student-no">Yoklama durumunu seçin:</div>
-                    
-                    <div class="attendance-btn-group">
-                        <button class="att-btn att-var" onclick="markAttendance('${student.id}', 'var')">
-                            <i class="fa-solid fa-check fa-lg"></i> VAR
-                        </button>
-                        <button class="att-btn att-yok" onclick="markAttendance('${student.id}', 'yok')">
-                            <i class="fa-solid fa-xmark fa-lg"></i> YOK
-                        </button>
-                        <button class="att-btn att-izinli" onclick="markAttendance('${student.id}', 'izinli')">
-                            <i class="fa-solid fa-clock fa-lg"></i> İZİNLİ
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        function markAttendance(studentId, status) {
-            const student = students.find(s => s.id === studentId);
-            if (student) {
-                const now = new Date();
-                const dateStr = now.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' }) + " " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-                if (status === 'var') student[activeCategory].p++;
-                if (status === 'yok') {
-                    student[activeCategory].a++;
-                    if(!student[activeCategory].history) student[activeCategory].history = [];
-                    student[activeCategory].history.push({ type: 'yok', date: dateStr });
-                }
-                if (status === 'izinli') {
-                    student[activeCategory].l++;
-                    if(!student[activeCategory].history) student[activeCategory].history = [];
-                    student[activeCategory].history.push({ type: 'izinli', date: dateStr });
-                }
-
-                saveToCloud();
-            }
-
-            activeQueue.shift();
-            renderNextStudent();
-        }
-
-        function addStudent() {
-            const name = document.getElementById('newStudentName').value.trim();
-            const cls = document.getElementById('newStudentClass').value;
-
-            if (!name) {
-                alert("Lütfen ad ve soyad girin!");
-                return;
-            }
-
-            let nextNum = students.length + 1;
-            let numStr = nextNum < 10 ? '0' + nextNum : '' + nextNum;
-
-            students.push({
-                id: numStr,
-                name: name + " (" + cls + ")",
-                clsGroup: cls,
-                dini: {p:0, a:0, l:0, history:[]},
-                namaz: {p:0, a:0, l:0, history:[]},
-                etut: {p:0, a:0, l:0, history:[]}
-            });
-
-            saveToCloud();
-            renderStudentTable();
-
-            document.getElementById('newStudentName').value = '';
-            alert("✅ Talebe ortak buluta eklendi!");
-        }
-
-        function deleteStudent(id) {
-            if(confirm("Talebeyi silmek istediğinize emin misiniz?")) {
-                students = students.filter(s => s.id !== id);
-                students.forEach((s, idx) => {
-                    s.id = (idx + 1) < 10 ? '0' + (idx + 1) : '' + (idx + 1);
-                });
-                saveToCloud();
-                renderStudentTable();
-            }
-        }
-
-        function renderStudentTable() {
-            const tbody = document.getElementById('studentTableBody');
-            if(!tbody) return;
-            tbody.innerHTML = '';
-            document.getElementById('totalStudentCount').innerText = `Toplam: ${students.length}`;
-
-            students.forEach(s => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>#${s.id}</strong></td>
-                    <td>${s.name}</td>
-                    <td><span class="p-badge badge-var-pro">${s.clsGroup || 'Genel'}</span></td>
-                    <td><button style="background:#fee2e2; color:#b91c1c; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-size:0.75rem;" onclick="deleteStudent('${s.id}')"><i class="fa-solid fa-trash"></i> Sil</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function switchStatsCategory(category) {
-            currentStatsCategory = category;
-            document.querySelectorAll('.stats-tab-btn').forEach(btn => btn.classList.remove('active'));
-            
-            const activeBtn = document.getElementById('btn-tab-' + category);
-            if (activeBtn) activeBtn.classList.add('active');
-            
-            renderStatsTable(category);
-        }
-
-        function filterStatsByClass(cls) {
-            currentClassFilter = cls;
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            renderStatsTable(currentStatsCategory);
-        }
-
-        function renderStatsTable(category) {
-            const tbody = document.getElementById('statsTableBody');
-            if(!tbody) return;
-            tbody.innerHTML = '';
-
-            let filteredStudents = students;
-            if(currentClassFilter !== 'ALL') {
-                filteredStudents = students.filter(s => s.clsGroup && s.clsGroup.includes(currentClassFilter));
-            }
-
-            filteredStudents.forEach(s => {
-                const data = s[category] || {p:0, a:0, l:0, history:[]};
-                const validLectures = data.p + data.a;
-                const percentage = validLectures > 0 ? Math.round((data.p / validLectures) * 100) : 100;
-
-                let barColor = '#10b981';
-                if(percentage < 70) barColor = '#f59e0b';
-                if(percentage < 50) barColor = '#ef4444';
-
-                const tr = document.createElement('tr');
-                tr.className = "clickable-row";
-                tr.onclick = () => openStudentHistory(s.id, category);
-
-                tr.innerHTML = `
-                    <td><strong>#${s.id}</strong></td>
-                    <td><strong>${s.name}</strong> <i class="fa-solid fa-angle-right" style="font-size:0.7rem; color:var(--text-muted);"></i></td>
-                    <td>
-                        <div class="badge-group">
-                            <span class="p-badge badge-var-pro"><i class="fa-solid fa-check"></i> ${data.p} Var</span>
-                            <span class="p-badge badge-yok-pro"><i class="fa-solid fa-xmark"></i> ${data.a} Yok</span>
-                            <span class="p-badge badge-izin-pro"><i class="fa-solid fa-clock"></i> ${data.l} İzin</span>
-                        </div>
-                    </td>
-                    <td><strong style="color: ${barColor};">%${percentage}</strong></td>
-                    <td style="width: 100px;">
-                        <div class="progress-bar-bg">
-                            <div class="progress-bar-fill" style="width: ${percentage}%; background: ${barColor};"></div>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function openStudentHistory(studentId, category) {
-            const student = students.find(s => s.id === studentId);
-            if (!student) return;
-
-            let catTitle = "Dini Ders";
-            if (category === 'namaz') catTitle = "Namaz";
-            if (category === 'etut') catTitle = "Etüt";
-
-            document.getElementById('modalStudentName').innerText = `${student.name} (#${student.id})`;
-            document.getElementById('modalCategoryName').innerText = `${catTitle} Geçmişi`;
-
-            const historyList = document.getElementById('modalHistoryList');
-            historyList.innerHTML = '';
-
-            const historyData = student[category]?.history || [];
-
-            if (historyData.length === 0) {
-                historyList.innerHTML = `
-                    <div style="text-align:center; padding:15px; color:var(--text-muted); font-size:0.8rem;">
-                        <i class="fa-solid fa-shield-cat" style="font-size:1.8rem; color:var(--success); margin-bottom:6px;"></i><br>
-                        Talebenin bu kategoride devamsızlığı veya izni bulunmuyor.
-                    </div>
-                `;
-            } else {
-                historyData.forEach(item => {
-                    const li = document.createElement('li');
-                    li.className = 'history-item';
-                    
-                    let badge = item.type === 'yok' 
-                        ? '<span class="p-badge badge-yok-pro">GELMEDİ (YOK)</span>' 
-                        : '<span class="p-badge badge-izin-pro">İZİNLİ</span>';
-
-                    li.innerHTML = `
-                        <span><i class="fa-regular fa-calendar-days" style="color:var(--text-muted);"></i> ${item.date}</span>
-                        ${badge}
-                    `;
-                    historyList.appendChild(li);
-                });
-            }
-
-            document.getElementById('historyModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('historyModal').style.display = 'none';
-        }
-
-        function openSmsReportModal() {
-            let catName = "Dini Ders";
-            if(currentStatsCategory === 'namaz') catName = "Namaz";
-            if(currentStatsCategory === 'etut') catName = "Etüt";
-
-            let reportText = `📌 DEMET EĞİTİM KURUMLARI - ${catName.toUpperCase()} YOKLAMA RAPORU\n\n`;
-            let absentCount = 0;
-
-            students.forEach(s => {
-                let historyData = s[currentStatsCategory]?.history || [];
-                if(historyData.length > 0) {
-                    let lastRecord = historyData[historyData.length - 1];
-                    reportText += `• ${s.name} ➡️ ${lastRecord.type.toUpperCase()} (${lastRecord.date})\n`;
-                    absentCount++;
-                }
-            });
-
-            if(absentCount === 0) {
-                reportText += "Bugün kayıtlı devamsız veya izinli talebe bulunmamaktadır.";
-            }
-
-            document.getElementById('smsReportText').value = reportText;
-            document.getElementById('smsModal').style.display = 'flex';
-        }
-
-        function closeSmsModal() {
-            document.getElementById('smsModal').style.display = 'none';
-        }
-
-        function sendViaWhatsApp() {
-            let textarea = document.getElementById('smsReportText');
-            textarea.select();
-            textarea.setSelectionRange(0, 99999);
-            
-            navigator.clipboard.writeText(textarea.value).then(() => {
-                alert("📋 Rapor kopyalandı! WhatsApp açılıyor, grubu seçip yapıştırabilirsiniz.");
-                let encoded = encodeURIComponent(textarea.value);
-                window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
-                closeSmsModal();
-            }).catch(err => {
-                let encoded = encodeURIComponent(textarea.value);
-                window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
-                closeSmsModal();
-            });
-        }
     </script>
+
 </body>
 </html>

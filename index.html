@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demet Eğitim Kurumları - Bulut Yoklama Portal</title>
+    <title>Demet Eğitim Kurumları - Yoklama Portal</title>
     <!-- Google Fonts & FontAwesome İkonlar -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- JSONbin Güvenli Bulut Altyapısı (Hesap Açma Gerektirmez) -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
         :root {
@@ -314,7 +310,7 @@
             <div class="brand-logo"><i class="fa-solid fa-graduation-cap"></i></div>
             <div class="brand-title">
                 <h1>DEMET EĞİTİM KURUMLARI</h1>
-                <p>Sorunsuz Bulut Portal</p>
+                <p>Sorunsuz Yoklama Portal</p>
             </div>
         </div>
 
@@ -332,7 +328,7 @@
         <div id="view-home" class="view-section active">
             <div style="text-align: center; margin-bottom: 15px;">
                 <h2 style="font-size: 1.3rem; color: var(--primary);">Yoklama & Rapor Paneli</h2>
-                <p style="color: var(--text-muted); font-size: 0.8rem;">Sistem hatasız ve kararlı bulut altyapısıyla çalışmaktadır.</p>
+                <p style="color: var(--text-muted); font-size: 0.8rem;">Talebe kayıtları ve istatistikler sorunsuz şekilde çalışmaktadır.</p>
             </div>
 
             <div class="dashboard-grid">
@@ -580,8 +576,7 @@
         }
 
         function loadSystemData() {
-            // Güvenli yerel bulut senkronizasyon belleği
-            const savedStudents = localStorage.getItem('demet_ogrenciler_v3000');
+            const savedStudents = localStorage.getItem('demet_ogrenciler_v5000');
             if (savedStudents) {
                 try {
                     students = JSON.parse(savedStudents);
@@ -593,15 +588,15 @@
                 saveData();
             }
 
-            const savedComments = localStorage.getItem('demet_yorumlar_v3000');
+            const savedComments = localStorage.getItem('demet_yorumlar_v5000');
             if (savedComments) {
                 try {
                     comments = JSON.parse(savedComments);
                 } catch(e) {
-                    comments = [{ author: "Seyit Talha Sarı", text: "Portalımız kararlı altyapısıyla aktifleşmiştir!", date: "17.10.2026 12:00" }];
+                    comments = [{ author: "Seyit Talha Sarı", text: "Portalımız aktif ve sorunsuz çalışmaktadır!", date: "17.10.2026 12:00" }];
                 }
             } else {
-                comments = [{ author: "Seyit Talha Sarı", text: "Portalımız kararlı altyapısıyla aktifleşmiştir!", date: "17.10.2026 12:00" }];
+                comments = [{ author: "Seyit Talha Sarı", text: "Portalımız aktif ve sorunsuz çalışmaktadır!", date: "17.10.2026 12:00" }];
                 saveComments();
             }
 
@@ -610,12 +605,12 @@
         }
 
         function saveData() {
-            localStorage.setItem('demet_ogrenciler_v3000', JSON.stringify(students));
+            localStorage.setItem('demet_ogrenciler_v5000', JSON.stringify(students));
             refreshActiveViews();
         }
 
         function saveComments() {
-            localStorage.setItem('demet_yorumlar_v3000', JSON.stringify(comments));
+            localStorage.setItem('demet_yorumlar_v5000', JSON.stringify(comments));
             renderComments();
         }
 
@@ -754,7 +749,7 @@
                     <div style="padding: 30px 10px; text-align: center;">
                         <i class="fa-solid fa-circle-check" style="font-size: 3.5rem; color: var(--success); margin-bottom: 12px;"></i>
                         <h3 style="font-size: 1.3rem; color: var(--primary);">Yoklama Tamamlandı!</h3>
-                        <p style="color: var(--text-muted); font-size:0.85rem; margin: 8px 0 20px 0;">Tüm yoklamalar sisteme kaydedildi.</p>
+                        <p style="color: var(--text-muted); font-size:0.85rem; margin: 8px 0 20px 0;">Tüm yoklamalar kaydedildi ve istatistiklere işlendi.</p>
                         <button class="btn-main" onclick="showView('home')"><i class="fa-solid fa-house"></i> Ana Menüye Dön</button>
                     </div>
                 `;

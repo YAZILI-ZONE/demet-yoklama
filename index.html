@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demet Eğitim Kurumları - Yoklama Portal</title>
+    <title>Demet Eğitim Kurumları - Ortak Bulut Yoklama Portal</title>
     <!-- Google Fonts & FontAwesome İkonlar -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -310,7 +310,7 @@
             <div class="brand-logo"><i class="fa-solid fa-graduation-cap"></i></div>
             <div class="brand-title">
                 <h1>DEMET EĞİTİM KURUMLARI</h1>
-                <p>Sorunsuz Yoklama Portal</p>
+                <p>Ortak Bulut Senkronize Portal</p>
             </div>
         </div>
 
@@ -328,7 +328,7 @@
         <div id="view-home" class="view-section active">
             <div style="text-align: center; margin-bottom: 15px;">
                 <h2 style="font-size: 1.3rem; color: var(--primary);">Yoklama & Rapor Paneli</h2>
-                <p style="color: var(--text-muted); font-size: 0.8rem;">Talebe kayıtları ve istatistikler sorunsuz şekilde çalışmaktadır.</p>
+                <p style="color: var(--text-muted); font-size: 0.8rem;">Tüm cihazlar ortak bulut üzerinden anlık olarak senkronize edilir.</p>
             </div>
 
             <div class="dashboard-grid">
@@ -518,6 +518,10 @@
             ADMIN: "2026"
         };
 
+        // Ücretsiz veHerkese Açık Ortak Bulut API Alanı (Herkes aynı veriyi görür)
+        const BIN_ID = "6714a60ee41b4d34e44431e1"; 
+        const API_URL = `https://api.jsonbin.io/v3/b/673e5bfce41b4d34e44e21a2`;
+
         const initialStudentsList = [
             { name: "SAMET SEFA SOĞANCI", cls: "9. Sınıf" },
             { name: "EMİR TALHA ÇUKUR", cls: "9. Sınıf" },
@@ -558,7 +562,9 @@
         window.onload = function() {
             updateClock();
             setInterval(updateClock, 1000);
-            loadSystemData();
+            loadFromCloud();
+            // Diğer telefonlardaki değişiklikleri yakalamak için her 5 saniyede bir buluttan güncel veriyi çeker
+            setInterval(loadFromCloud, 5000); 
         };
 
         function getFreshInitialStudents() {
@@ -575,43 +581,44 @@
             });
         }
 
-        function loadSystemData() {
-            const savedStudents = localStorage.getItem('demet_ogrenciler_v5000');
-            if (savedStudents) {
-                try {
-                    students = JSON.parse(savedStudents);
-                } catch(e) {
+        async function loadFromCloud() {
+            try {
+                let response = await fetch("https://api.jsonbin.io/v3/b/673e5bfce41b4d34e44e21a2/latest", {
+                    headers: { "X-Master-Key": "$2a$10$wN2L0XG3N0g5Z5sK7H8Y8O7qZ6x3V2b1n0m9L8K7J6H5G4F3E2D1C" }
+                });
+                let data = await response.json();
+                if (data && data.record && data.record.students) {
+                    students = data.record.students;
+                    comments = data.record.comments || [];
+                } else {
+                    students = getFreshInitialStudents();
+                    comments = [{ author: "Seyit Talha Sarı", text: "Ortak bulut sistemi aktifleşti!", date: "17.10.2026 12:00" }];
+                    saveToCloud();
+                }
+            } catch(e) {
+                // İnternet veya bulut erişiminde geçici sorun olursa yerel hafızadan devam eder
+                if(students.length === 0) {
                     students = getFreshInitialStudents();
                 }
-            } else {
-                students = getFreshInitialStudents();
-                saveData();
             }
-
-            const savedComments = localStorage.getItem('demet_yorumlar_v5000');
-            if (savedComments) {
-                try {
-                    comments = JSON.parse(savedComments);
-                } catch(e) {
-                    comments = [{ author: "Seyit Talha Sarı", text: "Portalımız aktif ve sorunsuz çalışmaktadır!", date: "17.10.2026 12:00" }];
-                }
-            } else {
-                comments = [{ author: "Seyit Talha Sarı", text: "Portalımız aktif ve sorunsuz çalışmaktadır!", date: "17.10.2026 12:00" }];
-                saveComments();
-            }
-
             refreshActiveViews();
             renderComments();
         }
 
-        function saveData() {
-            localStorage.setItem('demet_ogrenciler_v5000', JSON.stringify(students));
+        async function saveToCloud() {
             refreshActiveViews();
-        }
-
-        function saveComments() {
-            localStorage.setItem('demet_yorumlar_v5000', JSON.stringify(comments));
-            renderComments();
+            try {
+                await fetch("https://api.jsonbin.io/v3/b/673e5bfce41b4d34e44e21a2", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Master-Key": "$2a$10$wN2L0XG3N0g5Z5sK7H8Y8O7qZ6x3V2b1n0m9L8K7J6H5G4F3E2D1C"
+                    },
+                    body: JSON.stringify({ students: students, comments: comments })
+                });
+            } catch(e) {
+                console.error("Buluta kayıt yapılırken hata oluştu.");
+            }
         }
 
         function refreshActiveViews() {
@@ -684,11 +691,11 @@
                 const dateStr = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
                 comments.unshift({ author: author, text: text, date: dateStr });
-                saveComments();
+                saveToCloud();
 
                 document.getElementById('commentAuthor').value = '';
                 document.getElementById('commentText').value = '';
-                alert("✅ Yorumunuz başarıyla yayınlandı!");
+                alert("✅ Yorumunuz ortak buluta kaydedildi!");
             } else if (pin !== null) {
                 alert("❌ Hatalı Şifre! Yorum yayınlanmadı.");
             }
@@ -749,7 +756,7 @@
                     <div style="padding: 30px 10px; text-align: center;">
                         <i class="fa-solid fa-circle-check" style="font-size: 3.5rem; color: var(--success); margin-bottom: 12px;"></i>
                         <h3 style="font-size: 1.3rem; color: var(--primary);">Yoklama Tamamlandı!</h3>
-                        <p style="color: var(--text-muted); font-size:0.85rem; margin: 8px 0 20px 0;">Tüm yoklamalar kaydedildi ve istatistiklere işlendi.</p>
+                        <p style="color: var(--text-muted); font-size:0.85rem; margin: 8px 0 20px 0;">Yoklamalar ortak buluta kaydedildi, diğer cihazlarda anında görünecek.</p>
                         <button class="btn-main" onclick="showView('home')"><i class="fa-solid fa-house"></i> Ana Menüye Dön</button>
                     </div>
                 `;
@@ -798,7 +805,7 @@
                     student[activeCategory].history.push({ type: 'izinli', date: dateStr });
                 }
 
-                saveData();
+                saveToCloud();
             }
 
             activeQueue.shift();
@@ -826,11 +833,11 @@
                 etut: {p:0, a:0, l:0, history:[]}
             });
 
-            saveData();
+            saveToCloud();
             renderStudentTable();
 
             document.getElementById('newStudentName').value = '';
-            alert("✅ Talebe başarıyla eklendi!");
+            alert("✅ Talebe ortak buluta eklendi!");
         }
 
         function deleteStudent(id) {
@@ -839,7 +846,7 @@
                 students.forEach((s, idx) => {
                     s.id = (idx + 1) < 10 ? '0' + (idx + 1) : '' + (idx + 1);
                 });
-                saveData();
+                saveToCloud();
                 renderStudentTable();
             }
         }

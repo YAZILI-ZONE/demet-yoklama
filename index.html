@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demet Eğitim Kurumları - Ortak Bulut Yoklama Portal</title>
+    <title>Demet Eğitim Kurumları - Ortak Bulut Portal</title>
     <!-- Google Fonts & FontAwesome İkonlar -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -228,6 +228,7 @@
         .form-row { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
         .form-input { flex: 1; min-width: 140px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; outline: none; }
         .btn-main { background: var(--accent); color: white; border: none; padding: 12px 16px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; width: 100%; margin-top: 5px; }
+        .btn-sms { background: #10b981; color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 0.78rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; }
 
         .progress-bar-bg { background: #e2e8f0; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 4px; }
         .progress-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s ease; }
@@ -310,7 +311,7 @@
             <div class="brand-logo"><i class="fa-solid fa-graduation-cap"></i></div>
             <div class="brand-title">
                 <h1>DEMET EĞİTİM KURUMLARI</h1>
-                <p>Ortak Bulut Senkronize Portal</p>
+                <p>Şifresiz Ortak Bulut & SMS Portal</p>
             </div>
         </div>
 
@@ -328,26 +329,26 @@
         <div id="view-home" class="view-section active">
             <div style="text-align: center; margin-bottom: 15px;">
                 <h2 style="font-size: 1.3rem; color: var(--primary);">Yoklama & Rapor Paneli</h2>
-                <p style="color: var(--text-muted); font-size: 0.8rem;">Tüm cihazlar ortak bulut üzerinden anlık olarak senkronize edilir.</p>
+                <p style="color: var(--text-muted); font-size: 0.8rem;">Şifresiz ortak bulut ve SMS bildirim sistemi aktif.</p>
             </div>
 
             <div class="dashboard-grid">
-                <div class="dash-card" onclick="startAttendanceWithPassword('dini')">
+                <div class="dash-card" onclick="startAttendance('dini')">
                     <div class="dash-icon" style="background: #e0f2fe; color: #0284c7;"><i class="fa-solid fa-book-quran"></i></div>
                     <div class="dash-title">Dini Ders Yoklaması</div>
-                    <div class="dash-desc">🔒 Şifre: 1299</div>
+                    <div class="dash-desc">⚡ Şifresiz Başla</div>
                 </div>
 
-                <div class="dash-card" onclick="startAttendanceWithPassword('namaz')">
+                <div class="dash-card" onclick="startAttendance('namaz')">
                     <div class="dash-icon" style="background: #d1fae5; color: #059669;"><i class="fa-solid fa-mosque"></i></div>
                     <div class="dash-title">Namaz Yoklaması</div>
-                    <div class="dash-desc">🔒 Şifre: 1299</div>
+                    <div class="dash-desc">⚡ Şifresiz Başla</div>
                 </div>
 
                 <div class="dash-card" onclick="openEtutClassSelection()">
                     <div class="dash-icon" style="background: #fef3c7; color: #d97706;"><i class="fa-solid fa-user-graduate"></i></div>
                     <div class="dash-title">Etüt Yoklaması</div>
-                    <div class="dash-desc">🔒 Şifre: 1453</div>
+                    <div class="dash-desc">⚡ Sınıf Seçimli Başla</div>
                 </div>
 
                 <div class="dash-card" onclick="showView('stats')">
@@ -359,13 +360,13 @@
                 <div class="dash-card" onclick="showView('comments')">
                     <div class="dash-icon" style="background: #fae8ff; color: #a21caf;"><i class="fa-solid fa-comments"></i></div>
                     <div class="dash-title">Yorumlar & Görüşler</div>
-                    <div class="dash-desc">💬 Okuma Açık / Yazma Şifreli</div>
+                    <div class="dash-desc">💬 Şifresiz Ortak Yorumlar</div>
                 </div>
 
-                <div class="dash-card" onclick="accessAdminPanel()">
+                <div class="dash-card" onclick="showView('students')">
                     <div class="dash-icon" style="background: #ede9fe; color: #7c3aed;"><i class="fa-solid fa-user-shield"></i></div>
                     <div class="dash-title">Talebe Kayıt / Yönet</div>
-                    <div class="dash-desc">🔒 Şifre: 2026</div>
+                    <div class="dash-desc">⚡ Hızlı Talebe Ekle/Sil</div>
                 </div>
             </div>
         </div>
@@ -386,7 +387,7 @@
         <div id="view-students" class="view-section">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title"><i class="fa-solid fa-user-plus"></i> Yönetici Talebe Kayıt Ekranı</div>
+                    <div class="card-title"><i class="fa-solid fa-user-plus"></i> Talebe Kayıt Ekranı</div>
                     <button class="btn-back" onclick="showView('home')"><i class="fa-solid fa-arrow-left"></i> Çıkış</button>
                 </div>
                 <div class="form-row">
@@ -412,7 +413,7 @@
                                 <th>Sıra No</th>
                                 <th>Talebe Adı Soyadı</th>
                                 <th>Sınıfı</th>
-                                <th>Yönetici İşlemi</th>
+                                <th>İşlem</th>
                             </tr>
                         </thead>
                         <tbody id="studentTableBody"></tbody>
@@ -428,6 +429,8 @@
                     <div class="card-title"><i class="fa-solid fa-chart-column"></i> İstatistikler ve Raporlar</div>
                     <button class="btn-back" onclick="showView('home')"><i class="fa-solid fa-arrow-left"></i> Ana Menü</button>
                 </div>
+
+                <button class="btn-sms" onclick="openSmsReportModal()"><i class="fa-solid fa-paper-plane"></i> Eksikleri SMS / WhatsApp ile Bildir</button>
 
                 <div class="stats-nav">
                     <button class="stats-tab-btn active" id="btn-tab-dini" onclick="switchStatsCategory('dini')"><i class="fa-solid fa-book-quran"></i> Dini Ders Raporu</button>
@@ -467,19 +470,19 @@
         <div id="view-comments" class="view-section">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title"><i class="fa-solid fa-comments"></i> Yorumlar ve Değerlendirmeler</div>
+                    <div class="card-title"><i class="fa-solid fa-comments"></i> Yorumlar ve Görüşler</div>
                     <button class="btn-back" onclick="showView('home')"><i class="fa-solid fa-arrow-left"></i> Ana Menü</button>
                 </div>
 
                 <div style="background: #f1f5f9; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
                     <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 8px; color: var(--primary);">
-                        ✍️ Yeni Yorum Ekleyin (Gönderirken Şifre İster):
+                        ✍️ Yeni Yorum Ekleyin:
                     </div>
                     <div class="form-row">
-                        <input type="text" id="commentAuthor" class="form-input" placeholder="Adınız Soyadınız (Örn: Hoca / Veli)">
-                        <input type="text" id="commentText" class="form-input" placeholder="Yorumunuz (Örn: Sistem çok güzel olmuş...)">
+                        <input type="text" id="commentAuthor" class="form-input" placeholder="Adınız Soyadınız">
+                        <input type="text" id="commentText" class="form-input" placeholder="Yorumunuz...">
                     </div>
-                    <button class="btn-main" onclick="submitCommentWithPassword()"><i class="fa-solid fa-paper-plane"></i> Yorumu Yayınla</button>
+                    <button class="btn-main" onclick="submitComment()"><i class="fa-solid fa-paper-plane"></i> Yorumu Yayınla</button>
                 </div>
 
                 <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 12px; color: var(--primary);">
@@ -511,16 +514,28 @@
         </div>
     </div>
 
-    <script>
-        const PASSWORDS = {
-            NAMAZ_DINI: "1299",
-            ETUT: "1453",
-            ADMIN: "2026"
-        };
+    <!-- SMS / BİLDİRİM MODAL -->
+    <div class="modal-overlay" id="smsModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fa-solid fa-paper-plane"></i> SMS / WhatsApp Bildirim Paneli</div>
+                <button class="modal-close" onclick="closeSmsModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+                Seçilen kategoriye ait bugünkü gelmeyen/eksik talebe raporu metni:
+            </div>
 
-        // Ücretsiz veHerkese Açık Ortak Bulut API Alanı (Herkes aynı veriyi görür)
-        const BIN_ID = "6714a60ee41b4d34e44431e1"; 
-        const API_URL = `https://api.jsonbin.io/v3/b/673e5bfce41b4d34e44e21a2`;
+            <textarea id="smsReportText" style="width:100%; height:120px; padding:10px; border-radius:8px; border:1px solid #cbd5e1; font-size:0.85rem; margin-bottom:12px; outline:none;"></textarea>
+
+            <button class="btn-main" onclick="sendViaWhatsApp()"><i class="fa-brands fa-whatsapp fa-lg"></i> WhatsApp ile Gönder</button>
+        </div>
+    </div>
+
+    <script>
+        // 🌐 KENDİ BIN ID'N VE MASTER KEY'İN ENTEGRE EDİLDİ:
+        const BIN_URL = "https://api.jsonbin.io/v3/b/6ae4a6b3ffd5d16053989d5c";
+        const API_KEY = "$2a$10$836Mma2Tx7Vbjqe5ncCca.cSQZDCQpuuBs3ddUlzyPUehkHyWdmKO";
 
         const initialStudentsList = [
             { name: "SAMET SEFA SOĞANCI", cls: "9. Sınıf" },
@@ -563,8 +578,7 @@
             updateClock();
             setInterval(updateClock, 1000);
             loadFromCloud();
-            // Diğer telefonlardaki değişiklikleri yakalamak için her 5 saniyede bir buluttan güncel veriyi çeker
-            setInterval(loadFromCloud, 5000); 
+            setInterval(loadFromCloud, 4000);
         };
 
         function getFreshInitialStudents() {
@@ -583,20 +597,19 @@
 
         async function loadFromCloud() {
             try {
-                let response = await fetch("https://api.jsonbin.io/v3/b/673e5bfce41b4d34e44e21a2/latest", {
-                    headers: { "X-Master-Key": "$2a$10$wN2L0XG3N0g5Z5sK7H8Y8O7qZ6x3V2b1n0m9L8K7J6H5G4F3E2D1C" }
+                let response = await fetch(BIN_URL + "/latest", {
+                    headers: { "X-Master-Key": API_KEY }
                 });
                 let data = await response.json();
-                if (data && data.record && data.record.students) {
+                if (data && data.record && data.record.students && data.record.students.length > 0) {
                     students = data.record.students;
                     comments = data.record.comments || [];
                 } else {
                     students = getFreshInitialStudents();
-                    comments = [{ author: "Seyit Talha Sarı", text: "Ortak bulut sistemi aktifleşti!", date: "17.10.2026 12:00" }];
+                    comments = [{ author: "Seyit Talha Sarı", text: "Şifresiz ortak bulut sistemi aktifleşti!", date: "17.10.2026 12:00" }];
                     saveToCloud();
                 }
             } catch(e) {
-                // İnternet veya bulut erişiminde geçici sorun olursa yerel hafızadan devam eder
                 if(students.length === 0) {
                     students = getFreshInitialStudents();
                 }
@@ -608,16 +621,16 @@
         async function saveToCloud() {
             refreshActiveViews();
             try {
-                await fetch("https://api.jsonbin.io/v3/b/673e5bfce41b4d34e44e21a2", {
+                await fetch(BIN_URL, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-Master-Key": "$2a$10$wN2L0XG3N0g5Z5sK7H8Y8O7qZ6x3V2b1n0m9L8K7J6H5G4F3E2D1C"
+                        "X-Master-Key": API_KEY
                     },
                     body: JSON.stringify({ students: students, comments: comments })
                 });
             } catch(e) {
-                console.error("Buluta kayıt yapılırken hata oluştu.");
+                console.error("Buluta kayıt hatası.");
             }
         }
 
@@ -641,22 +654,11 @@
             if (viewId === 'comments') renderComments();
         }
 
-        function startAttendanceWithPassword(category) {
-            const pin = prompt("Dini Ders / Namaz Yoklaması İçin Şifre Giriniz (1299):");
-            if (pin === PASSWORDS.NAMAZ_DINI) {
-                startAttendance(category);
-            } else if (pin !== null) {
-                alert("❌ Hatalı Şifre!");
-            }
+        function startAttendance(category) {
+            startAttendanceDirect(category, "ALL");
         }
 
         function openEtutClassSelection() {
-            const pin = prompt("Etüt Yoklaması İçin Şifre Giriniz (1453):");
-            if (pin !== PASSWORDS.ETUT) {
-                if(pin !== null) alert("❌ Hatalı Şifre!");
-                return;
-            }
-
             let clsChoice = prompt("Hangi Sınıfın Etüt Yoklamasını Alacaksınız?\n\n1: 9. Sınıflar\n2: 10. Sınıflar\n3: 11-12. Sınıflar\n4: Tüm Sınıflar (Karma Etüt)\n\nLütfen rakam giriniz (1, 2, 3 veya 4):");
             
             let filterCls = "ALL";
@@ -664,19 +666,33 @@
             if(clsChoice === "2") filterCls = "10. Sınıf";
             if(clsChoice === "3") filterCls = "11-12. Sınıf";
 
-            startAttendance('etut', filterCls);
+            startAttendanceDirect('etut', filterCls);
         }
 
-        function accessAdminPanel() {
-            const pin = prompt("Yönetici Erişimi İçin Şifre Giriniz (2026):");
-            if (pin === PASSWORDS.ADMIN) {
-                showView('students');
-            } else if (pin !== null) {
-                alert("❌ Hatalı Şifre!");
+        function startAttendanceDirect(category, filterCls) {
+            activeCategory = category;
+            
+            if(filterCls !== "ALL") {
+                activeQueue = students.filter(s => s.clsGroup === filterCls);
+            } else {
+                activeQueue = [...students];
             }
+
+            if (activeQueue.length === 0) {
+                alert("Seçilen grupta talebe bulunmuyor!");
+                return;
+            }
+
+            let titleText = "Dini Ders";
+            if (category === 'namaz') titleText = "Namaz";
+            if (category === 'etut') titleText = "Etüt" + (filterCls !== "ALL" ? ` (${filterCls})` : "");
+            document.getElementById('attendanceCategoryTitle').innerHTML = `<i class="fa-solid fa-pen-clip"></i> ${titleText} (Kalan: ${activeQueue.length})`;
+
+            showView('attendance');
+            renderNextStudent();
         }
 
-        function submitCommentWithPassword() {
+        function submitComment() {
             const author = document.getElementById('commentAuthor').value.trim();
             const text = document.getElementById('commentText').value.trim();
 
@@ -685,20 +701,15 @@
                 return;
             }
 
-            const pin = prompt("Yorum Yayınlamak İçin Yönetici Şifresini Giriniz (2026):");
-            if (pin === PASSWORDS.ADMIN) {
-                const now = new Date();
-                const dateStr = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-                comments.unshift({ author: author, text: text, date: dateStr });
-                saveToCloud();
+            comments.unshift({ author: author, text: text, date: dateStr });
+            saveToCloud();
 
-                document.getElementById('commentAuthor').value = '';
-                document.getElementById('commentText').value = '';
-                alert("✅ Yorumunuz ortak buluta kaydedildi!");
-            } else if (pin !== null) {
-                alert("❌ Hatalı Şifre! Yorum yayınlanmadı.");
-            }
+            document.getElementById('commentAuthor').value = '';
+            document.getElementById('commentText').value = '';
+            alert("✅ Yorumunuz ortak buluta eklendi!");
         }
 
         function renderComments() {
@@ -723,29 +734,6 @@
                 `;
                 container.appendChild(card);
             });
-        }
-
-        function startAttendance(category, filterCls = "ALL") {
-            activeCategory = category;
-            
-            if(filterCls !== "ALL") {
-                activeQueue = students.filter(s => s.clsGroup === filterCls);
-            } else {
-                activeQueue = [...students];
-            }
-
-            if (activeQueue.length === 0) {
-                alert("Seçilen grupta talebe bulunmuyor!");
-                return;
-            }
-
-            let titleText = "Dini Ders";
-            if (category === 'namaz') titleText = "Namaz";
-            if (category === 'etut') titleText = "Etüt" + (filterCls !== "ALL" ? ` (${filterCls})` : "");
-            document.getElementById('attendanceCategoryTitle').innerHTML = `<i class="fa-solid fa-pen-clip"></i> ${titleText} (Kalan: ${activeQueue.length})`;
-
-            showView('attendance');
-            renderNextStudent();
         }
 
         function renderNextStudent() {
@@ -975,6 +963,41 @@
 
         function closeModal() {
             document.getElementById('historyModal').style.display = 'none';
+        }
+
+        function openSmsReportModal() {
+            let catName = "Dini Ders";
+            if(currentStatsCategory === 'namaz') catName = "Namaz";
+            if(currentStatsCategory === 'etut') catName = "Etüt";
+
+            let reportText = `📌 DEMET EĞİTİM KURUMLARI - ${catName.toUpperCase()} YOKLAMA RAPORU\n\n`;
+            let absentCount = 0;
+
+            students.forEach(s => {
+                let historyData = s[currentStatsCategory]?.history || [];
+                if(historyData.length > 0) {
+                    let lastRecord = historyData[historyData.length - 1];
+                    reportText += `• ${s.name} ➡️ ${lastRecord.type.toUpperCase()} (${lastRecord.date})\n`;
+                    absentCount++;
+                }
+            });
+
+            if(absentCount === 0) {
+                reportText += "Bugün kayıtlı devamsız veya izinli talebe bulunmamaktadır.";
+            }
+
+            document.getElementById('smsReportText').value = reportText;
+            document.getElementById('smsModal').style.display = 'flex';
+        }
+
+        function closeSmsModal() {
+            document.getElementById('smsModal').style.display = 'none';
+        }
+
+        function sendViaWhatsApp() {
+            let text = document.getElementById('smsReportText').value;
+            let encoded = encodeURIComponent(text);
+            window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
         }
     </script>
 </body>

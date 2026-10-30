@@ -311,7 +311,7 @@
             <div class="brand-logo"><i class="fa-solid fa-graduation-cap"></i></div>
             <div class="brand-title">
                 <h1>DEMET EĞİTİM KURUMLARI</h1>
-                <p>Şifresiz Ortak Bulut & SMS Portal</p>
+                <p>Ortak Bulut & Şifreli Yoklama Portal</p>
             </div>
         </div>
 
@@ -329,26 +329,26 @@
         <div id="view-home" class="view-section active">
             <div style="text-align: center; margin-bottom: 15px;">
                 <h2 style="font-size: 1.3rem; color: var(--primary);">Yoklama & Rapor Paneli</h2>
-                <p style="color: var(--text-muted); font-size: 0.8rem;">Şifresiz ortak bulut ve SMS bildirim sistemi aktif.</p>
+                <p style="color: var(--text-muted); font-size: 0.8rem;">Güvenlik şifreleri ve ortak bulut senkronizasyonu aktiftir.</p>
             </div>
 
             <div class="dashboard-grid">
-                <div class="dash-card" onclick="startAttendance('dini')">
+                <div class="dash-card" onclick="startAttendanceWithPassword('dini')">
                     <div class="dash-icon" style="background: #e0f2fe; color: #0284c7;"><i class="fa-solid fa-book-quran"></i></div>
                     <div class="dash-title">Dini Ders Yoklaması</div>
-                    <div class="dash-desc">⚡ Şifresiz Başla</div>
+                    <div class="dash-desc">🔒 Şifre: 1910</div>
                 </div>
 
-                <div class="dash-card" onclick="startAttendance('namaz')">
+                <div class="dash-card" onclick="startAttendanceWithPassword('namaz')">
                     <div class="dash-icon" style="background: #d1fae5; color: #059669;"><i class="fa-solid fa-mosque"></i></div>
                     <div class="dash-title">Namaz Yoklaması</div>
-                    <div class="dash-desc">⚡ Şifresiz Başla</div>
+                    <div class="dash-desc">🔒 Şifre: 1071</div>
                 </div>
 
                 <div class="dash-card" onclick="openEtutClassSelection()">
                     <div class="dash-icon" style="background: #fef3c7; color: #d97706;"><i class="fa-solid fa-user-graduate"></i></div>
                     <div class="dash-title">Etüt Yoklaması</div>
-                    <div class="dash-desc">⚡ Sınıf Seçimli Başla</div>
+                    <div class="dash-desc">🔒 Şifre: 1299</div>
                 </div>
 
                 <div class="dash-card" onclick="showView('stats')">
@@ -363,10 +363,10 @@
                     <div class="dash-desc">💬 Şifresiz Ortak Yorumlar</div>
                 </div>
 
-                <div class="dash-card" onclick="showView('students')">
+                <div class="dash-card" onclick="accessAdminPanel()">
                     <div class="dash-icon" style="background: #ede9fe; color: #7c3aed;"><i class="fa-solid fa-user-shield"></i></div>
                     <div class="dash-title">Talebe Kayıt / Yönet</div>
-                    <div class="dash-desc">⚡ Hızlı Talebe Ekle/Sil</div>
+                    <div class="dash-desc">🔒 Şifre: 1299</div>
                 </div>
             </div>
         </div>
@@ -533,6 +533,13 @@
     </div>
 
     <script>
+        // 🔑 GÜNCELLENMİŞ ŞİFRELER
+        const PASSWORDS = {
+            DINI: "1910",
+            NAMAZ: "1071",
+            ETUT_ADMIN: "1299"
+        };
+
         // 🌐 KENDİ BIN ID'N VE MASTER KEY'İN ENTEGRE EDİLDİ:
         const BIN_URL = "https://api.jsonbin.io/v3/b/6ae4a6b3ffd5d16053989d5c";
         const API_KEY = "$2a$10$836Mma2Tx7Vbjqe5ncCca.cSQZDCQpuuBs3ddUlzyPUehkHyWdmKO";
@@ -606,7 +613,7 @@
                     comments = data.record.comments || [];
                 } else {
                     students = getFreshInitialStudents();
-                    comments = [{ author: "Seyit Talha Sarı", text: "Şifresiz ortak bulut sistemi aktifleşti!", date: "17.10.2026 12:00" }];
+                    comments = [{ author: "Seyit Talha Sarı", text: "Şifreli ortak bulut sistemi aktifleşti!", date: "17.10.2026 12:00" }];
                     saveToCloud();
                 }
             } catch(e) {
@@ -654,11 +661,24 @@
             if (viewId === 'comments') renderComments();
         }
 
-        function startAttendance(category) {
-            startAttendanceDirect(category, "ALL");
+        function startAttendanceWithPassword(category) {
+            let requiredPass = category === 'dini' ? PASSWORDS.DINI : PASSWORDS.NAMAZ;
+            const pin = prompt(`${category === 'dini' ? 'Dini Ders' : 'Namaz'} Yoklaması İçin Şifre Giriniz:`);
+            
+            if (pin === requiredPass) {
+                startAttendanceDirect(category, "ALL");
+            } else if (pin !== null) {
+                alert("❌ Hatalı Şifre!");
+            }
         }
 
         function openEtutClassSelection() {
+            const pin = prompt("Etüt Yoklaması İçin Şifre Giriniz (1299):");
+            if (pin !== PASSWORDS.ETUT_ADMIN) {
+                if(pin !== null) alert("❌ Hatalı Şifre!");
+                return;
+            }
+
             let clsChoice = prompt("Hangi Sınıfın Etüt Yoklamasını Alacaksınız?\n\n1: 9. Sınıflar\n2: 10. Sınıflar\n3: 11-12. Sınıflar\n4: Tüm Sınıflar (Karma Etüt)\n\nLütfen rakam giriniz (1, 2, 3 veya 4):");
             
             let filterCls = "ALL";
@@ -667,6 +687,15 @@
             if(clsChoice === "3") filterCls = "11-12. Sınıf";
 
             startAttendanceDirect('etut', filterCls);
+        }
+
+        function accessAdminPanel() {
+            const pin = prompt("Talebe Yönetim Paneli İçin Şifre Giriniz (1299):");
+            if (pin === PASSWORDS.ETUT_ADMIN) {
+                showView('students');
+            } else if (pin !== null) {
+                alert("❌ Hatalı Şifre!");
+            }
         }
 
         function startAttendanceDirect(category, filterCls) {

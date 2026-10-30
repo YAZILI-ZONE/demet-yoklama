@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demet Eğitim Kurumları - Akıllı Ortak Bulut Portal</title>
+    <title>Demet Eğitim Kurumları - Ortak Bulut Portal</title>
     <!-- Google Fonts & FontAwesome İkonlar -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -319,18 +319,23 @@
             font-weight: 600;
         }
         .ai-launch-btn {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            background: linear-gradient(135deg, #2563eb, #0f172a);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 0.82rem;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 0.88rem;
             cursor: pointer;
             font-weight: 700;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 4px 18px rgba(37, 99, 235, 0.35);
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            transition: all 0.2s ease;
+        }
+        .ai-launch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(37, 99, 235, 0.45);
         }
     </style>
 </head>
@@ -362,9 +367,9 @@
         <!-- 1. ANA EKRAN -->
         <div id="view-home" class="view-section active">
             
-            <div style="text-align: center; margin-bottom: 20px;">
+            <div style="text-align: center; margin-bottom: 22px; margin-top: 10px;">
                 <button class="ai-launch-btn" onclick="openAiModal()">
-                    <i class="fa-solid fa-robot"></i> 🤖 Yapay Zeka Asistanını Aç
+                    <i class="fa-solid fa-robot" style="color:#38bdf8; font-size:1.1rem;"></i> 🤖 Yapay Zeka Asistanını Aç
                 </button>
             </div>
 
@@ -554,12 +559,12 @@
                 Talebe yoklama verilerini, katılım yüzdelerini ve yorumları anlık analiz eder.
             </div>
 
-            <div id="aiResponseArea" style="background: rgba(255,255,255,0.07); border-radius: 10px; padding: 12px; min-height: 90px; max-height: 180px; overflow-y: auto; font-size: 0.85rem; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.1); line-height: 1.4;">
-                Merhaba! Sistem ve talebe verileri analiz edilmeye hazır. Merak ettiğiniz bir konuyu veya öğrenci durumunu sorabilirsiniz.
+            <div id="aiResponseArea" style="background: rgba(255,255,255,0.07); border-radius: 10px; padding: 12px; min-height: 90px; max-height: 200px; overflow-y: auto; font-size: 0.85rem; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.1); line-height: 1.4;">
+                Merhaba! Sistem ve talebe verileri analiz edilmeye hazır. Öğrenci katılım durumunu veya genel değerlendirmeleri sorabilirsiniz.
             </div>
 
             <div class="form-row" style="margin-bottom: 0;">
-                <input type="text" id="aiQuestionInput" class="form-input" placeholder="Bir soru sorun (Örn: Samet Sefa nasıl?)" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;">
+                <input type="text" id="aiQuestionInput" class="form-input" placeholder="Soru sorun... (Örn: Samet Sefa nasıl?)" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;" onkeypress="if(event.key==='Enter') askAiAssistant()">
                 <button class="btn-main" style="width: auto; margin-top: 0; padding: 10px 16px;" onclick="askAiAssistant()">Sor</button>
             </div>
         </div>
@@ -739,25 +744,28 @@
             document.getElementById('aiModal').style.display = 'none';
         }
 
-        // 🤖 AKILLI ASİSTAN ANALİZ MOTORU
+        // 🤖 TÜRKÇE VE DETAYLI YAPAY ZEKA ANALİZ MOTORU
         function askAiAssistant() {
             const rawInput = document.getElementById('aiQuestionInput').value.trim();
             const q = rawInput.toLowerCase();
             const responseBox = document.getElementById('aiResponseArea');
 
             if (!q) {
-                responseBox.innerHTML = "Lütfen bir şeyler yazın.";
+                responseBox.innerHTML = "Lütfen bir soru yazın.";
                 return;
             }
 
             let answer = "";
 
+            // Bekar hoca
             if (q.includes("bekar hoca") || q.includes("bekar hocamız")) {
                 answer = "👨‍🏫 Kurumumuzun bekar hocası: **Emirhan Tanış**'tır.";
             }
+            // İdareci
             else if (q.includes("idareci") || q.includes("yönetici") || q.includes("kurum müdürü")) {
                 answer = "🏛️ Kurumumuzun idarecisi: **Adem Koca**'dır.";
             }
+            // Haftanın talebesi
             else if (q.includes("haftanın talebesi") || q.includes("en iyi talebe") || q.includes("lider")) {
                 let best = students[0];
                 let maxP = -1;
@@ -768,22 +776,42 @@
                         best = s;
                     }
                 });
-                answer = maxP > 0 ? `🌟 Yapay Zeka Analizi: Verilere göre toplam katılımda öne çıkan talebe **${best.name}** (${maxP} katılım) olarak görünmektedir.` : "Henüz yeterli katılım verisi girilmedi.";
+                answer = maxP > 0 ? `🌟 **Yapay Zeka Analizi:** Verilere göre toplam katılımda lider olan talebe **${best.name}** (${maxP} katılım) görünmektedir.` : "Henüz yeterli katılım verisi bulunmuyor.";
             }
+            // Talebe sorgulama
             else {
-                let foundStudent = students.find(s => s.name.toLowerCase().includes(q));
-                if (foundStudent) {
-                    let totalDini = foundStudent.dini.p + foundStudent.dini.a;
-                    let diniYuzde = totalDini > 0 ? Math.round((foundStudent.dini.p / totalDini) * 100) : 100;
-                    
-                    let totalNamaz = foundStudent.namaz.p + foundStudent.namaz.a;
-                    let namazYuzde = totalNamaz > 0 ? Math.round((foundStudent.namaz.p / totalNamaz) * 100) : 100;
+                // İsme göre arama
+                let matches = students.filter(s => {
+                    let nameParts = s.name.toLowerCase().split(' ');
+                    let searchParts = q.split(' ');
+                    return searchParts.some(part => part.length > 2 && s.name.toLowerCase().includes(part));
+                });
 
-                    answer = `📊 **${foundStudent.name}** Raporu:\n• Dini Ders Katılım: %${diniYuzde} (Var: ${foundStudent.dini.p}, Yok: ${foundStudent.dini.a}, İzin: ${foundStudent.dini.l})\n• Namaz Katılım: %${namazYuzde} (Var: ${foundStudent.namaz.p}, Yok: ${foundStudent.namaz.a})`;
+                if (matches.length > 0) {
+                    let s = matches[0];
+                    let totalDini = s.dini.p + s.dini.a;
+                    let diniYuzde = totalDini > 0 ? Math.round((s.dini.p / totalDini) * 100) : 100;
+                    
+                    let totalNamaz = s.namaz.p + s.namaz.a;
+                    let namazYuzde = totalNamaz > 0 ? Math.round((s.namaz.p / totalNamaz) * 100) : 100;
+
+                    let totalEtut = s.etut.p + s.etut.a;
+                    let etutYuzde = totalEtut > 0 ? Math.round((s.etut.p / totalEtut) * 100) : 100;
+
+                    let commentMatch = comments.filter(c => c.text.toLowerCase().includes(s.name.toLowerCase().split(' ')[0]));
+
+                    answer = `📊 **${s.name}** Analiz Raporu:\n` +
+                             `• Dini Ders Katılımı: %${diniYuzde} (Var: ${s.dini.p}, Yok: ${s.dini.a}, İzin: ${s.dini.l})\n` +
+                             `• Namaz Katılımı: %${namazYuzde} (Var: ${s.namaz.p}, Yok: ${s.namaz.a}, İzin: ${s.namaz.l})\n` +
+                             `• Etüt Katılımı: %${etutYuzde} (Var: ${s.etut.p}, Yok: ${s.etut.a}, İzin: ${s.etut.l})\n`;
+                             
+                    if(commentMatch.length > 0) {
+                        answer += `• Talebe Hakkında Son Yorum: "${commentMatch[0].text}" (${commentMatch[0].author})`;
+                    }
                 } else if (q.includes("yorum") || q.includes("görüş")) {
-                    answer = `💬 Sistemde kayıtlı toplam ${comments.length} adet ortak yorum bulunmaktadır. Yorumlar sekmesinden inceleyebilirsiniz.`;
+                    answer = `💬 Sistemde toplam ${comments.length} yorum var. Son yorum: "${comments[0] ? comments[0].text : 'Yorum yok'}"`;
                 } else {
-                    answer = `🤖 "${rawInput}" ile ilgili özel bir veri bulamadım. Talebe isimlerini, katılım durumlarını, "haftanın talebesi" veya "idarecimiz kim" gibi soruları sorabilirsiniz.`;
+                    answer = `🤖 "${rawInput}" sorgusunu analiz ettim. Özel bir öğrenci adı (Örn: "Samet Sefa nasıl?"), "haftanın talebesi" veya "idareci kim" yazarak detaylı bilgi alabilirsiniz.`;
                 }
             }
 
@@ -791,7 +819,7 @@
             document.getElementById('aiQuestionInput').value = '';
         }
 
-        // 🔐 GİZLİ ŞİFRE PANELİ (İdareci sorusu ve Adem Koca cevabı)
+        // 🔐 GİZLİ ŞİFRE PANELİ
         function openSecretPasswordPanel() {
             let answer = prompt("🔒 Yönetici Şifrelerini Görmek İçin Doğrulama:\n'Kurumumuzun idarecisi kimdir?'");
             if (answer && answer.toLowerCase().includes("adem koca")) {

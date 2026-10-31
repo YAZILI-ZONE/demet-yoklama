@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Demet Eğitim Kurumları - Mobil Ortak Portal</title>
+    <title>Demet Eğitim Kurumları - Profesyonel Mobil Portal</title>
     <!-- Google Fonts & FontAwesome İkonlar -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -72,7 +72,7 @@
             color: #e2e8f0;
             font-size: 0.72rem;
             outline: none;
-            width: 100px;
+            width: 110px;
             font-weight: 600;
         }
 
@@ -143,6 +143,19 @@
             gap: 4px;
         }
 
+        .search-box {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-bottom: 14px;
+            outline: none;
+            background: #f8fafc;
+            font-weight: 600;
+        }
+        .search-box:focus { border-color: var(--accent); background: #fff; }
+
         .attendance-box {
             width: 100%;
             margin: 0 auto;
@@ -179,7 +192,7 @@
         .stats-nav { display: flex; gap: 6px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
         .stats-tab-btn {
             flex: 1;
-            min-width: 100px;
+            min-width: 90px;
             padding: 9px 6px;
             border: 1px solid #e2e8f0;
             background: #f8fafc;
@@ -193,14 +206,14 @@
         }
         .stats-tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 3px 10px rgba(37,99,235,0.2); }
 
-        .filter-nav { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+        .filter-nav { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
         .filter-btn {
-            padding: 5px 12px;
+            padding: 5px 10px;
             border: 1px solid #cbd5e1;
             background: white;
             border-radius: 16px;
             font-weight: 600;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
             cursor: pointer;
             white-space: nowrap;
@@ -208,22 +221,22 @@
         .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
         .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        table { width: 100%; border-collapse: collapse; text-align: left; min-width: 480px; }
-        th, td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; font-size: 0.82rem; }
-        th { background: #f8fafc; color: var(--text-muted); font-weight: 700; font-size: 0.68rem; text-transform: uppercase; }
+        table { width: 100%; border-collapse: collapse; text-align: left; min-width: 460px; }
+        th, td { padding: 10px 10px; border-bottom: 1px solid #f1f5f9; font-size: 0.8rem; }
+        th { background: #f8fafc; color: var(--text-muted); font-weight: 700; font-size: 0.65rem; text-transform: uppercase; }
 
         .clickable-row { cursor: pointer; }
         .clickable-row:active { background: #f1f5f9; }
 
         .badge-group { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
         .p-badge {
-            padding: 3px 7px;
+            padding: 3px 6px;
             border-radius: 6px;
             font-weight: 700;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             display: inline-flex;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
         }
         .badge-var-pro { background: #d1fae5; color: #047857; }
         .badge-yok-pro { background: #fee2e2; color: #b91c1c; }
@@ -353,9 +366,9 @@
             </div>
         </div>
 
-        <div class="mini-prompt-box">
-            <i class="fa-solid fa-note-sticky" style="color: #38bdf8;"></i>
-            <input type="text" class="prompt-input" id="kurumPrompt" value="Demet Eğitim" placeholder="Not...">
+        <div class="mini-prompt-box" title="Ortak Bulut Duyurusu">
+            <i class="fa-solid fa-bullhorn" style="color: #38bdf8;"></i>
+            <input type="text" class="prompt-input" id="kurumPrompt" value="Demet Eğitim" placeholder="Duyuru..." oninput="saveAnnouncement()">
             <span style="opacity: 0.4;">|</span>
             <span id="liveClock" style="font-weight: 700;">12:00</span>
         </div>
@@ -374,7 +387,7 @@
 
             <div style="text-align: center; margin-bottom: 14px;">
                 <h2 style="font-size: 1.2rem; color: var(--primary); font-weight: 800;">Yoklama & Rapor Paneli</h2>
-                <p style="color: var(--text-muted); font-size: 0.78rem; font-weight: 600;">Ortak bulut, şifreli girişler ve yapay zeka aktif.</p>
+                <p style="color: var(--text-muted); font-size: 0.78rem; font-weight: 600;">Ortak bulut, canlı arama ve yapay zeka aktif.</p>
             </div>
 
             <div class="dashboard-grid">
@@ -455,6 +468,10 @@
                     <div class="card-title"><i class="fa-solid fa-list-check"></i> Kayıtlı Talebeler</div>
                     <span id="totalStudentCount" style="font-size:0.78rem; color:var(--text-muted); font-weight:700;">Toplam: 0</span>
                 </div>
+
+                <!-- 🔍 CANLI ARAMA ÇUBUĞU -->
+                <input type="text" id="studentSearchInput" class="search-box" placeholder="🔍 Talebe adı ile ara..." oninput="renderStudentTable()">
+
                 <div class="table-responsive">
                     <table>
                         <thead>
@@ -494,7 +511,10 @@
                     <button class="filter-btn" onclick="filterStatsByClass('11')">11-12. Sınıf</button>
                 </div>
 
-                <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 10px; font-weight: 600;">
+                <!-- 🔍 İSTATİSTİK İÇİN CANLI ARAMA ÇUBUĞU -->
+                <input type="text" id="statsSearchInput" class="search-box" placeholder="🔍 Listede öğrenci ara..." oninput="renderStatsTable(currentStatsCategory)">
+
+                <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;">
                     ℹ️ Detay geçmiş için talebe satırına dokun.
                 </div>
 
@@ -651,6 +671,7 @@
 
         let students = [];
         let comments = [];
+        let announcementText = "Demet Eğitim";
         let activeCategory = '';
         let activeQueue = [];
         let currentStatsCategory = 'dini';
@@ -686,6 +707,13 @@
                 if (data && data.record && data.record.students && data.record.students.length > 0) {
                     students = data.record.students;
                     comments = data.record.comments || [];
+                    if(data.record.announcement !== undefined) {
+                        announcementText = data.record.announcement;
+                        let promptInputEl = document.getElementById('kurumPrompt');
+                        if(promptInputEl && document.activeElement !== promptInputEl) {
+                            promptInputEl.value = announcementText;
+                        }
+                    }
                 } else {
                     students = getFreshInitialStudents();
                     comments = [{ author: "Seyit Talha Sarı", text: "Mobil ortak bulut portalı aktif!", date: "17.10.2026 12:00" }];
@@ -709,11 +737,16 @@
                         "Content-Type": "application/json",
                         "X-Master-Key": API_KEY
                     },
-                    body: JSON.stringify({ students: students, comments: comments })
+                    body: JSON.stringify({ students: students, comments: comments, announcement: announcementText })
                 });
             } catch(e) {
                 console.error("Bulut kayıt hatası.");
             }
+        }
+
+        function saveAnnouncement() {
+            announcementText = document.getElementById('kurumPrompt').value;
+            saveToCloud();
         }
 
         function refreshActiveViews() {
@@ -1033,9 +1066,13 @@
             const tbody = document.getElementById('studentTableBody');
             if(!tbody) return;
             tbody.innerHTML = '';
-            document.getElementById('totalStudentCount').innerText = `Toplam: ${students.length}`;
 
-            students.forEach(s => {
+            const searchTerm = document.getElementById('studentSearchInput').value.toLowerCase();
+            let filtered = students.filter(s => s.name.toLowerCase().includes(searchTerm));
+
+            document.getElementById('totalStudentCount').innerText = `Toplam: ${filtered.length}`;
+
+            filtered.forEach(s => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><strong>#${s.id}</strong></td>
@@ -1074,6 +1111,11 @@
                 filteredStudents = students.filter(s => s.clsGroup && s.clsGroup.includes(currentClassFilter));
             }
 
+            const searchTerm = document.getElementById('statsSearchInput').value.toLowerCase();
+            if(searchTerm) {
+                filteredStudents = filteredStudents.filter(s => s.name.toLowerCase().includes(searchTerm));
+            }
+
             filteredStudents.forEach(s => {
                 const data = s[category] || {p:0, a:0, l:0, history:[]};
                 const validLectures = data.p + data.a;
@@ -1097,7 +1139,7 @@
                         </div>
                     </td>
                     <td><strong style="color: ${barColor};">%${percentage}</strong></td>
-                    <td style="width: 80px;">
+                    <td style="width: 70px;">
                         <div class="progress-bar-bg">
                             <div class="progress-bar-fill" style="width: ${percentage}%; background: ${barColor};"></div>
                         </div>

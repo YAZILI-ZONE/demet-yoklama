@@ -350,6 +350,7 @@
             justify-content: center;
         }
 
+        /* ŞİFRELİ ÖDEV / NOT ALANI */
         .daily-note-banner {
             background: linear-gradient(135deg, #fef3c7, #fde68a);
             border: 1px solid #f59e0b;
@@ -361,17 +362,18 @@
             margin-bottom: 14px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 8px;
             box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+            cursor: pointer;
         }
-        .daily-note-input {
-            background: transparent;
-            border: none;
-            outline: none;
+        .daily-note-text {
             color: #92400e;
             font-weight: 700;
             font-size: 0.8rem;
-            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -409,10 +411,13 @@
                 </button>
             </div>
 
-            <!-- 📌 GÜNÜN ÖDEVİ / NOTU ALANI (ORTAK BULUTTA SENKRONİZE) -->
-            <div class="daily-note-banner">
-                <i class="fa-solid fa-thumbtack" style="font-size: 1rem; color: #d97706;"></i>
-                <input type="text" id="dailyNoteInput" class="daily-note-input" value="Günün Notu / Ödevi..." placeholder="Günün notunu buraya yaz..." oninput="saveDailyNote()">
+            <!-- 🔒 ŞİFRE İLE DEĞİŞTİRİLEBİLEN GÜNÜN ÖDEVİ / NOTU ALANI -->
+            <div class="daily-note-banner" onclick="editProtectedDailyNote()">
+                <div style="display:flex; align-items:center; gap:8px; overflow:hidden;">
+                    <i class="fa-solid fa-thumbtack" style="font-size: 1rem; color: #d97706; flex-shrink:0;"></i>
+                    <span id="dailyNoteDisplay" class="daily-note-text">Günün Notu / Ödevi...</span>
+                </div>
+                <i class="fa-solid fa-lock" style="font-size:0.75rem; opacity:0.6; flex-shrink:0;" title="Düzenlemek için tıklayın"></i>
             </div>
 
             <div style="text-align: center; margin-bottom: 12px;">
@@ -754,9 +759,9 @@
 
                     if(data.record.dailyNote !== undefined) {
                         dailyNoteText = data.record.dailyNote;
-                        let dailyInputEl = document.getElementById('dailyNoteInput');
-                        if(dailyInputEl && document.activeElement !== dailyInputEl) {
-                            dailyInputEl.value = dailyNoteText;
+                        let dailyTextEl = document.getElementById('dailyNoteDisplay');
+                        if(dailyTextEl) {
+                            dailyTextEl.innerText = dailyNoteText;
                         }
                     }
                 } else {
@@ -799,9 +804,20 @@
             saveToCloud();
         }
 
-        function saveDailyNote() {
-            dailyNoteText = document.getElementById('dailyNoteInput').value;
-            saveToCloud();
+        // 🔒 ŞİFRELİ (İDARECİ DOĞRULAMALI) NOT DÜZENLEME İŞLEVİ
+        function editProtectedDailyNote() {
+            let answer = prompt("🔒 Yetkili Doğrulaması:\n'Kurumumuzun idarecisi kimdir?'");
+            if (answer && answer.toLowerCase().includes("adem koca")) {
+                let newNote = prompt("Yeni Günün Notunu / Ödevini Giriniz:", dailyNoteText);
+                if (newNote !== null && newNote.trim() !== "") {
+                    dailyNoteText = newNote.trim();
+                    document.getElementById('dailyNoteDisplay').innerText = dailyNoteText;
+                    saveToCloud();
+                    alert("✅ Günün notu başarıyla güncellendi!");
+                }
+            } else if (answer !== null) {
+                alert("❌ Hatalı doğrulama! Not değiştirilemedi.");
+            }
         }
 
         function refreshActiveViews() {

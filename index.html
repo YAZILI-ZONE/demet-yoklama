@@ -299,6 +299,7 @@
             background: #f8fafc;
             border: 1px solid #f1f5f9;
             font-weight: 600;
+            cursor: pointer;
         }
 
         .creator-badge {
@@ -387,7 +388,7 @@
 
             <div style="text-align: center; margin-bottom: 14px;">
                 <h2 style="font-size: 1.2rem; color: var(--primary); font-weight: 800;">Yoklama & Rapor Paneli</h2>
-                <p style="color: var(--text-muted); font-size: 0.78rem; font-weight: 600;">Ortak bulut, namaz karışık sıra ve 0147 silme şifresi aktif.</p>
+                <p style="color: var(--text-muted); font-size: 0.78rem; font-weight: 600;">Ortak bulut, namaz rastgele karıştırma ve 0147 silme şifresi aktif.</p>
             </div>
 
             <div class="dashboard-grid">
@@ -400,7 +401,7 @@
                 <div class="dash-card" onclick="startAttendanceWithPassword('namaz')">
                     <div class="dash-icon" style="background: #d1fae5; color: #059669;"><i class="fa-solid fa-mosque"></i></div>
                     <div class="dash-title">Namaz</div>
-                    <div class="dash-desc">🔒 Şifreli Giriş (Karışık)</div>
+                    <div class="dash-desc">🔒 Şifreli Giriş (Karışık Sıra)</div>
                 </div>
 
                 <div class="dash-card" onclick="openEtutClassSelection()">
@@ -1206,7 +1207,7 @@
                         ${badge}
                     `;
                     
-                    // 🗑️ DEVAMSIZLIĞI 0147 İLE SİLME
+                    // 🗑️ DEVAMSIZLIĞI 0147 ŞİFRESİ İLE SİLME
                     li.onclick = () => deleteAttendanceRecord(index);
                     historyList.appendChild(li);
                 });

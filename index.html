@@ -287,7 +287,7 @@
         .modal-title { font-size: 1.05rem; font-weight: 800; color: var(--primary); }
         .modal-close { background: none; border: none; font-size: 1.2rem; color: var(--text-muted); cursor: pointer; padding: 4px; }
 
-        .history-list { list-style: none; max-height: 220px; overflow-y: auto; }
+        .history-list { list-style: none; max-height: 200px; overflow-y: auto; }
         .history-item {
             padding: 8px 10px;
             border-radius: 8px;
@@ -299,7 +299,6 @@
             background: #f8fafc;
             border: 1px solid #f1f5f9;
             font-weight: 600;
-            cursor: pointer;
         }
 
         .creator-badge {
@@ -350,6 +349,30 @@
             width: 100%;
             justify-content: center;
         }
+
+        .daily-note-banner {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 1px solid #f59e0b;
+            color: #92400e;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+        }
+        .daily-note-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #92400e;
+            font-weight: 700;
+            font-size: 0.8rem;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -380,15 +403,21 @@
         <!-- 1. ANA EKRAN -->
         <div id="view-home" class="view-section active">
             
-            <div style="text-align: center; margin-bottom: 18px; margin-top: 8px;">
+            <div style="text-align: center; margin-bottom: 14px; margin-top: 8px;">
                 <button class="ai-launch-btn" onclick="openAiModal()">
                     <i class="fa-solid fa-robot" style="color:#38bdf8; font-size:1.1rem;"></i> 🤖 Yapay Zeka Asistanını Aç
                 </button>
             </div>
 
-            <div style="text-align: center; margin-bottom: 14px;">
-                <h2 style="font-size: 1.2rem; color: var(--primary); font-weight: 800;">Yoklama & Rapor Paneli</h2>
-                <p style="color: var(--text-muted); font-size: 0.78rem; font-weight: 600;">Ortak bulut, namaz rastgele karıştırma ve 0147 silme şifresi aktif.</p>
+            <!-- 📌 GÜNÜN ÖDEVİ / NOTU ALANI (ORTAK BULUTTA SENKRONİZE) -->
+            <div class="daily-note-banner">
+                <i class="fa-solid fa-thumbtack" style="font-size: 1rem; color: #d97706;"></i>
+                <input type="text" id="dailyNoteInput" class="daily-note-input" value="Günün Notu / Ödevi..." placeholder="Günün notunu buraya yaz..." oninput="saveDailyNote()">
+            </div>
+
+            <div style="text-align: center; margin-bottom: 12px;">
+                <h2 style="font-size: 1.15rem; color: var(--primary); font-weight: 800;">Yoklama & Rapor Paneli</h2>
+                <p style="color: var(--text-muted); font-size: 0.76rem; font-weight: 600;">Veriler güvenle saklanır, asla sıfırlanmaz.</p>
             </div>
 
             <div class="dashboard-grid">
@@ -496,6 +525,11 @@
                     <button class="btn-back" onclick="showView('home')"><i class="fa-solid fa-arrow-left"></i> Menü</button>
                 </div>
 
+                <!-- 📊 GENEL KATILIM ÖZET ROZETİ -->
+                <div id="statsSummaryBadge" style="background: #e0f2fe; color: #0369a1; padding: 8px 12px; border-radius: 10px; font-size: 0.78rem; font-weight: 800; margin-bottom: 12px; text-align: center;">
+                    📊 Genel Katılım Oranı: %100
+                </div>
+
                 <button class="btn-sms" onclick="openSmsReportModal()"><i class="fa-solid fa-paper-plane"></i> Eksikleri WhatsApp ile Bildir</button>
 
                 <div class="stats-nav">
@@ -514,7 +548,7 @@
                 <input type="text" id="statsSearchInput" class="search-box" placeholder="🔍 Listede öğrenci ara..." oninput="renderStatsTable(currentStatsCategory)">
 
                 <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;">
-                    ℹ️ Detay geçmiş ve şifreli silme/düzenleme için talebe satırına dokun.
+                    ℹ️ Detay geçmiş için talebe satırına dokun.
                 </div>
 
                 <div class="table-responsive">
@@ -589,7 +623,7 @@
         </div>
     </div>
 
-    <!-- TARİH DETAYI VE DEVAMSIZLIK SİLME MODALI (0147 ŞİFRELİ) -->
+    <!-- TARİH DETAYI MODALI -->
     <div class="modal-overlay" id="historyModal">
         <div class="modal-card">
             <div class="modal-header">
@@ -600,9 +634,8 @@
                 <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <div style="margin-bottom: 10px; font-weight: 800; font-size: 0.82rem; color: var(--primary); display: flex; justify-content: space-between; align-items: center;">
-                <span>🚨 Kayıtlı Tarihler (Silmek için dokun):</span>
-                <span style="font-size: 0.7rem; color: var(--accent);">🔑 Şifre: 0147</span>
+            <div style="margin-bottom: 8px; font-weight: 800; font-size: 0.82rem; color: var(--primary);">
+                🚨 Kayıtlı Devamsızlık / İzin Tarihleri:
             </div>
             
             <ul class="history-list" id="modalHistoryList"></ul>
@@ -632,8 +665,7 @@
         const PASSWORDS = {
             DINI: "1910",
             NAMAZ: "1071",
-            ETUT_ADMIN: "1299",
-            DELETE_RECORD: "0147" // Devamsızlık silme şifresi
+            ETUT_ADMIN: "1299"
         };
 
         // 🌐 ORTAK BULUT (JSONbin.io) BAĞLANTISI
@@ -673,6 +705,7 @@
         let students = [];
         let comments = [];
         let announcementText = "Demet Eğitim";
+        let dailyNoteText = "Günün Notu / Ödevi...";
         let activeCategory = '';
         let activeQueue = [];
         let currentStudentIdForModal = null;
@@ -710,11 +743,20 @@
                 if (data && data.record && data.record.students && data.record.students.length > 0) {
                     students = data.record.students;
                     comments = data.record.comments || [];
+                    
                     if(data.record.announcement !== undefined) {
                         announcementText = data.record.announcement;
                         let promptInputEl = document.getElementById('kurumPrompt');
                         if(promptInputEl && document.activeElement !== promptInputEl) {
                             promptInputEl.value = announcementText;
+                        }
+                    }
+
+                    if(data.record.dailyNote !== undefined) {
+                        dailyNoteText = data.record.dailyNote;
+                        let dailyInputEl = document.getElementById('dailyNoteInput');
+                        if(dailyInputEl && document.activeElement !== dailyInputEl) {
+                            dailyInputEl.value = dailyNoteText;
                         }
                     }
                 } else {
@@ -740,7 +782,12 @@
                         "Content-Type": "application/json",
                         "X-Master-Key": API_KEY
                     },
-                    body: JSON.stringify({ students: students, comments: comments, announcement: announcementText })
+                    body: JSON.stringify({ 
+                        students: students, 
+                        comments: comments, 
+                        announcement: announcementText,
+                        dailyNote: dailyNoteText 
+                    })
                 });
             } catch(e) {
                 console.error("Bulut kayıt hatası.");
@@ -749,6 +796,11 @@
 
         function saveAnnouncement() {
             announcementText = document.getElementById('kurumPrompt').value;
+            saveToCloud();
+        }
+
+        function saveDailyNote() {
+            dailyNoteText = document.getElementById('dailyNoteInput').value;
             saveToCloud();
         }
 
@@ -848,9 +900,9 @@
         }
 
         function openSecretPasswordPanel() {
-            let answer = prompt("🔒 Yönetici Şifreleri İçin Doğrulama:\n'Kurumumuzun idarecisi kimdir?'");
+            let answer = prompt("🔒 Yönetici Doğrulaması:\n'Kurumumuzun idarecisi kimdir?'");
             if (answer && answer.toLowerCase().includes("adem koca")) {
-                alert(`📋 GÜVENLİ YÖNETİCİ ŞİFRELERİ:\n\n• Dini Ders Şifresi: ${PASSWORDS.DINI}\n• Namaz Şifresi: ${PASSWORDS.NAMAZ}\n• Etüt & Yönetim Şifresi: ${PASSWORDS.ETUT_ADMIN}\n• Devamsızlık Silme Şifresi: ${PASSWORDS.DELETE_RECORD}`);
+                alert(`📋 GÜVENLİ YÖNETİCİ ŞİFRELERİ:\n\n• Dini Ders Şifresi: ${PASSWORDS.DINI}\n• Namaz Şifresi: ${PASSWORDS.NAMAZ}\n• Etüt & Yönetim Şifresi: ${PASSWORDS.ETUT_ADMIN}`);
             } else if (answer !== null) {
                 alert("❌ Yanlış cevap!");
             }
@@ -976,7 +1028,7 @@
                     <div style="padding: 25px 10px; text-align: center;">
                         <i class="fa-solid fa-circle-check" style="font-size: 3.2rem; color: var(--success); margin-bottom: 10px;"></i>
                         <h3 style="font-size: 1.2rem; color: var(--primary); font-weight: 800;">Yoklama Bitti!</h3>
-                        <p style="color: var(--text-muted); font-size:0.8rem; margin: 6px 0 16px 0; font-weight: 600;">Veriler ortak buluta kaydedildi.</p>
+                        <p style="color: var(--text-muted); font-size:0.8rem; margin: 6px 0 16px 0; font-weight: 600;">Veriler güvenle ortak buluta kaydedildi.</p>
                         <button class="btn-main" onclick="showView('home')"><i class="fa-solid fa-house"></i> Ana Menüye Dön</button>
                     </div>
                 `;
@@ -1125,9 +1177,16 @@
                 filteredStudents = filteredStudents.filter(s => s.name.toLowerCase().includes(searchTerm));
             }
 
+            let totalPAll = 0;
+            let totalValidAll = 0;
+
             filteredStudents.forEach(s => {
                 const data = s[category] || {p:0, a:0, l:0, history:[]};
                 const validLectures = data.p + data.a;
+                
+                totalPAll += data.p;
+                totalValidAll += validLectures;
+
                 const percentage = validLectures > 0 ? Math.round((data.p / validLectures) * 100) : 100;
 
                 let barColor = '#10b981';
@@ -1157,6 +1216,9 @@
                 `;
                 tbody.appendChild(tr);
             });
+
+            let overallPercentage = totalValidAll > 0 ? Math.round((totalPAll / totalValidAll) * 100) : 100;
+            document.getElementById('statsSummaryBadge').innerText = `📊 Genel Katılım Oranı (%${overallPercentage}) — Toplam Listelenen: ${filteredStudents.length} Talebe`;
         }
 
         function openStudentHistory(studentId, category) {
@@ -1194,46 +1256,20 @@
                     </div>
                 `;
             } else {
-                historyData.forEach((item, index) => {
+                historyData.forEach((item) => {
                     const li = document.createElement('li');
                     li.className = 'history-item';
                     
                     let badge = item.type === 'yok' 
-                        ? '<span class="p-badge badge-yok-pro">YOK (Silmek için dokun)</span>' 
-                        : '<span class="p-badge badge-izin-pro">İZİN (Silmek için dokun)</span>';
+                        ? '<span class="p-badge badge-yok-pro">YOK</span>' 
+                        : '<span class="p-badge badge-izin-pro">İZİN</span>';
 
                     li.innerHTML = `
                         <span><i class="fa-regular fa-calendar-days"></i> ${item.date}</span>
                         ${badge}
                     `;
-                    
-                    // 🗑️ DEVAMSIZLIĞI 0147 ŞİFRESİ İLE SİLME
-                    li.onclick = () => deleteAttendanceRecord(index);
                     historyList.appendChild(li);
                 });
-            }
-        }
-
-        function deleteAttendanceRecord(index) {
-            let pin = prompt("🔒 Kaydı silmek için şifreyi giriniz (0147):");
-            if (pin === PASSWORDS.DELETE_RECORD) {
-                const student = students.find(s => s.id === currentStudentIdForModal);
-                if (student) {
-                    let record = student[currentCategoryForModal].history[index];
-                    if (record.type === 'yok' && student[currentCategoryForModal].a > 0) {
-                        student[currentCategoryForModal].a--;
-                    } else if (record.type === 'izinli' && student[currentCategoryForModal].l > 0) {
-                        student[currentCategoryForModal].l--;
-                    }
-
-                    student[currentCategoryForModal].history.splice(index, 1);
-                    saveToCloud();
-                    renderHistoryList();
-                    refreshActiveViews();
-                    alert("✅ Kayıt başarıyla silindi ve istatistikler güncellendi!");
-                }
-            } else if (pin !== null) {
-                alert("❌ Hatalı şifre!");
             }
         }
 

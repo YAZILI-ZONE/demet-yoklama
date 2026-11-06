@@ -421,9 +421,22 @@
                 <i class="fa-solid fa-lock" style="font-size:0.75rem; opacity:0.6; flex-shrink:0;" title="Düzenlemek için tıklayın"></i>
             </div>
 
+            <!-- 🏆 HAFTANIN YILDIZ LİDERLERİ -->
+            <div class="card" style="background: linear-gradient(135deg, #f8fafc, #edf2f7); border: 1px solid #cbd5e1; margin-bottom: 14px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <div style="font-size: 0.88rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-crown" style="color: #f59e0b;"></i> Haftanın Kurum Öncüleri
+                    </div>
+                    <span style="font-size: 0.68rem; background: #e0f2fe; color: #0284c7; padding: 2px 6px; border-radius: 6px; font-weight: 700;">En Yüksek Katılım</span>
+                </div>
+                <div id="topLeadersContainer" style="font-size: 0.78rem; color: #334155; font-weight: 600;">
+                    Yükleniyor...
+                </div>
+            </div>
+
             <div style="text-align: center; margin-bottom: 12px;">
                 <h2 style="font-size: 1.15rem; color: var(--primary); font-weight: 800;">Yoklama & Kurumsal Rapor Paneli</h2>
-                <p style="color: var(--text-muted); font-size: 0.76rem; font-weight: 600;">En son yoklamada bulunmayanlar anında raporlanır.</p>
+                <p style="color: var(--text-muted); font-size: 0.76rem; font-weight: 600;">Resmi rapor, veli bildirimi ve son yoklama analizleri aktif.</p>
             </div>
 
             <div class="dashboard-grid">
@@ -536,7 +549,7 @@
                 </div>
 
                 <button class="btn-sms" onclick="openSmsReportModal()"><i class="fa-solid fa-paper-plane"></i> 🚨 Son Yoklamadaki Eksikleri WhatsApp ile Gönder</button>
-                <button class="btn-main" style="background:#0f172a; margin-top:0; margin-bottom:12px; font-size:0.78rem; padding:10px;" onclick="copyFullInstitutionalReport()"><i class="fa-solid fa-clipboard"></i> 📋 Tüm Zamanların Genel Raporunu Kopyala</button>
+                <button class="btn-main" style="background:#0f172a; margin-top:0; margin-bottom:8px; font-size:0.78rem; padding:10px;" onclick="printOfficialReport()"><i class="fa-solid fa-print"></i> 🖨️ Resmi Raporu Yazdır / PDF Yap</button>
 
                 <div class="stats-nav">
                     <button class="stats-tab-btn active" id="btn-tab-dini" onclick="switchStatsCategory('dini')">Dini Ders</button>
@@ -555,7 +568,7 @@
                 <input type="text" id="statsSearchInput" class="search-box" placeholder="🔍 Listede öğrenci ara..." oninput="renderStatsTable(currentStatsCategory)">
 
                 <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;">
-                    ℹ️ Detay geçmiş için talebe satırına dokun.
+                    ℹ️ Detay geçmiş ve veli bildirimi için talebe satırına dokun.
                 </div>
 
                 <div class="table-responsive">
@@ -630,7 +643,7 @@
         </div>
     </div>
 
-    <!-- TARİH DETAYI MODALI -->
+    <!-- TARİH DETAYI VE VELİ BİLDİRİMİ MODALI -->
     <div class="modal-overlay" id="historyModal">
         <div class="modal-card">
             <div class="modal-header">
@@ -641,6 +654,8 @@
                 <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
+            <button class="btn-sms" style="margin-bottom: 12px;" onclick="sendParentWhatsApp()"><i class="fa-brands fa-whatsapp"></i> 📱 Velisine Özel WhatsApp Bildirimi Gönder</button>
+
             <div style="margin-bottom: 8px; font-weight: 800; font-size: 0.82rem; color: var(--primary);">
                 🚨 Kayıtlı Devamsızlık / İzin / Eksik Tarihleri:
             </div>
@@ -668,14 +683,12 @@
     </div>
 
     <script>
-        // 🔑 GÜVENLİK ŞİFRELERİ
         const PASSWORDS = {
             DINI: "1910",
             NAMAZ: "1071",
             ETUT_ADMIN: "1299"
         };
 
-        // 🌐 ORTAK BULUT (JSONbin.io) BAĞLANTISI
         const BIN_URL = "https://api.jsonbin.io/v3/b/6ae4a6b3ffd5d16053989d5c";
         const API_KEY = "$2a$10$836Mma2Tx7Vbjqe5ncCca.cSQZDCQpuuBs3ddUlzyPUehkHyWdmKO";
 
@@ -713,7 +726,7 @@
         let comments = [];
         let announcementText = "Demet Eğitim";
         let dailyNoteText = "Günün Notu / Ödevi...";
-        let lastSessionId = null; // Son yoklama oturumu kimliği
+        let lastSessionId = null;
         let activeCategory = '';
         let activeQueue = [];
         let currentStudentIdForModal = null;
@@ -787,10 +800,12 @@
             }
             refreshActiveViews();
             renderComments();
+            renderTopLeaders();
         }
 
         async function saveToCloud() {
             refreshActiveViews();
+            renderTopLeaders();
             try {
                 await fetch(BIN_URL, {
                     method: "PUT",
@@ -829,6 +844,29 @@
             } else if (answer !== null) {
                 alert("❌ Hatalı doğrulama! Not değiştirilemedi.");
             }
+        }
+
+        function renderTopLeaders() {
+            const container = document.getElementById('topLeadersContainer');
+            if(!container) return;
+
+            let scored = students.map(s => {
+                let totalP = (s.dini?.p || 0) + (s.namaz?.p || 0) + (s.etut?.p || 0);
+                return { name: s.name, p: totalP };
+            }).sort((a,b) => b.p - a.p);
+
+            let top3 = scored.slice(0, 3);
+            if(top3.length === 0 || top3[0].p === 0) {
+                container.innerHTML = "Henüz katılım puanı kaydedilmedi.";
+                return;
+            }
+
+            let html = "";
+            top3.forEach((item, idx) => {
+                let medal = idx === 0 ? "🥇" : (idx === 1 ? "🥈" : "🥉");
+                html += `<div>${medal} <strong>${item.name}</strong> (${item.p} Katılım)</div>`;
+            });
+            container.innerHTML = html;
         }
 
         function refreshActiveViews() {
@@ -972,7 +1010,7 @@
 
         function startAttendanceDirect(category, filterCls) {
             activeCategory = category;
-            lastSessionId = "SES_" + Date.now(); // YENİ YOKLAMA OTURUM KİMLİĞİ
+            lastSessionId = "SES_" + Date.now();
             
             let pool = students;
             if(filterCls !== "ALL") {
@@ -1321,7 +1359,43 @@
             document.getElementById('historyModal').style.display = 'none';
         }
 
-        // 🚨 SADECE EN SON YOKLAMADAKİ EKSİKLERİ RAPORLAMA İŞLEVİ
+        // 📱 VELİYE ÖZEL WHATSAPP BİLDİRİMİ
+        function sendParentWhatsApp() {
+            const student = students.find(s => s.id === currentStudentIdForModal);
+            if(!student) return;
+
+            let catName = currentCategoryForModal === 'namaz' ? "Namaz" : (currentCategoryForModal === 'etut' ? "Etüt" : "Dini Ders");
+            let historyData = student[currentCategoryForModal]?.history || [];
+            let lastRecord = historyData.length > 0 ? historyData[historyData.length - 1] : { type: 'katılmadı', date: 'Bugün' };
+
+            let msg = `Sayın velimiz, öğrencimiz ${student.name}, Demet Eğitim Kurumları bünyesindeki ${catName} yoklamasında "${lastRecord.type.toUpperCase()}" olarak kaydedilmiştir. Bilgilerinize sunarız.`;
+            let encoded = encodeURIComponent(msg);
+            window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+        }
+
+        // 🖨️ RESMİ RAPORU YAZDIR / PDF YAP
+        function printOfficialReport() {
+            let catName = currentStatsCategory.toUpperCase();
+            let printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>Demet Eğitim - Resmi Rapor</title>');
+            printWindow.document.write('<style>body{font-family:sans-serif;padding:20px;}h2,h3{color:#0f172a;}table{width:100%;border-collapse:collapse;margin-top:15px;}th,td{border:1px solid #cbd5e1;padding:8px;font-size:12px;text-align:left;}th{background:#f8fafc;}</style>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write('<h2>DEMET EĞİTİM KURUMLARI</h2>');
+            printWindow.document.write(`<h3>${catName} Kurumsal Devamsızlık ve Katılım Raporu</h3>`);
+            printWindow.document.write(`<p>Rapor Tarihi: ${new Date().toLocaleDateString('tr-TR')}</p>`);
+            printWindow.document.write('<table><thead><tr><th>No</th><th>Talebe Adı</th><th>Sınıfı</th><th>Var</th><th>Yok</th><th>İzin</th><th>Eksik</th></tr></thead><tbody>');
+
+            students.forEach(s => {
+                let d = s[currentStatsCategory] || {p:0, a:0, l:0, m:0};
+                printWindow.document.write(`<tr><td>#${s.id}</td><td>${s.name}</td><td>${s.clsGroup}</td><td>${d.p}</td><td>${d.a}</td><td>${d.l}</td><td>${d.m}</td></tr>`);
+            });
+
+            printWindow.document.write('</tbody></table></body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => { printWindow.print(); }, 500);
+        }
+
         function openSmsReportModal() {
             let catName = currentStatsCategory === 'namaz' ? "Namaz" : (currentStatsCategory === 'etut' ? "Etüt" : "Dini Ders");
             const now = new Date();
@@ -1334,7 +1408,6 @@
                 let historyData = s[currentStatsCategory]?.history || [];
                 if(historyData.length > 0) {
                     let lastRecord = historyData[historyData.length - 1];
-                    // Eğer son kayıt en son yapılan oturuma aitse ve 'var' değilse
                     if(lastRecord.type !== 'var' && lastRecord.sessionId === lastSessionId) {
                         reportText += `• ${s.name} ➡️ ${lastRecord.type.toUpperCase()}\n`;
                         missingCount++;
@@ -1354,22 +1427,6 @@
 
         function closeSmsModal() {
             document.getElementById('smsModal').style.display = 'none';
-        }
-
-        function copyFullInstitutionalReport() {
-            let catName = currentStatsCategory.toUpperCase();
-            let text = `🏛️ DEMET EĞİTİM KURUMLARI - ${catName} GENEL İSTATİSTİK RAPORU\n`;
-            text += `📅 Tarih: ${new Date().toLocaleDateString('tr-TR')}\n`;
-            text += `----------------------------------------\n`;
-
-            students.forEach(s => {
-                let d = s[currentStatsCategory] || {p:0, a:0, l:0, m:0};
-                text += `${s.id}. ${s.name} | Var: ${d.p}, Yok: ${d.a}, İzin: ${d.l}, Eksik: ${d.m}\n`;
-            });
-
-            navigator.clipboard.writeText(text).then(() => {
-                alert("📋 Tüm genel istatistik raporu panoya kopyalandı!");
-            });
         }
 
         function sendViaWhatsApp() {

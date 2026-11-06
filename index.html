@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Demet Eğitim Kurumları - Mobil Ortak Portal</title>
+    <title>Demet Eğitim Kurumları - Mobil Kurumsal Portal</title>
     <!-- Google Fonts & FontAwesome İkonlar -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -169,13 +169,13 @@
         .attendance-student-name { font-size: 1.2rem; font-weight: 800; color: var(--primary); margin: 10px 0 4px 0; word-break: break-word; }
         .attendance-student-no { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 18px; font-weight: 600; }
 
-        .attendance-btn-group { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        .attendance-btn-group { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
         .att-btn {
             border: none;
-            padding: 12px 4px;
+            padding: 12px 2px;
             border-radius: 10px;
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.72rem;
             cursor: pointer;
             color: white;
             display: flex;
@@ -188,6 +188,7 @@
         .att-var { background: var(--success); }
         .att-yok { background: var(--danger); }
         .att-izinli { background: var(--warning); }
+        .att-mazeretsiz { background: #64748b; }
 
         .stats-nav { display: flex; gap: 6px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
         .stats-tab-btn {
@@ -241,13 +242,14 @@
         .badge-var-pro { background: #d1fae5; color: #047857; }
         .badge-yok-pro { background: #fee2e2; color: #b91c1c; }
         .badge-izin-pro { background: #fef3c7; color: #b45309; }
+        .badge-mazeretsiz-pro { background: #f1f5f9; color: #475569; }
 
         .form-row { display: flex; gap: 8px; margin-bottom: 10px; flex-direction: column; }
         .form-input { width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; outline: none; background: #fff; }
         .form-input:focus { border-color: var(--accent); }
 
         .btn-main { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; width: 100%; margin-top: 4px; box-shadow: 0 3px 10px rgba(37,99,235,0.25); }
-        .btn-sms { background: #10b981; color: white; border: none; padding: 9px 12px; border-radius: 8px; font-weight: 700; font-size: 0.78rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; width: 100%; justify-content: center; }
+        .btn-sms { background: #10b981; color: white; border: none; padding: 10px 12px; border-radius: 8px; font-weight: 700; font-size: 0.78rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 8px; width: 100%; justify-content: center; }
 
         .progress-bar-bg { background: #e2e8f0; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 4px; }
         .progress-bar-fill { height: 100%; border-radius: 3px; }
@@ -350,7 +352,6 @@
             justify-content: center;
         }
 
-        /* ŞİFRELİ ÖDEV / NOT ALANI */
         .daily-note-banner {
             background: linear-gradient(135deg, #fef3c7, #fde68a);
             border: 1px solid #f59e0b;
@@ -388,11 +389,11 @@
             <div class="brand-logo"><i class="fa-solid fa-graduation-cap"></i></div>
             <div class="brand-title">
                 <h1>DEMET EĞİTİM KURUMLARI</h1>
-                <p>Mobil Ortak Portal</p>
+                <p>Mobil Kurumsal Portal</p>
             </div>
         </div>
 
-        <div class="mini-prompt-box" title="Ortak Bulut Duyurusu">
+        <div class="mini-prompt-box" title="Kurumsal Duyuru">
             <i class="fa-solid fa-bullhorn" style="color: #38bdf8;"></i>
             <input type="text" class="prompt-input" id="kurumPrompt" value="Demet Eğitim" placeholder="Duyuru..." oninput="saveAnnouncement()">
             <span style="opacity: 0.4;">|</span>
@@ -407,11 +408,11 @@
             
             <div style="text-align: center; margin-bottom: 14px; margin-top: 8px;">
                 <button class="ai-launch-btn" onclick="openAiModal()">
-                    <i class="fa-solid fa-robot" style="color:#38bdf8; font-size:1.1rem;"></i> 🤖 Yapay Zeka Asistanını Aç
+                    <i class="fa-solid fa-robot" style="color:#38bdf8; font-size:1.1rem;"></i> 🤖 Kurumsal Asistanı Aç
                 </button>
             </div>
 
-            <!-- 🔒 ŞİFRE İLE DEĞİŞTİRİLEBİLEN GÜNÜN ÖDEVİ / NOTU ALANI -->
+            <!-- 🔒 GÜNÜN ÖDEVİ / NOTU ALANI -->
             <div class="daily-note-banner" onclick="editProtectedDailyNote()">
                 <div style="display:flex; align-items:center; gap:8px; overflow:hidden;">
                     <i class="fa-solid fa-thumbtack" style="font-size: 1rem; color: #d97706; flex-shrink:0;"></i>
@@ -421,8 +422,8 @@
             </div>
 
             <div style="text-align: center; margin-bottom: 12px;">
-                <h2 style="font-size: 1.15rem; color: var(--primary); font-weight: 800;">Yoklama & Rapor Paneli</h2>
-                <p style="color: var(--text-muted); font-size: 0.76rem; font-weight: 600;">Veriler güvenle saklanır, asla sıfırlanmaz.</p>
+                <h2 style="font-size: 1.15rem; color: var(--primary); font-weight: 800;">Yoklama & Kurumsal Rapor Paneli</h2>
+                <p style="color: var(--text-muted); font-size: 0.76rem; font-weight: 600;">En son yoklamada bulunmayanlar anında raporlanır.</p>
             </div>
 
             <div class="dashboard-grid">
@@ -526,16 +527,16 @@
         <div id="view-stats" class="view-section">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title"><i class="fa-solid fa-chart-column"></i> İstatistikler</div>
+                    <div class="card-title"><i class="fa-solid fa-chart-column"></i> Kurumsal İstatistikler</div>
                     <button class="btn-back" onclick="showView('home')"><i class="fa-solid fa-arrow-left"></i> Menü</button>
                 </div>
 
-                <!-- 📊 GENEL KATILIM ÖZET ROZETİ -->
-                <div id="statsSummaryBadge" style="background: #e0f2fe; color: #0369a1; padding: 8px 12px; border-radius: 10px; font-size: 0.78rem; font-weight: 800; margin-bottom: 12px; text-align: center;">
+                <div id="statsSummaryBadge" style="background: #e0f2fe; color: #0369a1; padding: 8px 12px; border-radius: 10px; font-size: 0.78rem; font-weight: 800; margin-bottom: 10px; text-align: center;">
                     📊 Genel Katılım Oranı: %100
                 </div>
 
-                <button class="btn-sms" onclick="openSmsReportModal()"><i class="fa-solid fa-paper-plane"></i> Eksikleri WhatsApp ile Bildir</button>
+                <button class="btn-sms" onclick="openSmsReportModal()"><i class="fa-solid fa-paper-plane"></i> 🚨 Son Yoklamadaki Eksikleri WhatsApp ile Gönder</button>
+                <button class="btn-main" style="background:#0f172a; margin-top:0; margin-bottom:12px; font-size:0.78rem; padding:10px;" onclick="copyFullInstitutionalReport()"><i class="fa-solid fa-clipboard"></i> 📋 Tüm Zamanların Genel Raporunu Kopyala</button>
 
                 <div class="stats-nav">
                     <button class="stats-tab-btn active" id="btn-tab-dini" onclick="switchStatsCategory('dini')">Dini Ders</button>
@@ -548,6 +549,7 @@
                     <button class="filter-btn" onclick="filterStatsByClass('9')">9. Sınıf</button>
                     <button class="filter-btn" onclick="filterStatsByClass('10')">10. Sınıf</button>
                     <button class="filter-btn" onclick="filterStatsByClass('11')">11-12. Sınıf</button>
+                    <button class="filter-btn" style="color:#ef4444; border-color:#fca5a5;" onclick="filterStatsByClass('ABSENT_ONLY')">⚠️ Sadece Eksikler</button>
                 </div>
 
                 <input type="text" id="statsSearchInput" class="search-box" placeholder="🔍 Listede öğrenci ara..." oninput="renderStatsTable(currentStatsCategory)">
@@ -608,21 +610,21 @@
         <div class="modal-card" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; border: 1px solid rgba(255,255,255,0.12);">
             <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.12);">
                 <div class="modal-title" style="color: white; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-robot" style="color: #38bdf8;"></i> Demet Eğitim Asistanı
+                    <i class="fa-solid fa-robot" style="color: #38bdf8;"></i> Demet Kurumsal Asistanı
                 </div>
                 <button class="modal-close" onclick="closeAiModal()" style="color: #94a3b8;"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
             <div style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 10px; font-weight: 500;">
-                Tüm veriler taranır; çoklu eşleşmeler eksiksiz listelenir.
+                Tüm veriler taranır; son yoklamadaki eksikler eksiksiz raporlanır.
             </div>
 
             <div id="aiResponseArea" style="background: rgba(255,255,255,0.06); border-radius: 10px; padding: 12px; min-height: 100px; max-height: 200px; overflow-y: auto; font-size: 0.85rem; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.1); line-height: 1.4;">
-                Merhaba! Talebe ve yoklama kayıtları analiz edilmeye hazır. Soru sorabilirsiniz.
+                Merhaba! Son yoklama sonuçları ve kurumsal veriler analiz edilmeye hazır. Soru sorabilirsiniz.
             </div>
 
             <div class="form-row" style="margin-bottom: 0;">
-                <input type="text" id="aiQuestionInput" class="form-input" placeholder="Soru sorun... (Örn: Mehmet)" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: white;">
+                <input type="text" id="aiQuestionInput" class="form-input" placeholder="Soru sorun... (Örn: Mehmet veya son eksikler)" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: white;">
                 <button class="btn-main" style="width: 100%; margin-top: 6px;" onclick="askAiAssistant()">Soru Sor</button>
             </div>
         </div>
@@ -640,7 +642,7 @@
             </div>
             
             <div style="margin-bottom: 8px; font-weight: 800; font-size: 0.82rem; color: var(--primary);">
-                🚨 Kayıtlı Devamsızlık / İzin Tarihleri:
+                🚨 Kayıtlı Devamsızlık / İzin / Eksik Tarihleri:
             </div>
             
             <ul class="history-list" id="modalHistoryList"></ul>
@@ -651,15 +653,15 @@
     <div class="modal-overlay" id="smsModal">
         <div class="modal-card">
             <div class="modal-header">
-                <div class="modal-title"><i class="fa-solid fa-paper-plane"></i> WhatsApp Raporu</div>
+                <div class="modal-title"><i class="fa-solid fa-paper-plane"></i> Son Yoklama Raporu</div>
                 <button class="modal-close" onclick="closeSmsModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
             <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px; font-weight: 600;">
-                Rapor hazır! Butona basınca kopyalanıp WhatsApp açılır:
+                En son yapılan yoklamadaki eksikler hazırlandı:
             </div>
 
-            <textarea id="smsReportText" style="width:100%; height:110px; padding:10px; border-radius:8px; border:1px solid #cbd5e1; font-size:0.82rem; margin-bottom:12px; outline:none; font-weight:600;"></textarea>
+            <textarea id="smsReportText" style="width:100%; height:130px; padding:10px; border-radius:8px; border:1px solid #cbd5e1; font-size:0.82rem; margin-bottom:12px; outline:none; font-weight:600;"></textarea>
 
             <button class="btn-main" onclick="sendViaWhatsApp()"><i class="fa-brands fa-whatsapp fa-lg"></i> Kopyala ve Gruba Gönder</button>
         </div>
@@ -711,6 +713,7 @@
         let comments = [];
         let announcementText = "Demet Eğitim";
         let dailyNoteText = "Günün Notu / Ödevi...";
+        let lastSessionId = null; // Son yoklama oturumu kimliği
         let activeCategory = '';
         let activeQueue = [];
         let currentStudentIdForModal = null;
@@ -732,9 +735,9 @@
                     id: numStr,
                     name: item.name + " (" + item.cls + ")",
                     clsGroup: item.cls,
-                    dini: {p:0, a:0, l:0, history:[]},
-                    namaz: {p:0, a:0, l:0, history:[]},
-                    etut: {p:0, a:0, l:0, history:[]}
+                    dini: {p:0, a:0, l:0, m:0, history:[]},
+                    namaz: {p:0, a:0, l:0, m:0, history:[]},
+                    etut: {p:0, a:0, l:0, m:0, history:[]}
                 };
             });
         }
@@ -747,7 +750,15 @@
                 let data = await response.json();
                 if (data && data.record && data.record.students && data.record.students.length > 0) {
                     students = data.record.students;
+                    students.forEach(s => {
+                        ['dini', 'namaz', 'etut'].forEach(cat => {
+                            if(!s[cat]) s[cat] = {p:0, a:0, l:0, m:0, history:[]};
+                            if(s[cat].m === undefined) s[cat].m = 0;
+                        });
+                    });
+
                     comments = data.record.comments || [];
+                    lastSessionId = data.record.lastSessionId || null;
                     
                     if(data.record.announcement !== undefined) {
                         announcementText = data.record.announcement;
@@ -766,7 +777,7 @@
                     }
                 } else {
                     students = getFreshInitialStudents();
-                    comments = [{ author: "Seyit Talha Sarı", text: "Mobil ortak bulut portalı aktif!", date: "17.10.2026 12:00" }];
+                    comments = [{ author: "Seyit Talha Sarı", text: "Mobil kurumsal portal aktif!", date: "17.10.2026 12:00" }];
                     saveToCloud();
                 }
             } catch(e) {
@@ -791,7 +802,8 @@
                         students: students, 
                         comments: comments, 
                         announcement: announcementText,
-                        dailyNote: dailyNoteText 
+                        dailyNote: dailyNoteText,
+                        lastSessionId: lastSessionId
                     })
                 });
             } catch(e) {
@@ -804,7 +816,6 @@
             saveToCloud();
         }
 
-        // 🔒 ŞİFRELİ (İDARECİ DOĞRULAMALI) NOT DÜZENLEME İŞLEVİ
         function editProtectedDailyNote() {
             let answer = prompt("🔒 Yetkili Doğrulaması:\n'Kurumumuzun idarecisi kimdir?'");
             if (answer && answer.toLowerCase().includes("adem koca")) {
@@ -870,18 +881,23 @@
             if (q.includes("idareci") || q.includes("yönetici") || q.includes("kurum müdürü") || q.includes("müdür")) {
                 answers.push("🏛️ Kurumumuzun idarecisi: **Adem Koca**'dır.");
             }
-            if (q.includes("haftanın talebesi") || q.includes("en iyi talebe") || q.includes("lider")) {
-                let best = students[0];
-                let maxP = -1;
+            if (q.includes("son yoklama") || q.includes("en son eksik") || q.includes("son eksikler")) {
+                let missingCount = 0;
+                let missingNames = [];
                 students.forEach(s => {
-                    let totalP = s.dini.p + s.namaz.p + s.etut.p;
-                    if (totalP > maxP) {
-                        maxP = totalP;
-                        best = s;
+                    let history = s[currentStatsCategory]?.history || [];
+                    if(history.length > 0) {
+                        let lastRec = history[history.length - 1];
+                        if(lastRec.sessionId === lastSessionId && lastRec.type !== 'var') {
+                            missingCount++;
+                            missingNames.push(`${s.name} (${lastRec.type.toUpperCase()})`);
+                        }
                     }
                 });
-                if (maxP > 0) {
-                    answers.push(`🌟 **Analiz:** Lider talebe **${best.name}** (${maxP} katılım).`);
+                if(missingCount > 0) {
+                    answers.push(`⚠️ Son yoklamada bulunmayan ${missingCount} kişi:\n• ` + missingNames.join('\n• '));
+                } else {
+                    answers.push("✅ Son yoklamada tüm talebeler eksiksiz katılmıştır.");
                 }
             }
 
@@ -892,23 +908,16 @@
 
             if (matchedStudents.length > 0) {
                 matchedStudents.forEach(s => {
-                    let totalDini = s.dini.p + s.dini.a;
+                    let totalDini = s.dini.p + s.dini.a + s.dini.m;
                     let diniYuzde = totalDini > 0 ? Math.round((s.dini.p / totalDini) * 100) : 100;
                     
-                    let totalNamaz = s.namaz.p + s.namaz.a;
-                    let namazYuzde = totalNamaz > 0 ? Math.round((s.namaz.p / totalNamaz) * 100) : 100;
-
-                    let studentInfo = `📊 **${s.name}**:\n• Dini Katılım: %${diniYuzde} (Var: ${s.dini.p}, Yok: ${s.dini.a})\n• Namaz Katılım: %${namazYuzde} (Var: ${s.namaz.p}, Yok: ${s.namaz.a})`;
+                    let studentInfo = `📊 **${s.name}**:\n• Dini Katılım: %${diniYuzde} (Var: ${s.dini.p}, Yok: ${s.dini.a}, Eksik/Mazeret: ${s.dini.m})\n• Namaz Yoklama (Var: ${s.namaz.p}, Yok: ${s.namaz.a}, Eksik: ${s.namaz.m})`;
                     answers.push(studentInfo);
                 });
             }
 
-            if (q.includes("yorum") || q.includes("görüş")) {
-                answers.push(`💬 Toplam ${comments.length} yorum var. Son yorum: "${comments[0] ? comments[0].text : 'Yok'}" (${comments[0] ? comments[0].author : ''})`);
-            }
-
             if (answers.length === 0) {
-                answers.push(`🤖 "${rawInput}" için kayıt bulunamadı. Öğrenci adı, "idareci kim" ya da "bekar hoca" sorabilirsiniz.`);
+                answers.push(`🤖 "${rawInput}" için kurumsal kayıt bulunamadı. Öğrenci adı, "idareci kim" ya da "son eksikler" yazabilirsiniz.`);
             }
 
             responseBox.innerHTML = answers.join('<hr style="border:0; border-top:1px solid rgba(255,255,255,0.18); margin:8px 0;">').replace(/\n/g, '<br>');
@@ -918,7 +927,7 @@
         function openSecretPasswordPanel() {
             let answer = prompt("🔒 Yönetici Doğrulaması:\n'Kurumumuzun idarecisi kimdir?'");
             if (answer && answer.toLowerCase().includes("adem koca")) {
-                alert(`📋 GÜVENLİ YÖNETİCİ ŞİFRELERİ:\n\n• Dini Ders Şifresi: ${PASSWORDS.DINI}\n• Namaz Şifresi: ${PASSWORDS.NAMAZ}\n• Etüt & Yönetim Şifresi: ${PASSWORDS.ETUT_ADMIN}`);
+                alert(`📋 GÜVENLİ KURUMSAL ŞİFRELER:\n\n• Dini Ders Şifresi: ${PASSWORDS.DINI}\n• Namaz Şifresi: ${PASSWORDS.NAMAZ}\n• Etüt & Yönetim Şifresi: ${PASSWORDS.ETUT_ADMIN}`);
             } else if (answer !== null) {
                 alert("❌ Yanlış cevap!");
             }
@@ -963,13 +972,13 @@
 
         function startAttendanceDirect(category, filterCls) {
             activeCategory = category;
+            lastSessionId = "SES_" + Date.now(); // YENİ YOKLAMA OTURUM KİMLİĞİ
             
             let pool = students;
             if(filterCls !== "ALL") {
                 pool = students.filter(s => s.clsGroup === filterCls);
             }
 
-            // 🔀 NAMAZ İÇİN HER AÇILIŞTA KARIŞIK (RASTGELE) SIRALAMA
             if (category === 'namaz') {
                 activeQueue = [...pool].sort(() => Math.random() - 0.5);
             } else {
@@ -1043,9 +1052,10 @@
                 container.innerHTML = `
                     <div style="padding: 25px 10px; text-align: center;">
                         <i class="fa-solid fa-circle-check" style="font-size: 3.2rem; color: var(--success); margin-bottom: 10px;"></i>
-                        <h3 style="font-size: 1.2rem; color: var(--primary); font-weight: 800;">Yoklama Bitti!</h3>
-                        <p style="color: var(--text-muted); font-size:0.8rem; margin: 6px 0 16px 0; font-weight: 600;">Veriler güvenle ortak buluta kaydedildi.</p>
-                        <button class="btn-main" onclick="showView('home')"><i class="fa-solid fa-house"></i> Ana Menüye Dön</button>
+                        <h3 style="font-size: 1.2rem; color: var(--primary); font-weight: 800;">Yoklama Tamamlandı!</h3>
+                        <p style="color: var(--text-muted); font-size:0.8rem; margin: 6px 0 16px 0; font-weight: 600;">Tüm durumlar eksiksiz ortak buluta kaydedildi.</p>
+                        <button class="btn-main" onclick="openSmsReportModal()"><i class="fa-solid fa-paper-plane"></i> Son Yoklamadaki Eksikleri WhatsApp ile Gönder</button>
+                        <button class="btn-main" style="background:#64748b; margin-top:8px;" onclick="showView('home')"><i class="fa-solid fa-house"></i> Ana Menüye Dön</button>
                     </div>
                 `;
                 return;
@@ -1058,7 +1068,7 @@
                 <div class="attendance-box">
                     <span style="background: #e2e8f0; color: var(--primary); font-weight:800; padding: 3px 8px; border-radius: 6px; font-size:0.75rem;">Sıra: #${student.id}</span>
                     <div class="attendance-student-name">${student.name}</div>
-                    <div class="attendance-student-no">Durumu seçiniz:</div>
+                    <div class="attendance-student-no">Kurumsal durumu seçiniz:</div>
                     
                     <div class="attendance-btn-group">
                         <button class="att-btn att-var" onclick="markAttendance('${student.id}', 'var')">
@@ -1069,6 +1079,9 @@
                         </button>
                         <button class="att-btn att-izinli" onclick="markAttendance('${student.id}', 'izinli')">
                             <i class="fa-solid fa-clock"></i> İZİN
+                        </button>
+                        <button class="att-btn att-mazeretsiz" onclick="markAttendance('${student.id}', 'mazeretsiz')">
+                            <i class="fa-solid fa-triangle-exclamation"></i> EKSİK
                         </button>
                     </div>
                 </div>
@@ -1081,16 +1094,23 @@
                 const now = new Date();
                 const dateStr = now.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' }) + " " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-                if (status === 'var') student[activeCategory].p++;
+                if (!student[activeCategory].history) student[activeCategory].history = [];
+
+                if (status === 'var') {
+                    student[activeCategory].p++;
+                    student[activeCategory].history.push({ type: 'var', date: dateStr, sessionId: lastSessionId });
+                }
                 if (status === 'yok') {
                     student[activeCategory].a++;
-                    if(!student[activeCategory].history) student[activeCategory].history = [];
-                    student[activeCategory].history.push({ type: 'yok', date: dateStr });
+                    student[activeCategory].history.push({ type: 'yok', date: dateStr, sessionId: lastSessionId });
                 }
                 if (status === 'izinli') {
                     student[activeCategory].l++;
-                    if(!student[activeCategory].history) student[activeCategory].history = [];
-                    student[activeCategory].history.push({ type: 'izinli', date: dateStr });
+                    student[activeCategory].history.push({ type: 'izinli', date: dateStr, sessionId: lastSessionId });
+                }
+                if (status === 'mazeretsiz') {
+                    student[activeCategory].m++;
+                    student[activeCategory].history.push({ type: 'eksik', date: dateStr, sessionId: lastSessionId });
                 }
 
                 saveToCloud();
@@ -1116,9 +1136,9 @@
                 id: numStr,
                 name: name + " (" + cls + ")",
                 clsGroup: cls,
-                dini: {p:0, a:0, l:0, history:[]},
-                namaz: {p:0, a:0, l:0, history:[]},
-                etut: {p:0, a:0, l:0, history:[]}
+                dini: {p:0, a:0, l:0, m:0, history:[]},
+                namaz: {p:0, a:0, l:0, m:0, history:[]},
+                etut: {p:0, a:0, l:0, m:0, history:[]}
             });
 
             saveToCloud();
@@ -1129,7 +1149,7 @@
         }
 
         function deleteStudent(id) {
-            if(confirm("Talebeyi silmek istiyor musunuz?")) {
+            if(confirm("Talebeyi sistemden kaldırmak istiyor musunuz?")) {
                 students = students.filter(s => s.id !== id);
                 students.forEach((s, idx) => {
                     s.id = (idx + 1) < 10 ? '0' + (idx + 1) : '' + (idx + 1);
@@ -1184,7 +1204,13 @@
             tbody.innerHTML = '';
 
             let filteredStudents = students;
-            if(currentClassFilter !== 'ALL') {
+
+            if (currentClassFilter === 'ABSENT_ONLY') {
+                filteredStudents = students.filter(s => {
+                    let d = s[category] || {a:0, l:0, m:0};
+                    return (d.a + d.l + d.m) > 0;
+                });
+            } else if (currentClassFilter !== 'ALL') {
                 filteredStudents = students.filter(s => s.clsGroup && s.clsGroup.includes(currentClassFilter));
             }
 
@@ -1197,8 +1223,8 @@
             let totalValidAll = 0;
 
             filteredStudents.forEach(s => {
-                const data = s[category] || {p:0, a:0, l:0, history:[]};
-                const validLectures = data.p + data.a;
+                const data = s[category] || {p:0, a:0, l:0, m:0, history:[]};
+                const validLectures = data.p + data.a + data.m;
                 
                 totalPAll += data.p;
                 totalValidAll += validLectures;
@@ -1221,6 +1247,7 @@
                             <span class="p-badge badge-var-pro">${data.p}V</span>
                             <span class="p-badge badge-yok-pro">${data.a}Y</span>
                             <span class="p-badge badge-izin-pro">${data.l}İ</span>
+                            <span class="p-badge badge-mazeretsiz-pro">${data.m}E</span>
                         </div>
                     </td>
                     <td><strong style="color: ${barColor};">%${percentage}</strong></td>
@@ -1249,7 +1276,7 @@
             if (category === 'etut') catTitle = "Etüt";
 
             document.getElementById('modalStudentName').innerText = `${student.name} (#${student.id})`;
-            document.getElementById('modalCategoryName').innerText = `${catTitle} Geçmişi`;
+            document.getElementById('modalCategoryName').innerText = `${catTitle} Geçmiş Kayıtları`;
 
             renderHistoryList();
             document.getElementById('historyModal').style.display = 'flex';
@@ -1268,7 +1295,7 @@
                 historyList.innerHTML = `
                     <div style="text-align:center; padding:15px; color:var(--text-muted); font-size:0.78rem; font-weight:600;">
                         <i class="fa-solid fa-shield-cat" style="font-size:1.6rem; color:var(--success); margin-bottom:6px;"></i><br>
-                        Kayıtlı devamsızlık veya izin bulunmuyor.
+                        Kayıtlı devamsızlık veya eksik bulunmuyor.
                     </div>
                 `;
             } else {
@@ -1276,13 +1303,14 @@
                     const li = document.createElement('li');
                     li.className = 'history-item';
                     
-                    let badge = item.type === 'yok' 
-                        ? '<span class="p-badge badge-yok-pro">YOK</span>' 
-                        : '<span class="p-badge badge-izin-pro">İZİN</span>';
+                    let badgeColor = 'badge-var-pro';
+                    if(item.type.includes('yok')) badgeColor = 'badge-yok-pro';
+                    if(item.type.includes('izin')) badgeColor = 'badge-izin-pro';
+                    if(item.type.includes('eksik')) badgeColor = 'badge-mazeretsiz-pro';
 
                     li.innerHTML = `
                         <span><i class="fa-regular fa-calendar-days"></i> ${item.date}</span>
-                        ${badge}
+                        <span class="p-badge ${badgeColor}">${item.type.toUpperCase()}</span>
                     `;
                     historyList.appendChild(li);
                 });
@@ -1293,25 +1321,31 @@
             document.getElementById('historyModal').style.display = 'none';
         }
 
+        // 🚨 SADECE EN SON YOKLAMADAKİ EKSİKLERİ RAPORLAMA İŞLEVİ
         function openSmsReportModal() {
-            let catName = "Dini Ders";
-            if(currentStatsCategory === 'namaz') catName = "Namaz";
-            if(currentStatsCategory === 'etut') catName = "Etüt";
+            let catName = currentStatsCategory === 'namaz' ? "Namaz" : (currentStatsCategory === 'etut' ? "Etüt" : "Dini Ders");
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('tr-TR') + " " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-            let reportText = `📌 DEMET EĞİTİM - ${catName.toUpperCase()} RAPORU\n\n`;
-            let absentCount = 0;
+            let reportText = `📌 DEMET EĞİTİM - ${catName.toUpperCase()} YOKLAMA RAPORU\n📅 ${dateStr}\n\n`;
+            let missingCount = 0;
 
             students.forEach(s => {
                 let historyData = s[currentStatsCategory]?.history || [];
                 if(historyData.length > 0) {
                     let lastRecord = historyData[historyData.length - 1];
-                    reportText += `• ${s.name} ➡️ ${lastRecord.type.toUpperCase()} (${lastRecord.date})\n`;
-                    absentCount++;
+                    // Eğer son kayıt en son yapılan oturuma aitse ve 'var' değilse
+                    if(lastRecord.type !== 'var' && lastRecord.sessionId === lastSessionId) {
+                        reportText += `• ${s.name} ➡️ ${lastRecord.type.toUpperCase()}\n`;
+                        missingCount++;
+                    }
                 }
             });
 
-            if(absentCount === 0) {
-                reportText += "Bugün devamsız veya izinli talebe yok.";
+            if(missingCount === 0) {
+                reportText += "✅ En son yoklamada devamsız veya eksik talebe bulunmuyor. Tüm öğrenciler mevcuttur.";
+            } else {
+                reportText += `\n⚠️ Toplam ${missingCount} talebe bulunmamaktadır.`;
             }
 
             document.getElementById('smsReportText').value = reportText;
@@ -1322,13 +1356,29 @@
             document.getElementById('smsModal').style.display = 'none';
         }
 
+        function copyFullInstitutionalReport() {
+            let catName = currentStatsCategory.toUpperCase();
+            let text = `🏛️ DEMET EĞİTİM KURUMLARI - ${catName} GENEL İSTATİSTİK RAPORU\n`;
+            text += `📅 Tarih: ${new Date().toLocaleDateString('tr-TR')}\n`;
+            text += `----------------------------------------\n`;
+
+            students.forEach(s => {
+                let d = s[currentStatsCategory] || {p:0, a:0, l:0, m:0};
+                text += `${s.id}. ${s.name} | Var: ${d.p}, Yok: ${d.a}, İzin: ${d.l}, Eksik: ${d.m}\n`;
+            });
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert("📋 Tüm genel istatistik raporu panoya kopyalandı!");
+            });
+        }
+
         function sendViaWhatsApp() {
             let textarea = document.getElementById('smsReportText');
             textarea.select();
             textarea.setSelectionRange(0, 99999);
             
             navigator.clipboard.writeText(textarea.value).then(() => {
-                alert("📋 Rapor kopyalandı! WhatsApp açılıyor.");
+                alert("📋 Son yoklama raporu kopyalandı! WhatsApp açılıyor.");
                 let encoded = encodeURIComponent(textarea.value);
                 window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
                 closeSmsModal();
